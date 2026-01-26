@@ -119,7 +119,8 @@ export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
                         person: JSON.parse(item.person as string),
                         date: item.date as string,
                         zoomMeetingsLink: item.zoom_meetings_link as string,
-                        recordingsLink: item.recordings_link as string
+                        recordingsLink: item.recordings_link as string,
+                        img: item.img as string | null
                     }))
                 });
             }

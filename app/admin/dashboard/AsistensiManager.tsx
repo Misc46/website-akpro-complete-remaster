@@ -20,7 +20,8 @@ export default function AsistensiManager() {
         person: [{ name: '' }],
         date: '',
         zoom_meetings_link: '',
-        recordings_link: ''
+        recordings_link: '',
+        img: ''
     });
 
     // Master Group Form State
@@ -62,7 +63,8 @@ export default function AsistensiManager() {
             person: [{ name: '' }],
             date: '',
             zoom_meetings_link: '',
-            recordings_link: ''
+            recordings_link: '',
+            img: ''
         });
         setEditingId(null);
     };
@@ -103,7 +105,8 @@ export default function AsistensiManager() {
             person: item.person,
             date: item.date,
             zoom_meetings_link: item.zoom_meetings_link || '',
-            recordings_link: item.recordings_link || ''
+            recordings_link: item.recordings_link || '',
+            img: item.img || ''
         });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -291,6 +294,13 @@ export default function AsistensiManager() {
                                 onChange={(e) => setFormData(prev => ({ ...prev, recordings_link: e.target.value }))}
                                 className="w-full bg-[#001B55] border border-[#0036A7] text-white px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-[#00B8D4]"
                                 placeholder="Recording Link"
+                            />
+                            <input
+                                type="url"
+                                value={formData.img}
+                                onChange={(e) => setFormData(prev => ({ ...prev, img: e.target.value }))}
+                                className="w-full bg-[#001B55] border border-[#0036A7] text-white px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-[#00B8D4] mt-2"
+                                placeholder="Thumbnail Image URL (Optional)"
                             />
                         </div>
 

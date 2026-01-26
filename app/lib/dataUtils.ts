@@ -31,6 +31,7 @@ export interface AsistensiItem {
     date: Date | string; // Date on client, string on wire
     zoomMeetingsLink: string;
     recordingsLink: string;
+    img?: string | null;
 }
 
 export interface AsistensiData {

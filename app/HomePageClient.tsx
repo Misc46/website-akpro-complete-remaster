@@ -24,11 +24,11 @@ export default function HomePageClient() {
 
                 <h1 className="text-5xl md:text-7xl font-black font-serif mb-8 leading-[1.1] animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
                     <span className={`${isDarkMode ? 'text-white' : 'text-[#001B55]'}`}>Empowering Your </span>
-                    <span className="bg-gradient-to-r from-[#00B8D4] to-[#0036A7] bg-clip-text text-transparent">Academic Journey</span>
+                    <span className="bg-gradient-to-r from-[#00B8D4] to-[#0036A7] bg-clip-text text-transparent">Academic & Professional Journey</span>
                 </h1>
 
                 <p className={`text-xl font-medium font-sans ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200`}>
-                    Platform terpadu untuk mengakses diktat eksklusif, jadwal asistensi interaktif, dan sumber daya pendukung untuk mahasiswa Teknik Elektro FTUI.
+                    Platform terpadu untuk mengakses diktat eksklusif, jadwal asistensi interaktif, dan sumber daya pendukung untuk mahasiswa Departemen Teknik Elektro FTUI.
                 </p>
 
                 <div className="flex flex-wrap justify-center gap-6 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
@@ -68,6 +68,20 @@ export default function HomePageClient() {
         </Link>
     );
 
+    const SmallFeatureCard = ({ icon: Icon, title, description, href, delay }: any) => (
+        <a href={href} className={`group relative ${isDarkMode ? 'bg-[#002A83]/50 border-[#0036A7]/30' : 'bg-white border-gray-100 shadow-sm'} p-6 rounded-[1.5rem] transition-all duration-300 hover:-translate-y-1 border block overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 ${delay}`}>
+            <div className="flex items-start gap-4">
+                <div className={`w-10 h-10 shrink-0 ${isDarkMode ? 'bg-[#001B55]' : 'bg-[#E0F7FA]'} rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
+                    <Icon className={isDarkMode ? 'text-[#00B8D4]' : 'text-[#001B55]'} size={20} />
+                </div>
+                <div>
+                    <h4 className={`text-lg font-black font-serif ${isDarkMode ? 'text-white' : 'text-[#001B55]'} mb-1`}>{title}</h4>
+                    <p className={`text-[10px] font-black font-sans uppercase tracking-[0.1em] ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{description}</p>
+                </div>
+            </div>
+        </a>
+    );
+
     return (
         <div className="flex flex-col overflow-hidden">
             <Hero />
@@ -83,7 +97,7 @@ export default function HomePageClient() {
                     />
                     <FeatureCard
                         icon={Calendar}
-                        title="Live Sessions"
+                        title="Jadwal Asistensi"
                         description="Informasi jadwal asistensi real-time, link meeting Zoom, dan rekaman sesi pembelajaran yang bisa diakses kapan saja."
                         href="/asistensi"
                         delay="delay-200"
@@ -94,6 +108,44 @@ export default function HomePageClient() {
                         description="Program pemberdayaan mahasiswa melalui kolaborasi belajar dan berbagi pengetahuan antar angkatan di DTE FTUI."
                         href="/#about"
                         delay="delay-300"
+                    />
+                </div>
+            </section>
+
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+                <div className="flex items-center gap-4 mb-10 overflow-hidden">
+                    <div className="h-[2px] w-8 bg-[#00B8D4]/30"></div>
+                    <h3 className={`text-xs font-black uppercase tracking-[0.3em] ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Additional Resources</h3>
+                    <div className="h-[2px] flex-1 bg-[#00B8D4]/10"></div>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <SmallFeatureCard
+                        icon={Star}
+                        title="Placeholder 1"
+                        description="CHANGE THIS"
+                        href="#"
+                        delay="delay-100"
+                    />
+                    <SmallFeatureCard
+                        icon={Star}
+                        title="Placeholder 2"
+                        description="CHANGE THIS"
+                        href="#"
+                        delay="delay-150"
+                    />
+                    <SmallFeatureCard
+                        icon={Star}
+                        title="Placeholder 3"
+                        description="CHANGE THIS"
+                        href="#"
+                        delay="delay-200"
+                    />
+                    <SmallFeatureCard
+                        icon={Star}
+                        title="Placeholder 4"
+                        description="CHANGE THIS"
+                        href="#"
+                        delay="delay-250"
                     />
                 </div>
             </section>
@@ -116,17 +168,17 @@ export default function HomePageClient() {
                     </div>
 
                     <div className="order-1 md:order-2">
-                        <p className="text-[#00B8D4] font-black uppercase tracking-[0.3em] text-xs mb-6">Misi Kami</p>
+                        <p className="text-[#00B8D4] font-black uppercase tracking-[0.3em] text-xs mb-6">Visi Kami</p>
                         <h2 className={`text-5xl font-black font-serif ${isDarkMode ? 'text-white' : 'text-[#001B55]'} mb-10 leading-tight`}>
-                            Membangun Pondasi <br />Akademis yang Kokoh
+                            Berdaya Saing Tinggi & <br />Selaras dalam Advokasi
                         </h2>
 
                         <div className="space-y-8">
                             <p className={`text-xl font-medium font-sans leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Departemen Akademis Praktis dan Produktif (AKPRO) hadir sebagai jembatan bagi mahasiswa DTE FTUI untuk meraih potensi maksimal mereka.
+                                Menjadikan AKPRO IME FTUI 2026 sebagai bidang yang dapat bergerak selaras dalam mengadvokasi akademis secara efektif.
                             </p>
                             <p className={`text-xl font-medium font-sans leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Kami percaya bahwa aksesibilitas terhadap sumber daya berkualitas adalah kunci keberhasilan akademis bersama.
+                                Kami berkomitmen menghasilkan warga DTE yang berdaya saing tinggi dalam menjalani dinamika kehidupan akademis dan keprofesian.
                             </p>
                         </div>
 

@@ -58,6 +58,7 @@ async function sync() {
             date TEXT,
             zoom_meetings_link TEXT,
             recordings_link TEXT,
+            img TEXT,
             FOREIGN KEY (asistensi_id) REFERENCES asistensis(id)
         )
     `);
@@ -195,7 +196,7 @@ async function sync() {
                         }
 
                         await db.execute({
-                            sql: 'INSERT INTO asistensi_items (asistensi_id, name, major, year, person, date, zoom_meetings_link, recordings_link) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                            sql: 'INSERT INTO asistensi_items (asistensi_id, name, major, year, person, date, zoom_meetings_link, recordings_link, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                             args: [
                                 asistensiId,
                                 subjectName,
@@ -204,7 +205,8 @@ async function sync() {
                                 JSON.stringify(person?.split(',').map((p: any) => ({ name: p.trim() })) || []),
                                 fullDateStr,
                                 zoom || '',
-                                record || ''
+                                record || '',
+                                null // No img column in current transposed G-Sheet layout
                             ]
                         });
                     }

@@ -39,10 +39,10 @@ export async function POST(req: NextRequest) {
     if (!await verifyAuth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     try {
-        const { asistensi_id, name, major, year, person, date, zoom_meetings_link, recordings_link } = await req.json();
+        const { asistensi_id, name, major, year, person, date, zoom_meetings_link, recordings_link, img } = await req.json();
 
         await db.execute({
-            sql: 'INSERT INTO asistensi_items (asistensi_id, name, major, year, person, date, zoom_meetings_link, recordings_link) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            sql: 'INSERT INTO asistensi_items (asistensi_id, name, major, year, person, date, zoom_meetings_link, recordings_link, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
             args: [
                 asistensi_id,
                 name,
@@ -51,7 +51,8 @@ export async function POST(req: NextRequest) {
                 JSON.stringify(person),
                 date,
                 zoom_meetings_link,
-                recordings_link
+                recordings_link,
+                img
             ]
         });
 
@@ -81,10 +82,10 @@ export async function PATCH(req: NextRequest) {
     if (!await verifyAuth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     try {
-        const { id, asistensi_id, name, major, year, person, date, zoom_meetings_link, recordings_link } = await req.json();
+        const { id, asistensi_id, name, major, year, person, date, zoom_meetings_link, recordings_link, img } = await req.json();
 
         await db.execute({
-            sql: 'UPDATE asistensi_items SET asistensi_id = ?, name = ?, major = ?, year = ?, person = ?, date = ?, zoom_meetings_link = ?, recordings_link = ? WHERE id = ?',
+            sql: 'UPDATE asistensi_items SET asistensi_id = ?, name = ?, major = ?, year = ?, person = ?, date = ?, zoom_meetings_link = ?, recordings_link = ?, img = ? WHERE id = ?',
             args: [
                 asistensi_id,
                 name,
@@ -94,6 +95,7 @@ export async function PATCH(req: NextRequest) {
                 date,
                 zoom_meetings_link,
                 recordings_link,
+                img,
                 id
             ]
         });

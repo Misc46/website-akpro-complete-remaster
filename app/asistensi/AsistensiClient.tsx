@@ -181,7 +181,16 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                     {filtered.length > 0 ? (
                         filtered.map((item: AsistensiItem, idx: number) => (
                             <div key={idx} className={`group ${isDarkMode ? 'bg-[#002A83] border-[#0036A7]' : 'bg-white border-gray-100 shadow-md'} rounded-[2.5rem] border flex flex-col overflow-hidden hover:shadow-2xl transition-all duration-500`}>
-                                <div className={`h-28 relative ${isDarkMode ? 'bg-gradient-to-br from-[#0036A7] to-[#00B8D4]' : 'bg-gradient-to-br from-[#00B8D4] to-[#001B55]'}`}>
+                                <div className={`h-28 relative overflow-hidden bg-[#001B55]`}>
+                                    {item.img ? (
+                                        <img
+                                            src={item.img}
+                                            alt={item.name}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
+                                    ) : (
+                                        <div className={`absolute inset-0 ${isDarkMode ? 'bg-gradient-to-br from-[#0036A7] to-[#00B8D4]' : 'bg-gradient-to-br from-[#00B8D4] to-[#001B55]'}`}></div>
+                                    )}
                                     <div className="absolute top-6 left-6 flex gap-1.5 flex-wrap">
                                         {item.major.map((m: string) => (
                                             <span key={m} className={`text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/20`}>

@@ -103,9 +103,17 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                 {filtered.length > 0 ? (
                     filtered.map((item: DiktatItem, idx: number) => (
                         <div key={idx} className={`group ${isDarkMode ? 'bg-[#002A83] border-[#0036A7]' : 'bg-white border-gray-100 shadow-md'} rounded-[2rem] border flex flex-col overflow-hidden hover:shadow-2xl hover:border-[#00B8D4]/50 transition-all duration-500`}>
-                            <div className={`h-28 relative overflow-hidden`}>
-                                <div className={`absolute inset-0 ${isDarkMode ? 'bg-gradient-to-br from-[#0036A7] to-[#00B8D4]' : 'bg-gradient-to-br from-[#00B8D4] to-[#001B55]'}`}></div>
-                                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
+                            <div className={`h-28 relative overflow-hidden bg-[#001B55]`}>
+                                {item.img ? (
+                                    <img
+                                        src={item.img}
+                                        alt={item.name}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    />
+                                ) : (
+                                    <div className={`absolute inset-0 ${isDarkMode ? 'bg-gradient-to-br from-[#0036A7] to-[#00B8D4]' : 'bg-gradient-to-br from-[#00B8D4] to-[#001B55]'}`}></div>
+                                )}
+                                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                                 <div className="absolute top-6 left-6">
                                     <div className="flex flex-wrap gap-1.5">
                                         {item.major.map((m: string) => (
