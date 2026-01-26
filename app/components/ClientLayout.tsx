@@ -2,10 +2,13 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ThemeProvider, useTheme } from '../lib/ThemeContext';
+import { useTheme } from '../lib/ThemeContext';
+import { usePathname } from 'next/navigation';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
     const { isDarkMode, toggleTheme } = useTheme();
+    const pathname = usePathname();
+    const isAdmin = pathname.startsWith('/admin');
 
     const Header = () => (
         <header className={`${isDarkMode ? 'bg-[#001B55] border-b border-[#002A83]' : 'bg-white border-b border-gray-100'} shadow-sm sticky top-0 z-50`}>
@@ -75,6 +78,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         </footer>
     );
 
+    if (isAdmin) {
+        return <div className={`min-h-screen ${isDarkMode ? 'bg-[#001B55]' : 'bg-[#F8FDFF]'}`}>{children}</div>;
+    }
+
     return (
         <div className={`min-h-screen flex flex-col ${isDarkMode ? 'bg-[#001B55]' : 'bg-[#F8FDFF]'}`}>
             <Header />
@@ -88,10 +95,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
     return (
-        <ThemeProvider>
-            <LayoutContent>
-                {children}
-            </LayoutContent>
-        </ThemeProvider>
+        <LayoutContent>
+            {children}
+        </LayoutContent>
     );
 }

@@ -30,8 +30,6 @@ export const FilterSelector = ({
             >
                 <option value={1}>Semester {getSemester(1, ganjilGenap)}</option>
                 <option value={2}>Semester {getSemester(2, ganjilGenap)}</option>
-                <option value={3}>Semester {getSemester(3, ganjilGenap)}</option>
-                <option value={4}>Semester {getSemester(4, ganjilGenap)}</option>
             </select>
         </div>
         <div className="flex-1 min-w-[150px]">

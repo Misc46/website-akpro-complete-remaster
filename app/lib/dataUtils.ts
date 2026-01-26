@@ -1,3 +1,5 @@
+import Papa from 'papaparse';
+
 export const majorDisplayNames: Record<string, string> = {
     elektro: 'Teknik Elektro',
     komputer: 'Teknik Komputer',
@@ -17,6 +19,7 @@ export interface DiktatData {
     year: number;
     uts_uas: string;
     ganjil_genap: string;
+    is_active?: boolean;
     content: DiktatItem[];
 }
 
@@ -79,43 +82,9 @@ export const convertMajorCode = (str: string) => {
     return '';
 };
 
-export const parseCsv = (csvString: string) => {
-    const rows: string[][] = [];
-    let currentRow: string[] = [];
-    let currentField = '';
-    let inQuotes = false;
-
-    for (let i = 0; i < csvString.length; i++) {
-        const char = csvString[i];
-        const nextChar = csvString[i + 1];
-
-        if (char === '"') {
-            if (inQuotes && nextChar === '"') {
-                currentField += '"';
-                i++;
-            } else {
-                inQuotes = !inQuotes;
-            }
-        } else if (char === ',' && !inQuotes) {
-            currentRow.push(currentField);
-            currentField = '';
-        } else if ((char === '\n' || char === '\r') && !inQuotes) {
-            if (currentField || currentRow.length > 0) {
-                currentRow.push(currentField);
-                rows.push(currentRow);
-                currentRow = [];
-                currentField = '';
-            }
-            if (char === '\r' && nextChar === '\n') i++;
-        } else {
-            currentField += char;
-        }
-    }
-
-    if (currentField || currentRow.length > 0) {
-        currentRow.push(currentField);
-        rows.push(currentRow);
-    }
-
-    return rows;
+export const parseCsv = (csvString: string): string[][] => {
+    const results = Papa.parse<string[]>(csvString, {
+        skipEmptyLines: true,
+    });
+    return results.data;
 };

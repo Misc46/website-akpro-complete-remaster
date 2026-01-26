@@ -20,7 +20,8 @@ async function sync() {
             id TEXT PRIMARY KEY,
             year INTEGER,
             uts_uas TEXT,
-            ganjil_genap TEXT
+            ganjil_genap TEXT,
+            is_active INTEGER DEFAULT 0
         )
     `);
 
@@ -29,8 +30,8 @@ async function sync() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             diktat_id TEXT,
             name TEXT,
-            major TEXT, -- JSON array
-            year TEXT,  -- JSON array
+            major TEXT, 
+            year TEXT,  
             google_drive_link TEXT,
             img TEXT,
             FOREIGN KEY (diktat_id) REFERENCES diktats(id)
@@ -51,9 +52,9 @@ async function sync() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             asistensi_id TEXT,
             name TEXT,
-            major TEXT, -- JSON array
-            year TEXT,  -- JSON array
-            person TEXT, -- JSON array
+            major TEXT, 
+            year TEXT,  
+            person TEXT, 
             date TEXT,
             zoom_meetings_link TEXT,
             recordings_link TEXT,
@@ -70,16 +71,24 @@ async function sync() {
     await db.execute('DELETE FROM asistensis');
 
     // 3. Fetch Master Data
-    const masterUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQT3zuplCOCJpIet9N6X6bbYBEdJ0uoLC-h5eVrylZcjUvCQS0pliMVAGdFhYGgiGp0RV2SQiK-1XqR/pub?gid=0&single=true&output=csv';
+    const masterUrl = process.env.GOOGLE_SHEET_MASTER_URL;
+    if (!masterUrl) {
+        throw new Error('GOOGLE_SHEET_MASTER_URL is not defined in .env.local');
+    }
     const response = await fetch(masterUrl);
     const csvText = await response.text();
     const parsed = parseCsv(csvText);
 
     for (let i = 1; i < parsed.length; i++) {
         const row = parsed[i];
-        const year = parseInt(row[0]);
-        const ganjilGenap = row[1]?.toLowerCase();
-        const utsUas = row[2]?.toLowerCase();
+        const year = parseInt(row[1]);
+        if (year > 2 && year < 1000) continue; // Skip Year 3, 4 etc. but allow actual years like 2025
+
+        // However, the 'year' in the spreadsheet row[1] seems to be the academic year (e.g. 2025)
+        // The 'Tingkat' in sub-sheets is what defines the semester (1, 2, 3, 4).
+
+        const ganjilGenap = row[2]?.toLowerCase();
+        const utsUas = row[3]?.toLowerCase();
         const isPublished = row[16]?.toLowerCase() === 'true';
 
         if (!isPublished) continue;
@@ -124,23 +133,81 @@ async function sync() {
             const asistensiCsv = await asistensiRes.text();
             const asistensiParsed = parseCsv(asistensiCsv);
 
-            for (let j = 1; j < asistensiParsed.length; j += 7) {
-                if (j + 6 < asistensiParsed.length) {
-                    const item = asistensiParsed[j];
-                    if (!item[0]) continue;
-                    await db.execute({
-                        sql: 'INSERT INTO asistensi_items (asistensi_id, name, major, year, person, date, zoom_meetings_link, recordings_link) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-                        args: [
-                            asistensiId,
-                            asistensiParsed[j][0],
-                            JSON.stringify(asistensiParsed[j + 1][0]?.split(',').map((m: any) => convertMajorCode(m.trim())).filter(Boolean) || []),
-                            JSON.stringify(asistensiParsed[j + 2][0]?.split(',').map((y: any) => parseInt(y.trim())).filter(Boolean) || []),
-                            JSON.stringify(asistensiParsed[j + 3][0]?.split(',').map((p: any) => ({ name: p.trim() })) || []),
-                            asistensiParsed[j + 4][0], // original date string
-                            asistensiParsed[j + 5][0] || '',
-                            asistensiParsed[j + 6][0] || ''
-                        ]
-                    });
+            /**
+             * ACTUAL TRANSPOSED LAYOUT (observed from G-Sheet export):
+             * Row 0: Description Header (Pekan Asistensi...)
+             * Row 1: "Hari" (Label) | Monday | Tuesday | Wednesday | ...
+             * Row 2: "Tanggal" (Label) | 2025-03-17 | 2025-03-18 | ...
+             * Row 3: "Matkul 1" (Label) | [Subject] | [Subject] | ...
+             * Row 4: "Jurusan" (Label) | [E, T, B] | ...
+             * Row 5: "Tingkat" (Label) | [1, 2] | ...
+             * Row 6: "Pengajar" (Label) | [Name-E22] | ...
+             * Row 7: "Jam" (Label) | [10:00] | ...
+             * Row 8: "Link Zoom" (Label) | [Link] | ...
+             * Row 9: "Link Rekaman" (Label) | [Link] | ...
+             */
+            if (asistensiParsed.length >= 8) {
+                const dateRow = asistensiParsed[2];
+                const subjectRow = asistensiParsed[3];
+                const majorRow = asistensiParsed[4];
+                const targetYearRow = asistensiParsed[5];
+                const personRow = asistensiParsed[6];
+                const timeRow = asistensiParsed[7];
+                const zoomRow = asistensiParsed[8];
+                const recordRow = asistensiParsed[9];
+
+                // Subject row is the primary indicator of data presence
+                if (subjectRow) {
+                    for (let col = 1; col < subjectRow.length; col++) {
+                        const subjectName = subjectRow[col]?.trim();
+
+                        // Skip if subject name is blank
+                        if (!subjectName || subjectName === '') continue;
+
+                        const dateVal = dateRow ? dateRow[col]?.trim() : '';
+                        const major = majorRow ? majorRow[col] : '';
+                        const targetYear = targetYearRow ? targetYearRow[col] : '';
+                        const person = personRow ? personRow[col] : '';
+                        const time = timeRow ? timeRow[col] : '';
+                        const zoom = zoomRow ? zoomRow[col] : '';
+                        const record = recordRow ? recordRow[col] : '';
+
+                        // Major logic: 'E', 'T', 'B' etc
+                        let majors: string[] = [];
+                        if (major) {
+                            majors = major.split(',').map(m => convertMajorCode(m.trim())).filter(Boolean);
+                        }
+
+                        // Year logic: '1', '2' etc
+                        let years: number[] = [];
+                        if (targetYear) {
+                            years = targetYear.split(',').map(y => parseInt(y.trim())).filter(y => !isNaN(y));
+                        }
+
+                        // Date logic
+                        let fullDateStr = dateVal || '';
+                        if (time && time.includes(':')) {
+                            if (fullDateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                                fullDateStr = `${fullDateStr}T${time}:00`;
+                            } else {
+                                fullDateStr = `${fullDateStr} ${time}`;
+                            }
+                        }
+
+                        await db.execute({
+                            sql: 'INSERT INTO asistensi_items (asistensi_id, name, major, year, person, date, zoom_meetings_link, recordings_link) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                            args: [
+                                asistensiId,
+                                subjectName,
+                                JSON.stringify(majors),
+                                JSON.stringify(years),
+                                JSON.stringify(person?.split(',').map((p: any) => ({ name: p.trim() })) || []),
+                                fullDateStr,
+                                zoom || '',
+                                record || ''
+                            ]
+                        });
+                    }
                 }
             }
         }

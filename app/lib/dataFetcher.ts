@@ -11,7 +11,10 @@ export const fetchDiktatData = async (): Promise<DiktatData[]> => {
     if (process.env.NEXT_PUBLIC_USE_TURSO === 'true' || process.env.TURSO_DATABASE_URL) {
         try {
             console.log('Fetching diktat data from Turso...');
-            const diktatsRs = await db.execute('SELECT * FROM diktats');
+            // Chronology: 2025 Ganjil UAS > 2025 Ganjil UTS > 2025 Genap UAS > 2025 Genap UTS
+            // Alphabetic: 'ganjil' (ga) < 'genap' (ge). So for same year, ASC ganjil_genap puts Ganjil first.
+            // Alphabetic: 'uts' < 'uas'. So for same semester, DESC uts_uas puts UAS first.
+            const diktatsRs = await db.execute('SELECT * FROM diktats ORDER BY year DESC, ganjil_genap ASC, uts_uas DESC');
             const diktatList: DiktatData[] = [];
 
             for (const row of diktatsRs.rows) {
@@ -25,6 +28,7 @@ export const fetchDiktatData = async (): Promise<DiktatData[]> => {
                     year: row.year as number,
                     uts_uas: row.uts_uas as string,
                     ganjil_genap: row.ganjil_genap as string,
+                    is_active: Boolean(row.is_active),
                     content: itemsRs.rows.map((item: any) => ({
                         name: item.name as string,
                         major: JSON.parse(item.major as string),
@@ -50,9 +54,9 @@ export const fetchDiktatData = async (): Promise<DiktatData[]> => {
 
         for (let i = 1; i < parsed.length; i++) {
             const row = parsed[i];
-            const year = parseInt(row[0]);
-            const ganjilGenap = row[1]?.toLowerCase();
-            const utsUas = row[2]?.toLowerCase();
+            const year = parseInt(row[1]);
+            const ganjilGenap = row[2]?.toLowerCase();
+            const utsUas = row[3]?.toLowerCase();
             const isPublished = row[16]?.toLowerCase() === 'true';
 
             if (!isPublished) continue;
@@ -94,7 +98,7 @@ export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
     if (process.env.NEXT_PUBLIC_USE_TURSO === 'true' || process.env.TURSO_DATABASE_URL) {
         try {
             console.log('Fetching asistensi data from Turso...');
-            const asistensiRs = await db.execute('SELECT * FROM asistensis');
+            const asistensiRs = await db.execute('SELECT * FROM asistensis ORDER BY year DESC, ganjil_genap ASC, uts_uas DESC');
             const asistensiList: AsistensiData[] = [];
 
             for (const row of asistensiRs.rows) {
@@ -135,9 +139,9 @@ export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
 
         for (let i = 1; i < parsed.length; i++) {
             const row = parsed[i];
-            const year = parseInt(row[0]);
-            const ganjilGenap = row[1]?.toLowerCase();
-            const utsUas = row[2]?.toLowerCase();
+            const year = parseInt(row[1]);
+            const ganjilGenap = row[2]?.toLowerCase();
+            const utsUas = row[3]?.toLowerCase();
             const isPublished = row[16]?.toLowerCase() === 'true';
 
             if (!isPublished) continue;

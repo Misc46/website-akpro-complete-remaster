@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Merriweather, Poppins } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "./lib/ThemeContext";
+import ClientLayout from "./components/ClientLayout";
 
 const merriweather = Merriweather({
   weight: ['300', '400', '700', '900'],
@@ -20,8 +22,6 @@ export const metadata: Metadata = {
   description: "Akademis Praktis dan Produktif - Mendukung pembelajaran mahasiswa Teknik Elektro FTUI",
 };
 
-import ClientLayout from "./components/ClientLayout";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,9 +32,11 @@ export default function RootLayout({
       <body
         className={`${merriweather.variable} ${poppins.variable} antialiased`}
       >
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        <ThemeProvider>
+          <ClientLayout>
+            {children}
+          </ClientLayout>
+        </ThemeProvider>
       </body>
     </html>
   );
