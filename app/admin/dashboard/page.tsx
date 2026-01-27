@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import {
     LayoutDashboard,
-    RefreshCw,
     Database,
     LogOut,
     FileText,
@@ -17,31 +16,12 @@ import AsistensiManager from './AsistensiManager';
 export default function AdminDashboard() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<'overview' | 'diktat' | 'asistensi'>('overview');
-    const [syncing, setSyncing] = useState(false);
     const [message, setMessage] = useState('');
 
     const handleLogout = async () => {
         document.cookie = 'admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         router.push('/admin/login');
         router.refresh();
-    };
-
-    const handleSync = async () => {
-        setSyncing(true);
-        setMessage('');
-        try {
-            const res = await fetch('/api/admin/sync', { method: 'POST' });
-            const data = await res.json();
-            if (res.ok) {
-                setMessage('Database synchronization successful.');
-            } else {
-                setMessage(`Sync error: ${data.error}`);
-            }
-        } catch (err) {
-            setMessage('Network error during sync.');
-        } finally {
-            setSyncing(false);
-        }
     };
 
     const StatusCard = ({ title, value, statusColor }: { title: string, value: string, statusColor: string }) => (
@@ -102,15 +82,6 @@ export default function AdminDashboard() {
                         </h1>
                         <p className="text-gray-400 text-sm font-sans">Control panel for AKPRO IME FTUI infrastructure</p>
                     </div>
-
-                    <button
-                        onClick={handleSync}
-                        disabled={syncing}
-                        className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold shadow-lg transition text-sm ${syncing ? 'bg-gray-600' : 'bg-[#00B8D4] hover:bg-[#00D4FF] text-[#001B55]'}`}
-                    >
-                        <RefreshCw size={18} className={syncing ? 'animate-spin' : ''} />
-                        <span>{syncing ? 'Syncing...' : 'Sync Cloud Data'}</span>
-                    </button>
                 </header>
 
                 {message && (
@@ -125,7 +96,7 @@ export default function AdminDashboard() {
                             <StatusCard title="Backend Status" value="Healthy" statusColor="bg-green-500" />
                             <StatusCard title="Database" value="Active" statusColor="bg-green-500" />
                             <StatusCard title="Traffic" value="Stable" statusColor="bg-[#00B8D4]" />
-                            <StatusCard title="Sync" value="Ready" statusColor="bg-yellow-500" />
+                            <StatusCard title="Environment" value="Production" statusColor="bg-blue-500" />
                         </div>
 
                         <div className="grid lg:grid-cols-2 gap-8">
@@ -140,7 +111,7 @@ export default function AdminDashboard() {
                                     {[
                                         { t: 'Just Now', m: 'Admin dashboard state initialized', s: 'info' },
                                         { t: '2m ago', m: 'Database connection verified with Turso Edge', s: 'success' },
-                                        { t: '1h ago', m: 'Cloud synchronization bypass triggered', s: 'warn' },
+                                        { t: '1h ago', m: 'Security protocols updated', s: 'warn' },
                                     ].map((log, i) => (
                                         <div key={i} className="flex gap-4 items-start pb-4 border-b border-[#0036A7]/50 last:border-0 last:pb-0">
                                             <span className="text-gray-500 text-[10px] font-mono w-20 shrink-0 uppercase">{log.t}</span>

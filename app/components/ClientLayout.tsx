@@ -11,7 +11,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     const isAdmin = pathname.startsWith('/admin');
 
     const Header = () => (
-        <header className={`${isDarkMode ? 'bg-[#001B55] border-b border-[#002A83]' : 'bg-white border-b border-gray-100'} shadow-sm sticky top-0 z-50`}>
+        <header className={`${isDarkMode ? 'bg-[#001B55] border-b border-[#002A83]' : 'bg-[#E0F7FA] border-b border-[#B2EBF2]'} shadow-sm sticky top-0 z-50`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     <Link href="/" className="flex items-center space-x-3">
@@ -46,7 +46,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                             onClick={toggleTheme}
                             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${isDarkMode
                                 ? 'bg-[#002A83] text-white hover:bg-[#0036A7]'
-                                : 'bg-gray-100 text-[#001B55] hover:bg-gray-200'
+                                : 'bg-[#B2EBF2] text-[#001B55] hover:bg-[#80DEEA]'
                                 }`}
                         >
                             {isDarkMode ? '☀️ Light' : '🌙 Dark'}
@@ -83,7 +83,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <div className={`min-h-screen flex flex-col ${isDarkMode ? 'bg-[#001B55]' : 'bg-[#F8FDFF]'}`}>
+        <div className={`min-h-screen flex flex-col ${isDarkMode ? 'bg-[#001B55]' : 'bg-[#F0FDFF]'}`}>
             <Header />
             <main className="flex-grow">
                 {children}
