@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { FilterSelector } from '../components/FilterSelector';
 import { useTheme } from '../lib/ThemeContext';
-import { Archive, ChevronRight, FileText, Sparkles, Download } from 'lucide-react';
+import { Archive, ChevronRight, FileText, Sparkles, Download, Search, Info, Grid, List as ListIcon } from 'lucide-react';
 import {
     filterContent,
     DiktatData,
@@ -18,6 +18,7 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
     const { isDarkMode } = useTheme();
     const [selectedYear, setSelectedYear] = useState(1);
     const [selectedMajor, setSelectedMajor] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Sort logic helper for chronological order (Descending)
     const academicSort = (data: DiktatData[]) => {
@@ -48,139 +49,151 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
         return <div className={`p-24 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Tidak ada data diktat tersedia</div>;
     }
 
-    const filtered = filterContent(currentGroup.content, selectedYear, selectedMajor);
+    const filtered = filterContent(currentGroup.content, selectedYear, selectedMajor).filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            {/* Header section */}
-            <div className="mb-12">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            {/* Context Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-border pb-8">
+                <div>
+                    <div className="flex items-center gap-2 text-highlight-text mb-4">
+                        <Archive size={16} />
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Repository / Diktat Bank</span>
+                    </div>
+                    <h1 className="text-3xl font-black tracking-tight text-foreground">
+                        {currentGroup.uts_uas.toUpperCase()} {currentGroup.ganjil_genap.toUpperCase()} {currentGroup.year}
+                    </h1>
+                    <p className="text-xs font-medium mt-2 text-muted-foreground">
+                        Browsing <span className="text-foreground dark:text-white font-bold">{filtered.length}</span> resources for this period.
+                    </p>
+                </div>
+
+                <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-muted border border-border">
+                    {activeGroups.map(g => (
+                        <button
+                            key={g.id}
+                            onClick={() => setActiveGroupId(g.id)}
+                            className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeGroupId === g.id
+                                ? 'bg-background text-highlight-text shadow-sm'
+                                : 'text-muted-foreground hover:text-foreground'}`}
+                        >
+                            {g.uts_uas} {g.ganjil_genap} {g.year}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="grid lg:grid-cols-[280px_1fr] gap-12">
+                {/* Sidebar Filters */}
+                <aside className="space-y-8">
                     <div>
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00B8D4]/10 border border-[#00B8D4]/20 mb-4">
-                            <Sparkles size={12} className="text-[#00B8D4]" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00B8D4]">Repository Resmi</span>
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Search</h4>
+                        <div className="relative">
+                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                            <input
+                                type="text"
+                                placeholder="Filter within group..."
+                                className="w-full bg-muted border border-border rounded-lg py-2.5 pl-9 pr-3 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-highlight/50 transition"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
                         </div>
-                        <h1 className={`text-4xl font-black font-serif ${isDarkMode ? 'text-white' : 'text-[#001B55]'} tracking-tight`}>
-                            Kumpulan Diktat
-                        </h1>
-                        <p className={`text-sm font-sans font-medium mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            Persiapan <span className="text-[#00B8D4] font-bold">{currentGroup.uts_uas.toUpperCase()}</span> semester <span className="text-[#00B8D4] font-bold">{currentGroup.ganjil_genap.toUpperCase()} {currentGroup.year}</span>
-                        </p>
                     </div>
 
-                    {/* Active Selector Bar - refined */}
-                    <div className={`flex flex-wrap gap-1.5 p-1.5 rounded-2xl ${isDarkMode ? 'bg-[#001B55] border border-[#0036A7]/50' : 'bg-gray-100 border border-gray-200'} shadow-inner`}>
-                        {(activeGroups.length > 0 ? activeGroups : sortedData.slice(0, 3)).map(g => (
-                            <button
-                                key={g.id}
-                                onClick={() => setActiveGroupId(g.id)}
-                                className={`relative px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 flex items-center gap-2 ${activeGroupId === g.id
-                                    ? 'bg-[#00B8D4] text-[#001B55] shadow-lg shadow-[#00B8D4]/20'
-                                    : (isDarkMode ? 'text-gray-500 hover:text-white' : 'text-gray-500 hover:text-[#001B55]')}`}
-                            >
-                                {g.id === latestDiktatId && <Sparkles size={12} className={activeGroupId === g.id ? 'text-[#001B55]' : 'text-[#00B8D4]'} />}
-                                {g.uts_uas} {g.ganjil_genap} {g.year}
-                            </button>
-                        ))}
+                    <div className="p-6 bg-muted border border-border rounded-xl">
+                        <FilterSelector
+                            selectedYear={selectedYear}
+                            setSelectedYear={setSelectedYear}
+                            selectedMajor={selectedMajor}
+                            setSelectedMajor={setSelectedMajor}
+                            ganjilGenap={currentGroup.ganjil_genap}
+                            isDarkMode={isDarkMode}
+                        />
                     </div>
-                </div>
 
-                {/* Main Filter Panel - slightly toned down */}
-                <div className={`p-8 rounded-[2rem] ${isDarkMode ? 'bg-gradient-to-br from-[#002A83] to-[#001B55] border-[#0036A7]' : 'bg-white border-gray-100 shadow-xl shadow-[#00B8D4]/5'} border shadow-2xl transition-all duration-500`}>
-                    <FilterSelector
-                        selectedYear={selectedYear}
-                        setSelectedYear={setSelectedYear}
-                        selectedMajor={selectedMajor}
-                        setSelectedMajor={setSelectedMajor}
-                        ganjilGenap={currentGroup.ganjil_genap}
-                        isDarkMode={isDarkMode}
-                    />
-                </div>
-            </div>
-
-            {/* Results Grid - toned down corners */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-                {filtered.length > 0 ? (
-                    filtered.map((item: DiktatItem, idx: number) => (
-                        <div key={idx} className={`group ${isDarkMode ? 'bg-[#002A83] border-[#0036A7]' : 'bg-white border-gray-100 shadow-md'} rounded-[2rem] border flex flex-col overflow-hidden hover:shadow-2xl hover:border-[#00B8D4]/50 transition-all duration-500`}>
-                            <div className={`h-28 relative overflow-hidden bg-[#001B55]`}>
-                                {item.img ? (
-                                    <img
-                                        src={item.img}
-                                        alt={item.name}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    />
-                                ) : (
-                                    <div className={`absolute inset-0 ${isDarkMode ? 'bg-gradient-to-br from-[#0036A7] to-[#00B8D4]' : 'bg-gradient-to-br from-[#00B8D4] to-[#001B55]'}`}></div>
-                                )}
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
-                                <div className="absolute top-6 left-6">
-                                    <div className="flex flex-wrap gap-1.5">
-                                        {item.major.map((m: string) => (
-                                            <span key={m} className={`text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/10`}>
-                                                {m}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="p-8 flex flex-col flex-1">
-                                <h3 className={`font-bold text-xl font-serif ${isDarkMode ? 'text-white' : 'text-[#001B55]'} mb-8 leading-tight group-hover:text-[#00B8D4] transition-colors h-14 line-clamp-2`}>{item.name}</h3>
-
-                                <a
-                                    href={item.googleDriveLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={`w-full flex items-center justify-center gap-3 ${isDarkMode ? 'bg-[#00B8D4] text-[#001B55]' : 'bg-[#001B55] text-white'} px-6 py-4 rounded-2xl transition-all duration-300 font-black text-xs uppercase tracking-widest group/btn shadow-lg hover:shadow-[#00B8D4]/20`}
-                                >
-                                    <Download size={16} className="group-hover/btn:-translate-y-1 transition-transform" />
-                                    <span>Unduh Materi</span>
-                                </a>
+                    {archiveGroups.length > 0 && (
+                        <div>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Archived Periods</h4>
+                            <div className="grid gap-2">
+                                {archiveGroups.map(group => (
+                                    <button
+                                        key={group.id}
+                                        onClick={() => {
+                                            setActiveGroupId(group.id);
+                                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                                        }}
+                                        className={`flex items-center justify-between p-3 rounded-lg border text-left transition-all ${activeGroupId === group.id
+                                            ? 'bg-highlight/10 border-highlight text-highlight-text'
+                                            : 'border-border bg-background text-muted-foreground hover:border-highlight/40 hover:text-foreground'}`}
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <FileText size={14} />
+                                            <span className="text-[10px] font-bold uppercase tracking-widest">{group.uts_uas} {group.ganjil_genap} {group.year}</span>
+                                        </div>
+                                        <ChevronRight size={12} />
+                                    </button>
+                                ))}
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <div className={`col-span-full py-32 text-center rounded-[2rem] border-2 border-dashed ${isDarkMode ? 'border-[#0036A7] text-gray-400' : 'border-gray-200 text-gray-500'}`}>
-                        <p className="font-bold text-lg">Materi tidak ditemukan.</p>
-                    </div>
-                )}
-            </div>
+                    )}
+                </aside>
 
-            {/* Archive Section - refined */}
-            {archiveGroups.length > 0 && (
-                <div className="border-t border-[#00B8D4]/10 pt-16">
-                    <div className="flex items-center gap-4 mb-10">
-                        <div className="w-10 h-10 rounded-xl bg-[#00B8D4]/10 flex items-center justify-center text-[#00B8D4]">
-                            <Archive size={20} />
-                        </div>
-                        <h2 className={`text-2xl font-black font-serif ${isDarkMode ? 'text-white' : 'text-[#001B55]'}`}>Arsip Diktat</h2>
-                    </div>
+                {/* Main Content */}
+                <div className="space-y-6">
+                    {filtered.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            {filtered.map((item: DiktatItem, idx: number) => (
+                                <div key={idx} className={`group flex flex-col border border-border rounded-xl overflow-hidden transition-all hover:border-highlight/50 ${isDarkMode ? 'bg-muted/20' : 'bg-background shadow-sm'}`}>
+                                    <div className="h-32 bg-muted relative overflow-hidden flex items-center justify-center border-b border-border">
+                                        {item.img ? (
+                                            <img
+                                                src={item.img}
+                                                alt={item.name}
+                                                className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                                            />
+                                        ) : (
+                                            <FileText size={48} className="text-highlight/20" />
+                                        )}
+                                        <div className="absolute top-3 left-3 flex flex-wrap gap-1">
+                                            {item.major.map((m: string) => (
+                                                <span key={m} className="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider bg-background/80 backdrop-blur border border-border text-foreground">
+                                                    {m}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="p-5 flex flex-col flex-1">
+                                        <h3 className="font-bold text-sm mb-6 flex-1 line-clamp-2 text-foreground">{item.name}</h3>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {archiveGroups.map(group => (
-                            <button
-                                key={group.id}
-                                onClick={() => {
-                                    setActiveGroupId(group.id);
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }}
-                                className={`group flex items-center justify-between p-6 rounded-2xl border transition-all duration-300 ${activeGroupId === group.id
-                                    ? 'bg-[#00B8D4]/10 border-[#00B8D4] text-[#00B8D4]'
-                                    : (isDarkMode ? 'bg-[#002A83] border-[#0036A7] text-gray-400 hover:border-[#00B8D4]/50' : 'bg-white border-gray-100 text-[#001B55] hover:border-[#00B8D4]/30')}`}
-                            >
-                                <div className="flex items-center gap-4">
-                                    <FileText size={18} className={activeGroupId === group.id ? 'text-[#00B8D4]' : 'text-gray-500 group-hover:text-[#00B8D4] transition-colors'} />
-                                    <div className="text-left">
-                                        <p className="font-black text-[10px] uppercase tracking-[0.2em]">{group.uts_uas} {group.ganjil_genap}</p>
-                                        <p className="text-[9px] opacity-60 font-bold mt-0.5">Academic Year {group.year}</p>
+                                        <div className="flex items-center justify-between pt-4 border-t border-border">
+                                            <div className="flex items-center gap-1.5 text-muted-foreground">
+                                                <Info size={12} />
+                                                <span className="text-[9px] font-bold uppercase tracking-widest">DRIVE_FILE</span>
+                                            </div>
+                                            <a
+                                                href={item.googleDriveLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1.5 text-highlight text-[9px] font-black uppercase tracking-[0.1em] hover:underline"
+                                            >
+                                                <span>Download</span>
+                                                <Download size={12} />
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <ChevronRight size={16} className={`transition-transform duration-300 ${activeGroupId === group.id ? 'translate-x-0' : '-translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'}`} />
-                            </button>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="py-24 text-center border-2 border-dashed border-border rounded-2xl">
+                            <Info size={32} className="mx-auto text-muted-foreground mb-4 opacity-20" />
+                            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">No matching records found.</p>
+                        </div>
+                    )}
                 </div>
-            )}
+            </div>
         </div>
     );
 }

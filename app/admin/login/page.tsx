@@ -40,8 +40,12 @@ export default function AdminLoginPage() {
         <div className="min-h-screen bg-[#001B55] flex flex-col items-center justify-center p-4">
             <div className="max-w-md w-full bg-[#002A83] border border-[#0036A7] rounded-3xl p-8 shadow-2xl">
                 <div className="flex flex-col items-center mb-8">
-                    <div className="w-16 h-16 bg-[#001B55] rounded-2xl flex items-center justify-center mb-4 border border-[#00B8D4]/20">
-                        <Lock className="text-[#00B8D4]" size={32} />
+                    <div className="w-20 h-20 mb-4">
+                        <img
+                            src="/Logo-Bidang-Akpro-IME-2026-LIGHT-removebg-preview.png"
+                            alt="AKPRO Logo"
+                            className="w-full h-full object-contain"
+                        />
                     </div>
                     <h1 className="text-2xl font-bold font-serif text-white text-center">Admin Control</h1>
                     <p className="text-gray-400 text-sm text-center mt-2 font-sans">Authorized Personnel Only</p>

@@ -11,46 +11,53 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     const isAdmin = pathname.startsWith('/admin');
 
     const Header = () => (
-        <header className={`${isDarkMode ? 'bg-[#001B55] border-b border-[#002A83]' : 'bg-[#E0F7FA] border-b border-[#B2EBF2]'} shadow-sm sticky top-0 z-50`}>
+        <header className="bg-background border-b border-border sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
+                <div className="flex justify-between items-center h-14">
                     <Link href="/" className="flex items-center space-x-3">
-                        <div className={`w-10 h-10 ${isDarkMode ? 'bg-gradient-to-br from-[#002A83] to-[#0036A7]' : 'bg-gradient-to-br from-[#00B8D4] to-[#002A83]'} rounded-lg`}></div>
-                        <div>
-                            <h1 className={`text-xl font-bold font-serif ${isDarkMode ? 'text-white' : 'text-[#001B55]'}`}>AKPRO IME</h1>
-                            <p className={`text-xs font-sans ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>FTUI 2026</p>
+                        <img
+                            src={isDarkMode
+                                ? "/Logo-Bidang-Akpro-IME-2026-DARK-removebg-preview.png"
+                                : "/Logo-Bidang-Akpro-IME-2026-LIGHT-removebg-preview.png"
+                            }
+                            alt="AKPRO Logo"
+                            className="w-10 h-10 object-contain"
+                        />
+                        <div className="flex flex-col">
+                            <h1 className="text-sm font-black tracking-tight text-foreground">AKPRO ARCHIVE</h1>
+                            <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">DTE FTUI 2026</p>
                         </div>
                     </Link>
-                    <div className="flex items-center gap-6">
-                        <nav className="hidden md:flex space-x-8">
+                    <div className="flex items-center gap-8">
+                        <nav className="hidden md:flex items-center space-x-6">
                             <Link
                                 href="/"
-                                className={`${isDarkMode ? 'text-[#00B8D4]' : 'text-[#001B55]'} hover:text-[#00B8D4] transition font-medium`}
+                                className={`text-xs font-bold uppercase tracking-widest ${pathname === '/' ? 'text-highlight' : 'text-muted-foreground hover:text-foreground'} transition`}
                             >
                                 Home
                             </Link>
                             <Link
                                 href="/diktat"
-                                className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} hover:text-[#00B8D4] transition font-medium`}
+                                className={`text-xs font-bold uppercase tracking-widest ${pathname === '/diktat' ? 'text-highlight' : 'text-muted-foreground hover:text-foreground'} transition`}
                             >
                                 Diktat
                             </Link>
                             <Link
                                 href="/asistensi"
-                                className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} hover:text-[#00B8D4] transition font-medium`}
+                                className={`text-xs font-bold uppercase tracking-widest ${pathname === '/asistensi' ? 'text-highlight' : 'text-muted-foreground hover:text-foreground'} transition`}
                             >
                                 Asistensi
                             </Link>
                         </nav>
-                        <button
-                            onClick={toggleTheme}
-                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${isDarkMode
-                                ? 'bg-[#002A83] text-white hover:bg-[#0036A7]'
-                                : 'bg-[#B2EBF2] text-[#001B55] hover:bg-[#80DEEA]'
-                                }`}
-                        >
-                            {isDarkMode ? '☀️ Light' : '🌙 Dark'}
-                        </button>
+                        <div className="flex items-center gap-3 border-l border-border pl-6">
+                            <button
+                                onClick={toggleTheme}
+                                className="p-1.5 rounded-md transition text-muted-foreground hover:bg-muted hover:text-foreground"
+                                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                            >
+                                <span className="text-xs font-black tracking-widest uppercase">{isDarkMode ? 'Light' : 'Dark'}</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,20 +65,51 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     );
 
     const Footer = () => (
-        <footer className={`${isDarkMode ? 'bg-[#000D2B] border-t border-white/5' : 'bg-[#001B55]'} py-12 text-white`}>
+        <footer className="bg-muted border-t border-border py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-[#00B8D4] rounded-md"></div>
-                        <span className="font-bold font-serif text-xl tracking-tight">AKPRO IME FTUI</span>
+                <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+                    <div className="max-w-sm">
+                        <div className="flex items-center gap-3 mb-6 shrink-0">
+                            <img
+                                src={isDarkMode
+                                    ? "/Logo-Bidang-Akpro-IME-2026-DARK-removebg-preview.png"
+                                    : "/Logo-Bidang-Akpro-IME-2026-LIGHT-removebg-preview.png"
+                                }
+                                alt="AKPRO Logo"
+                                className="w-8 h-8 object-contain"
+                            />
+                            <span className="font-black text-xs uppercase tracking-widest text-highlight">AKPRO Archive</span>
+                        </div>
+                        <p className="text-xs leading-relaxed text-muted-foreground">
+                            Repositori digital resmi Departemen Teknik Elektro FTUI. Dikelola oleh Bidang Akademis dan Keprofesian IME FTUI Periode 2026.
+                        </p>
                     </div>
-                    <div className="text-gray-400 text-sm">
-                        &copy; 2026 AKPRO IME FTUI. All rights reserved.
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-12">
+                        <div>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Resources</h4>
+                            <ul className="space-y-2">
+                                <li><Link href="/diktat" className="text-xs text-muted-foreground hover:text-highlight transition">Diktat Bank</Link></li>
+                                <li><Link href="/asistensi" className="text-xs text-muted-foreground hover:text-highlight transition">Tutorial Sessions</Link></li>
+                                <li><Link href="/#toolbox" className="text-xs text-muted-foreground hover:text-highlight transition">Academic Tools</Link></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Organization</h4>
+                            <ul className="space-y-2">
+                                <li><a href="#" className="text-xs text-muted-foreground hover:text-highlight transition">IME FTUI</a></li>
+                                <li><a href="#" className="text-xs text-muted-foreground hover:text-highlight transition">DTE FTUI</a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div className="flex gap-6">
-                        <div className="w-5 h-5 bg-gray-600 rounded-full"></div>
-                        <div className="w-5 h-5 bg-gray-600 rounded-full"></div>
-                        <div className="w-5 h-5 bg-gray-600 rounded-full"></div>
+                </div>
+                <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
+                        &copy; 2026 AKPRO IME FTUI. Compiled with precision.
+                    </p>
+                    <div className="flex gap-4">
+                        <div className="w-1.5 h-1.5 rounded-full bg-highlight animate-pulse"></div>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-highlight">System Online</span>
                     </div>
                 </div>
             </div>
@@ -79,11 +117,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     );
 
     if (isAdmin) {
-        return <div className={`min-h-screen ${isDarkMode ? 'bg-[#001B55]' : 'bg-[#F8FDFF]'}`}>{children}</div>;
+        return <div className={`min-h-screen ${isDarkMode ? 'dark bg-background text-foreground' : 'bg-background text-foreground'}`}>{children}</div>;
     }
 
     return (
-        <div className={`min-h-screen flex flex-col ${isDarkMode ? 'bg-[#001B55]' : 'bg-[#F0FDFF]'}`}>
+        <div className={`min-h-screen flex flex-col ${isDarkMode ? 'dark bg-background text-foreground' : 'bg-background text-foreground'}`}>
             <Header />
             <main className="flex-grow">
                 {children}

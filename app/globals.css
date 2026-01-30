@@ -1,28 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F0FDFF;
-  --foreground: #171717;
+  --background: #f0fdff;
+  --foreground: #001B55;
+  --muted: #e0f7fa;
+  --muted-foreground: #005a8a;
+  --accent: #001B55;
+  --accent-foreground: #ffffff;
+  --highlight: #ffd500;
+  --highlight-text: #001B55;
+  /* Dark blue for readable text highlights in light mode */
+  --highlight-foreground: #ffffff;
+  --border: #a5e1e9;
+  --card: #ffffff;
+}
+
+.dark {
+  --background: #001B55;
+  --foreground: #ffffff;
+  --muted: #002A83;
+  --muted-foreground: #00b4d8;
+  --accent: #00b4d4;
+  /* Vibrant Cyan from palette */
+  --accent-foreground: #ffffff;
+  --highlight: #FFD400;
+  --highlight-text: #FFD400;
+  /* Yellow for text highlights in dark mode */
+  --highlight-foreground: #001B55;
+  --border: #0036A7;
+  --card: #00133a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-text: var(--highlight-text);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-border: var(--border);
+  --color-card: var(--card);
   --font-sans: var(--font-poppins);
   --font-serif: var(--font-merriweather);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #001B55;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
@@ -33,4 +62,27 @@ h5,
 h6 {
   font-family: var(--font-merriweather), Georgia, serif;
   font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+.glass-card {
+  @apply backdrop-blur-md bg-white/10 border border-white/20;
 }
