@@ -1,0 +1,120 @@
+[
+    {
+        "id": "transisi",
+        "label": "Transisi Kurikulum",
+        "isGrouped": true,
+        "groups": [
+            {
+                "name": "Teknik Elektro",
+                "links": [
+                    {
+                        "title": "Aturan Transisi Kurikulum",
+                        "href": "https://drive.google.com/file/d/1FllbkS93HozAnkxucC3njZFyogbafZ6U/view?usp=sharing"
+                    },
+                    {
+                        "title": "Simulasi Transisi Kurikulum",
+                        "href": "https://docs.google.com/spreadsheets/d/1wrORAn5yPMr3ANLlYJjNgBqtkjMBoaPw/edit?usp=sharing"
+                    }
+                ]
+            },
+            {
+                "name": "Teknik Komputer",
+                "links": [
+                    {
+                        "title": "Aturan Transisi Kurikulum",
+                        "href": "https://drive.google.com/file/d/1BazEeK_Djk-72pOcavnGf5uan7ZqrMRY/view"
+                    },
+                    {
+                        "title": "Simulasi Transisi Kurikulum",
+                        "href": "https://docs.google.com/spreadsheets/d/1xIXdrp50kvbGevwgBTDAgKUvwDmOZFur/edit?usp=sharing"
+                    }
+                ]
+            },
+            {
+                "name": "Teknik Biomedik",
+                "links": [
+                    {
+                        "title": "Aturan Transisi Kurikulum",
+                        "href": "https://drive.google.com/file/d/1OrONufdYmcRokcZoOu3JU7jJ6dapY-Tq/view?usp=sharing"
+                    },
+                    {
+                        "title": "Simulasi Transisi Kurikulum",
+                        "href": "https://docs.google.com/spreadsheets/d/1QXGqhLqapza_Iuqha61qBjEVci083vcb/edit?usp=sharing"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "akademis",
+        "label": "Akademis DTE",
+        "links": [
+            {
+                "title": "Kalender FTUI",
+                "description": "Genap 2025/2026",
+                "href": "https://drive.google.com/file/d/1AT30fW77EQTK3WBDl0rMtbRzDaHzKsIF/view?usp=sharing",
+                "icon": "Calendar"
+            },
+            {
+                "title": "MBKM 2024",
+                "description": "Recording Sosialisasi",
+                "href": "https://youtu.be/5YZFkQfC-7g?si=GsUDP0jHBv89PTI2",
+                "icon": "Youtube"
+            },
+            {
+                "title": "Buku EE",
+                "description": "Kurikulum Elektro",
+                "href": "https://online.pubhtml5.com/sstc/yjeo/",
+                "icon": "BookOpen"
+            },
+            {
+                "title": "Buku CE",
+                "description": "Kurikulum Komputer",
+                "href": "https://online.pubhtml5.com/sstc/kcli/",
+                "icon": "BookOpen"
+            },
+            {
+                "title": "Buku BME",
+                "description": "Kurikulum Biomedik",
+                "href": "https://online.pubhtml5.com/sstc/swrt/",
+                "icon": "BookOpen"
+            }
+        ]
+    },
+    {
+        "id": "media",
+        "label": "Media Belajar",
+        "links": [
+            {
+                "title": "DTE E-book",
+                "description": "Kumpulan E-book Mata Kuliah",
+                "href": "https://drive.google.com/drive/folders/1VJlvzJXKLQNutvG_ieRvpvDJbaV6p2b6?usp=drive_link",
+                "icon": "FolderOpen"
+            },
+            {
+                "title": "DRL Playlist",
+                "description": "Dasar Rangkaian Listrik",
+                "href": "https://youtube.com/playlist?list=PLvvIG2wS7Z6H11k9_Vzy9X7hBDDT5E5Gb",
+                "icon": "Youtube"
+            },
+            {
+                "title": "RL Pak Tomy",
+                "description": "Rangkaian Listrik Playlist",
+                "href": "https://youtube.com/playlist?list=PLPo1kEEL45jz3t2n0iVZBiZOXtfrZgWYP",
+                "icon": "Youtube"
+            },
+            {
+                "title": "DSD Playlist",
+                "description": "Dasar Sistem Digital",
+                "href": "https://youtube.com/playlist?list=PLF9K2dVsV_xK8wSXt5Gi24lhYFhWx0HzA",
+                "icon": "Youtube"
+            },
+            {
+                "title": "MT Pak Tomy",
+                "description": "Matematika Teknik Playlist",
+                "href": "https://youtube.com/playlist?list=PLPo1kEEL45jyOsWa4zuKJymIGs9L0s1Yq",
+                "icon": "Youtube"
+            }
+        ]
+    }
+]

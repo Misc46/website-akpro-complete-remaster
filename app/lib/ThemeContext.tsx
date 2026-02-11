@@ -28,6 +28,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         });
     };
 
+    useEffect(() => {
+        const root = window.document.documentElement;
+        if (isDarkMode) {
+            root.classList.add('dark');
+            root.style.colorScheme = 'dark';
+        } else {
+            root.classList.remove('dark');
+            root.style.colorScheme = 'light';
+        }
+    }, [isDarkMode]);
+
     return (
         <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
             {children}

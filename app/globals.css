@@ -13,6 +13,7 @@
   --highlight-foreground: #ffffff;
   --border: #a5e1e9;
   --card: #ffffff;
+  color-scheme: light;
 }
 
 .dark {
@@ -29,6 +30,7 @@
   --highlight-foreground: #001B55;
   --border: #0036A7;
   --card: #00133a;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -47,11 +49,22 @@
   --font-serif: var(--font-merriweather);
 }
 
+html {
+  /* Force a single scrollbar on the root */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Prevent body from scrolling itself */
+  overflow: visible;
+  margin: 0;
+  min-height: 100%;
 }
 
 h1,
@@ -65,22 +78,29 @@ h6 {
   letter-spacing: -0.025em;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Hidden but scrollable */
 ::-webkit-scrollbar {
-  width: 8px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+html {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100%;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--muted);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--muted-foreground);
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: visible;
+  margin: 0;
+  min-height: 100%;
 }
 
 .glass-card {
