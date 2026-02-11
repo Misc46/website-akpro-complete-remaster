@@ -71,7 +71,7 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-muted border border-border">
-                    {activeGroups.map(g => (
+                    {sortedData.slice(0, 3).map(g => (
                         <button
                             key={g.id}
                             onClick={() => setActiveGroupId(g.id)}
