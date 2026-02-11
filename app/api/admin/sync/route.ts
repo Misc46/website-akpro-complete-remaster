@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/app/lib/db';
+import { db } from '@/scripts/db-client';
 import { jwtVerify } from 'jose';
 import Papa from 'papaparse';
 import { convertMajorCode } from '@/app/lib/dataUtils';

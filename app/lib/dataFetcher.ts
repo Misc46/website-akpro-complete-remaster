@@ -1,188 +1,101 @@
-import { db } from './db';
+import Papa from 'papaparse';
+import fs from 'fs';
+import path from 'path';
 import {
     DiktatData,
     AsistensiData,
-    AsistensiItem,
-    convertMajorCode,
-    parseCsv
+    AsistensiItem
 } from './dataUtils';
 
+// Helper to read local CSV
+const readLocalCsv = async (filename: string) => {
+    const filePath = path.join(process.cwd(), 'public', 'data', filename);
+    if (!fs.existsSync(filePath)) return [];
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const parsed = Papa.parse(fileContent, { header: true, skipEmptyLines: true });
+    return parsed.data;
+};
+
 export const fetchDiktatData = async (): Promise<DiktatData[]> => {
-    if (process.env.NEXT_PUBLIC_USE_TURSO === 'true' || process.env.TURSO_DATABASE_URL) {
-        try {
-            console.log('Fetching diktat data from Turso...');
-            // Chronology: 2025 Ganjil UAS > 2025 Ganjil UTS > 2025 Genap UAS > 2025 Genap UTS
-            // Alphabetic: 'ganjil' (ga) < 'genap' (ge). So for same year, ASC ganjil_genap puts Ganjil first.
-            // Alphabetic: 'uts' < 'uas'. So for same semester, DESC uts_uas puts UAS first.
-            const diktatsRs = await db.execute('SELECT * FROM diktats ORDER BY year DESC, ganjil_genap ASC, uts_uas DESC');
-            const diktatList: DiktatData[] = [];
-
-            for (const row of diktatsRs.rows) {
-                const itemsRs = await db.execute({
-                    sql: 'SELECT * FROM diktat_items WHERE diktat_id = ?',
-                    args: [row.id as string]
-                });
-
-                diktatList.push({
-                    id: row.id as string,
-                    year: row.year as number,
-                    uts_uas: row.uts_uas as string,
-                    ganjil_genap: row.ganjil_genap as string,
-                    is_active: Boolean(row.is_active),
-                    content: itemsRs.rows.map((item: any) => ({
-                        name: item.name as string,
-                        major: JSON.parse(item.major as string),
-                        year: JSON.parse(item.year as string),
-                        googleDriveLink: item.google_drive_link as string,
-                        img: item.img as string | null
-                    }))
-                });
-            }
-            return diktatList;
-        } catch (e) {
-            console.error('Error fetching from Turso, falling back to CSV:', e);
-        }
-    }
-
     try {
-        const masterUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQT3zuplCOCJpIet9N6X6bbYBEdJ0uoLC-h5eVrylZcjUvCQS0pliMVAGdFhYGgiGp0RV2SQiK-1XqR/pub?gid=0&single=true&output=csv';
-        const response = await fetch(masterUrl);
-        const csvText = await response.text();
-        const parsed = parseCsv(csvText);
+        const rows = await readLocalCsv('diktats.csv');
+        const grouped: Record<string, DiktatData> = {};
 
-        const diktatList: DiktatData[] = [];
+        for (const row of rows as any[]) {
+            const id = row.diktat_id;
+            if (!grouped[id]) {
+                grouped[id] = {
+                    id,
+                    year: parseInt(row.academic_year),
+                    uts_uas: row.uts_uas,
+                    ganjil_genap: row.ganjil_genap,
+                    is_active: row.is_active === '1' || row.is_active === 'true',
+                    content: []
+                };
+            }
 
-        for (let i = 1; i < parsed.length; i++) {
-            const row = parsed[i];
-            const year = parseInt(row[1]);
-            const ganjilGenap = row[2]?.toLowerCase();
-            const utsUas = row[3]?.toLowerCase();
-            const isPublished = row[16]?.toLowerCase() === 'true';
-
-            if (!isPublished) continue;
-
-            if (row[9]) {
-                try {
-                    const diktatRes = await fetch(row[9]);
-                    const diktatCsv = await diktatRes.text();
-                    const diktatParsed = parseCsv(diktatCsv);
-
-                    const content = diktatParsed.slice(1).map((d: any) => ({
-                        name: d[0],
-                        major: d[1]?.split(',').map((m: any) => convertMajorCode(m.trim())).filter(Boolean) || [],
-                        year: d[2]?.split(',').map((y: any) => parseInt(y.trim())).filter(Boolean) || [],
-                        googleDriveLink: d[3] || '',
-                        img: d[4] || null
-                    }));
-
-                    diktatList.push({
-                        id: `Diktat_${utsUas}_${ganjilGenap}_${year}`,
-                        year,
-                        uts_uas: utsUas,
-                        ganjil_genap: ganjilGenap,
-                        content
-                    });
-                } catch (e) {
-                    console.error('Error fetching diktat:', e);
-                }
+            if (row.item_name) {
+                grouped[id].content.push({
+                    name: row.item_name,
+                    major: JSON.parse(row.major || '[]'),
+                    year: JSON.parse(row.target_year || '[]'),
+                    googleDriveLink: row.google_drive_link,
+                    img: row.img || null
+                });
             }
         }
-        return diktatList;
+
+        return Object.values(grouped).sort((a, b) => {
+            // Sort by Year DESC, then Ganjil/Genap ASC, then UTS/UAS DESC
+            if (b.year !== a.year) return b.year - a.year;
+            if (a.ganjil_genap !== b.ganjil_genap) return a.ganjil_genap.localeCompare(b.ganjil_genap);
+            return b.uts_uas.localeCompare(a.uts_uas);
+        });
     } catch (error) {
-        console.error('Error fetching diktat data:', error);
+        console.error('Error fetching diktat data form CSV:', error);
         return [];
     }
 };
 
 export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
-    if (process.env.NEXT_PUBLIC_USE_TURSO === 'true' || process.env.TURSO_DATABASE_URL) {
-        try {
-            console.log('Fetching asistensi data from Turso...');
-            const asistensiRs = await db.execute('SELECT * FROM asistensis ORDER BY year DESC, ganjil_genap ASC, uts_uas DESC');
-            const asistensiList: AsistensiData[] = [];
-
-            for (const row of asistensiRs.rows) {
-                const itemsRs = await db.execute({
-                    sql: 'SELECT * FROM asistensi_items WHERE asistensi_id = ?',
-                    args: [row.id as string]
-                });
-
-                asistensiList.push({
-                    id: row.id as string,
-                    year: row.year as number,
-                    uts_uas: row.uts_uas as string,
-                    ganjil_genap: row.ganjil_genap as string,
-                    content: itemsRs.rows.map((item: any) => ({
-                        name: item.name as string,
-                        major: JSON.parse(item.major as string),
-                        year: JSON.parse(item.year as string),
-                        person: JSON.parse(item.person as string),
-                        date: item.date as string,
-                        zoomMeetingsLink: item.zoom_meetings_link as string,
-                        recordingsLink: item.recordings_link as string,
-                        img: item.img as string | null
-                    }))
-                });
-            }
-            return asistensiList;
-        } catch (e) {
-            console.error('Error fetching from Turso, falling back to CSV:', e);
-        }
-    }
-
     try {
-        const masterUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQT3zuplCOCJpIet9N6X6bbYBEdJ0uoLC-h5eVrylZcjUvCQS0pliMVAGdFhYGgiGp0RV2SQiK-1XqR/pub?gid=0&single=true&output=csv';
-        const response = await fetch(masterUrl);
-        const csvText = await response.text();
-        const parsed = parseCsv(csvText);
+        const rows = await readLocalCsv('asistensis.csv');
+        const grouped: Record<string, AsistensiData> = {};
 
-        const asistensiList: AsistensiData[] = [];
+        for (const row of rows as any[]) {
+            const id = row.asistensi_id;
+            if (!grouped[id]) {
+                grouped[id] = {
+                    id,
+                    year: parseInt(row.academic_year),
+                    uts_uas: row.uts_uas,
+                    ganjil_genap: row.ganjil_genap,
+                    content: []
+                };
+            }
 
-        for (let i = 1; i < parsed.length; i++) {
-            const row = parsed[i];
-            const year = parseInt(row[1]);
-            const ganjilGenap = row[2]?.toLowerCase();
-            const utsUas = row[3]?.toLowerCase();
-            const isPublished = row[16]?.toLowerCase() === 'true';
-
-            if (!isPublished) continue;
-
-            if (row[15]) {
-                try {
-                    const asistensiRes = await fetch(row[15]);
-                    const asistensiCsv = await asistensiRes.text();
-                    const asistensiParsed = parseCsv(asistensiCsv);
-
-                    const content: AsistensiItem[] = [];
-                    for (let j = 1; j < asistensiParsed.length; j += 7) {
-                        if (j + 6 < asistensiParsed.length) {
-                            content.push({
-                                name: asistensiParsed[j][0],
-                                major: asistensiParsed[j + 1][0]?.split(',').map((m: any) => convertMajorCode(m.trim())).filter(Boolean) || [],
-                                year: asistensiParsed[j + 2][0]?.split(',').map((y: any) => parseInt(y.trim())).filter(Boolean) || [],
-                                person: asistensiParsed[j + 3][0]?.split(',').map((p: any) => ({ name: p.trim() })) || [],
-                                date: asistensiParsed[j + 4][0],
-                                zoomMeetingsLink: asistensiParsed[j + 5][0] || '',
-                                recordingsLink: asistensiParsed[j + 6][0] || ''
-                            });
-                        }
-                    }
-
-                    asistensiList.push({
-                        id: `Asistensi_${utsUas}_${ganjilGenap}_${year}`,
-                        year,
-                        uts_uas: utsUas,
-                        ganjil_genap: ganjilGenap,
-                        content
-                    });
-                } catch (e) {
-                    console.error('Error fetching asistensi:', e);
-                }
+            if (row.item_name) {
+                grouped[id].content.push({
+                    name: row.item_name,
+                    major: JSON.parse(row.major || '[]'),
+                    year: JSON.parse(row.target_year || '[]'),
+                    person: JSON.parse(row.person || '[]'),
+                    date: row.date,
+                    zoomMeetingsLink: row.zoom_meetings_link,
+                    recordingsLink: row.recordings_link,
+                    img: row.img || null
+                });
             }
         }
-        return asistensiList;
+
+        return Object.values(grouped).sort((a, b) => {
+            if (b.year !== a.year) return b.year - a.year;
+            if (a.ganjil_genap !== b.ganjil_genap) return a.ganjil_genap.localeCompare(b.ganjil_genap);
+            return b.uts_uas.localeCompare(a.uts_uas);
+        });
     } catch (error) {
-        console.error('Error fetching asistensi data:', error);
+        console.error('Error fetching asistensi data from CSV:', error);
         return [];
     }
 };
+
