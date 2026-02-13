@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/scripts/db-client';
 import { jwtVerify } from 'jose';
 import Papa from 'papaparse';
-import fs from 'fs';
-import path from 'path';
+
+export const runtime = 'edge';
 
 async function verifyAuth(req: NextRequest) {
     const token = req.cookies.get('admin_token')?.value;
@@ -21,11 +21,6 @@ export async function POST(req: NextRequest) {
     if (!await verifyAuth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     try {
-        const publicDataDir = path.join(process.cwd(), 'public', 'data');
-        if (!fs.existsSync(publicDataDir)) {
-            fs.mkdirSync(publicDataDir, { recursive: true });
-        }
-
         // Dump Diktats
         const diktatsQuery = `
             SELECT 
@@ -45,7 +40,6 @@ export async function POST(req: NextRequest) {
         `;
         const diktatsRs = await db.execute(diktatsQuery);
         const diktatsCsv = Papa.unparse(diktatsRs.rows);
-        fs.writeFileSync(path.join(publicDataDir, 'diktats.csv'), diktatsCsv);
 
         // Dump Asistensis
         const asistensisQuery = `
@@ -67,22 +61,26 @@ export async function POST(req: NextRequest) {
         `;
         const asistensisRs = await db.execute(asistensisQuery);
         const asistensisCsv = Papa.unparse(asistensisRs.rows);
-        fs.writeFileSync(path.join(publicDataDir, 'asistensis.csv'), asistensisCsv);
 
         // Dump FAQs
         const faqsRs = await db.execute('SELECT q, a FROM faqs ORDER BY order_index ASC');
         const faqsData = faqsRs.rows.map(row => ({ q: row.q, a: row.a }));
-        const appDataDir = path.join(process.cwd(), 'app', 'data');
-        fs.writeFileSync(path.join(appDataDir, 'faqs.json'), JSON.stringify(faqsData, null, 4));
 
+        // Return the data as JSON so the admin can download it
+        // File writing is handled locally via `npm run db:dump`
         return NextResponse.json({
             success: true,
             diktatsCount: diktatsRs.rows.length,
             asistensiCount: asistensisRs.rows.length,
-            faqsCount: faqsRs.rows.length
+            faqsCount: faqsRs.rows.length,
+            data: {
+                diktatsCsv,
+                asistensisCsv,
+                faqsJson: faqsData
+            }
         });
-    } catch (error: any) {
-        console.error('Dump error:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

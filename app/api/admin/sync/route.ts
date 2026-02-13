@@ -4,6 +4,8 @@ import { jwtVerify } from 'jose';
 import Papa from 'papaparse';
 import { convertMajorCode } from '@/app/lib/dataUtils';
 
+export const runtime = 'edge';
+
 async function verifyAuth(req: NextRequest) {
     const token = req.cookies.get('admin_token')?.value;
     if (!token) return false;

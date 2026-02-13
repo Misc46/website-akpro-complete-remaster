@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/scripts/db-client';
 import { jwtVerify } from 'jose';
 
+export const runtime = 'edge';
+
 async function verifyAuth(req: NextRequest) {
     const token = req.cookies.get('admin_token')?.value;
     if (!token) return false;

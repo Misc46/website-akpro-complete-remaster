@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 
+export const runtime = 'edge';
+
 export async function POST(req: NextRequest) {
     try {
         const { password } = await req.json();
