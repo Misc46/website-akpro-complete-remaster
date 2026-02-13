@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTheme } from '../lib/ThemeContext';
+import { Moon, Sun } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
@@ -52,10 +53,20 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                         <div className="flex items-center gap-3 border-l border-border pl-6">
                             <button
                                 onClick={toggleTheme}
-                                className="p-1.5 rounded-md transition text-muted-foreground hover:bg-muted hover:text-foreground"
-                                title={isDarkMode ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'}
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-muted-foreground hover:bg-muted hover:text-foreground group"
+                                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                             >
-                                <span className="text-xs font-black tracking-widest uppercase">{isDarkMode ? 'Terang' : 'Gelap'}</span>
+                                {isDarkMode ? (
+                                    <>
+                                        <Sun size={14} className="group-hover:text-highlight transition-colors" />
+                                        <span className="text-[10px] font-black tracking-widest uppercase">Light</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Moon size={14} className="group-hover:text-highlight transition-colors" />
+                                        <span className="text-[10px] font-black tracking-widest uppercase">Dark</span>
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>
