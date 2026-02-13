@@ -15,10 +15,10 @@ export const DirectorySection: React.FC = () => {
                         </div>
                         <ArrowUpRight size={20} className="text-muted-foreground group-hover:text-highlight transition-all" />
                     </div>
-                    <h3 className="text-xl font-bold mb-2 text-foreground">Diktat Bank</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed mb-6 font-medium">Browse our collection of course notes, exam solutions, and study guides for all majors.</p>
+                    <h3 className="text-xl font-bold mb-2 text-foreground">Kumpulan Diktat</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed mb-6 font-medium">Kumpulan pembahasan soal yang berkaitan dengan materi UTS/UAS.</p>
                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-highlight">
-                        <span>Enter Directory</span>
+                        <span>Lihat Diktat</span>
                         <ChevronRight size={14} />
                     </div>
                 </Link>
@@ -30,10 +30,10 @@ export const DirectorySection: React.FC = () => {
                         </div>
                         <ArrowUpRight size={20} className="text-muted-foreground group-hover:text-highlight transition-all" />
                     </div>
-                    <h3 className="text-xl font-bold mb-2 text-foreground">Tutorial Index</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed mb-6 font-medium">Access real-time schedules, meeting links, and recorded sessions from peer tutors.</p>
+                    <h3 className="text-xl font-bold mb-2 text-foreground">Link & Jadwal Asistensi</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed mb-6 font-medium">Pembahasan materi dan soal-soal yang berhubungan dengan materi UTS/UAS melalui sesi live Zoom meeting atau video Youtube.</p>
                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-highlight">
-                        <span>View Schedule</span>
+                        <span>Lihat Jadwal</span>
                         <ChevronRight size={14} />
                     </div>
                 </Link>

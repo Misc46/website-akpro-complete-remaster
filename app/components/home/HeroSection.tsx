@@ -23,11 +23,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
                 <h1 className="text-3xl md:text-4xl font-black mb-4 tracking-tight text-foreground">
-                    Find and access academic resources with ease.
+                     Welcome to website Akpro IME FTUI 2026!
                 </h1>
 
                 <p className="text-xs md:text-sm font-medium max-w-xl mx-auto mb-8 text-muted-foreground leading-relaxed">
-                    A centralized repository for DTE FTUI students to access course materials, assistance schedules, and essential academic documentation.
+                    Website Akpro adalah wadah yang menyediakan berbagai informasi terkait Akpro dan hal akademis departemen lainnya seperti kumpulan Diktat, E-Book, Video Asistensi, informasi Kurikulum, informasi magang, dan lain lain.
                 </p>
 
                 <div className="relative max-w-lg mx-auto mb-8">

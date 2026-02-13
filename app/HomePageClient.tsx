@@ -20,15 +20,8 @@ export default function HomePageClient() {
     const { isDarkMode } = useTheme();
     const [activeCategory, setActiveCategory] = useState('transisi');
     const [searchQuery, setSearchQuery] = useState('');
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-    // Auto-rotate carousel
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentImageIndex((prev) => (prev + 1) % showcaseImages.length);
-        }, 5000);
-        return () => clearInterval(timer);
-    }, []);
+
 
     // Prepare links for search
     const allLinks = useMemo(() => {
@@ -100,8 +93,6 @@ export default function HomePageClient() {
                         <FAQSection />
                         <InstitutionalObjective
                             isDarkMode={isDarkMode}
-                            currentImageIndex={currentImageIndex}
-                            setCurrentImageIndex={setCurrentImageIndex}
                             showcaseImages={showcaseImages}
                         />
                     </>

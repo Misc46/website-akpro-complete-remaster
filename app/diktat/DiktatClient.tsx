@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { FilterSelector } from '../components/FilterSelector';
 import { useTheme } from '../lib/ThemeContext';
-import { Archive, ChevronRight, FileText, Sparkles, Download, Search, Info, Grid, List as ListIcon } from 'lucide-react';
+import { Archive, ChevronRight, FileText, Sparkles, Download, Search, Info, Grid, List as ListIcon, ChevronDown } from 'lucide-react';
 import {
     filterContent,
     DiktatData,
@@ -19,6 +19,7 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
     const [selectedYear, setSelectedYear] = useState(1);
     const [selectedMajor, setSelectedMajor] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    const [isArchiveOpen, setIsArchiveOpen] = useState(false);
 
     // Sort logic helper for chronological order (Descending)
     const academicSort = (data: DiktatData[]) => {
@@ -60,13 +61,13 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                 <div>
                     <div className="flex items-center gap-2 text-highlight-text mb-4">
                         <Archive size={16} />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Repository / Diktat Bank</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Bank Diktat</span>
                     </div>
                     <h1 className="text-3xl font-black tracking-tight text-foreground">
                         {currentGroup.uts_uas.toUpperCase()} {currentGroup.ganjil_genap.toUpperCase()} {currentGroup.year}
                     </h1>
                     <p className="text-xs font-medium mt-2 text-muted-foreground">
-                        Browsing <span className="text-foreground dark:text-white font-bold">{filtered.length}</span> resources for this period.
+                        Menampilkan <span className="text-foreground dark:text-white font-bold">{filtered.length}</span> dokumen untuk periode ini.
                     </p>
                 </div>
 
@@ -89,12 +90,12 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                 {/* Sidebar Filters */}
                 <aside className="space-y-8">
                     <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Search</h4>
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Cari</h4>
                         <div className="relative">
                             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                             <input
                                 type="text"
-                                placeholder="Filter within group..."
+                                placeholder="Cari dalam dokumen..."
                                 className="w-full bg-muted border border-border rounded-lg py-2.5 pl-9 pr-3 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-highlight/50 transition"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -115,26 +116,47 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
 
                     {archiveGroups.length > 0 && (
                         <div>
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Archived Periods</h4>
-                            <div className="grid gap-2">
-                                {archiveGroups.map(group => (
-                                    <button
-                                        key={group.id}
-                                        onClick={() => {
-                                            setActiveGroupId(group.id);
-                                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                                        }}
-                                        className={`flex items-center justify-between p-3 rounded-lg border text-left transition-all ${activeGroupId === group.id
-                                            ? 'bg-highlight/10 border-highlight text-highlight-text'
-                                            : 'border-border bg-background text-muted-foreground hover:border-highlight/40 hover:text-foreground'}`}
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <FileText size={14} />
-                                            <span className="text-[10px] font-bold uppercase tracking-widest">{group.uts_uas} {group.ganjil_genap} {group.year}</span>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Arsip Periode</h4>
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsArchiveOpen(!isArchiveOpen)}
+                                    className={`w-full flex items-center justify-between px-4 py-3 text-xs border font-sans font-bold bg-background text-foreground rounded-xl focus:ring-1 focus:ring-highlight focus:border-highlight outline-none transition-all cursor-pointer hover:border-highlight/40 ${isArchiveOpen ? 'border-highlight ring-1 ring-highlight' : 'border-border'}`}
+                                >
+                                    <span>
+                                        {archiveGroups.find(g => g.id === activeGroupId)
+                                            ? (() => {
+                                                const group = archiveGroups.find(g => g.id === activeGroupId)!;
+                                                return `${group.uts_uas.toUpperCase()} ${group.ganjil_genap.toUpperCase()} ${group.year}`;
+                                            })()
+                                            : "Pilih Periode Arsip..."}
+                                    </span>
+                                    <ChevronDown size={14} className={`text-muted-foreground transition-transform duration-300 ${isArchiveOpen ? 'rotate-180' : ''}`} />
+                                </button>
+
+                                <div className={`grid transition-all duration-300 ease-in-out ${isArchiveOpen ? 'grid-rows-[1fr] opacity-100 mt-2' : 'grid-rows-[0fr] opacity-0 mt-0'}`}>
+                                    <div className="overflow-hidden">
+                                        <div className="flex flex-col gap-2 pl-1 pr-1">
+                                            {archiveGroups.map(group => (
+                                                <button
+                                                    key={group.id}
+                                                    onClick={() => {
+                                                        setActiveGroupId(group.id);
+                                                        setIsArchiveOpen(false);
+                                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                    }}
+                                                    className={`flex items-center justify-between w-full text-left px-4 py-3 rounded-lg border transition-all ${activeGroupId === group.id
+                                                        ? 'bg-highlight/10 border-highlight text-highlight-text'
+                                                        : 'bg-muted/30 border-transparent hover:bg-muted hover:border-border text-muted-foreground hover:text-foreground'}`}
+                                                >
+                                                    <span className="text-xs font-bold uppercase tracking-wide">
+                                                        {group.uts_uas} {group.ganjil_genap} {group.year}
+                                                    </span>
+                                                    {activeGroupId === group.id && <div className="w-1.5 h-1.5 rounded-full bg-highlight"></div>}
+                                                </button>
+                                            ))}
                                         </div>
-                                        <ChevronRight size={12} />
-                                    </button>
-                                ))}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -145,7 +167,13 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                     {filtered.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                             {filtered.map((item: DiktatItem, idx: number) => (
-                                <div key={idx} className={`group flex flex-col border border-border rounded-xl overflow-hidden transition-all hover:border-highlight/50 ${isDarkMode ? 'bg-muted/20' : 'bg-background shadow-sm'}`}>
+                                <a
+                                    key={idx}
+                                    href={item.googleDriveLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`group flex flex-col border border-border rounded-xl overflow-hidden transition-all hover:border-highlight/50 hover:shadow-md ${isDarkMode ? 'bg-muted/20' : 'bg-background shadow-sm'}`}
+                                >
                                     <div className="h-32 bg-muted relative overflow-hidden flex items-center justify-center border-b border-border">
                                         {item.img ? (
                                             <img
@@ -165,31 +193,28 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                                         </div>
                                     </div>
                                     <div className="p-5 flex flex-col flex-1">
-                                        <h3 className="font-bold text-sm mb-6 flex-1 line-clamp-2 text-foreground">{item.name}</h3>
+                                        <h3 className="font-bold text-sm mb-6 flex-1 line-clamp-2 text-foreground group-hover:text-highlight transition-colors">{item.name}</h3>
 
                                         <div className="flex items-center justify-between pt-4 border-t border-border">
                                             <div className="flex items-center gap-1.5 text-muted-foreground">
                                                 <Info size={12} />
-                                                <span className="text-[9px] font-bold uppercase tracking-widest">DRIVE_FILE</span>
+                                                <span className="text-[9px] font-bold uppercase tracking-widest">Google Drive Link</span>
                                             </div>
-                                            <a
-                                                href={item.googleDriveLink}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-1.5 text-highlight text-[9px] font-black uppercase tracking-[0.1em] hover:underline"
+                                            <div
+                                                className="flex items-center gap-1.5 text-highlight text-[9px] font-black uppercase tracking-[0.1em] group-hover:underline"
                                             >
                                                 <span>Download</span>
                                                 <Download size={12} />
-                                            </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             ))}
                         </div>
                     ) : (
                         <div className="py-24 text-center border-2 border-dashed border-border rounded-2xl">
                             <Info size={32} className="mx-auto text-muted-foreground mb-4 opacity-20" />
-                            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">No matching records found.</p>
+                            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Tidak ada dokumen yang ditemukan.</p>
                         </div>
                     )}
                 </div>
