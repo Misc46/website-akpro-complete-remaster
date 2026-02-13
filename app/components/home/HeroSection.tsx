@@ -20,7 +20,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <section className="relative pt-24 pb-12 overflow-hidden">
             <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
                 <h1 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-                    Selamat datang di website Akpro IME FTUI 2026!
+                     Website Akpro IME FTUI 2026
                 </h1>
 
                 <p className="text-xs md:text-sm font-normal max-w-xl mx-auto mb-8 text-muted-foreground leading-relaxed">
