@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:dump": "tsx scripts/dump-turso.ts",
-    "pages:build": "npx @cloudflare/next-on-pages",
+    "pages:build": "npx @cloudflare/next-on-pages && touch .vercel/output/static/.assetsignore",
     "pages:deploy": "npm run build && npm run pages:build && wrangler pages deploy"
   },
   "dependencies": {
