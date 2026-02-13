@@ -89,6 +89,55 @@ async function dump() {
         console.error('Error dumping faqs:', e);
     }
 
+    // Dump Toolbox → resourceCategories.json
+    console.log('Fetching toolbox data...');
+    try {
+        const catsRs = await db.execute('SELECT * FROM toolbox_categories ORDER BY order_index ASC');
+        const itemsRs = await db.execute('SELECT * FROM toolbox_items ORDER BY order_index ASC');
+
+        const categories = catsRs.rows.map((cat: Record<string, unknown>) => {
+            const isGrouped = cat.is_grouped === 1 || cat.is_grouped === '1';
+            const catItems = (itemsRs.rows as Record<string, unknown>[]).filter(
+                (item) => item.category_id === cat.id
+            );
+
+            if (isGrouped) {
+                const groupMap: Record<string, { title: string; href: string }[]> = {};
+                for (const item of catItems) {
+                    const groupName = (item.group_name as string) || 'Ungrouped';
+                    if (!groupMap[groupName]) groupMap[groupName] = [];
+                    groupMap[groupName].push({
+                        title: item.title as string,
+                        href: item.href as string,
+                    });
+                }
+                return {
+                    id: cat.id,
+                    label: cat.label,
+                    isGrouped: true,
+                    groups: Object.entries(groupMap).map(([name, links]) => ({ name, links })),
+                };
+            }
+
+            return {
+                id: cat.id,
+                label: cat.label,
+                links: catItems.map((item) => ({
+                    title: item.title,
+                    description: item.description,
+                    href: item.href,
+                    icon: item.icon,
+                })),
+            };
+        });
+
+        const appDataDir2 = path.join(process.cwd(), 'app', 'data');
+        fs.writeFileSync(path.join(appDataDir2, 'resourceCategories.json'), JSON.stringify(categories, null, 4));
+        console.log(`Dumped ${catsRs.rows.length} toolbox categories with ${itemsRs.rows.length} items to app/data/resourceCategories.json`);
+    } catch (e) {
+        console.error('Error dumping toolbox:', e);
+    }
+
     console.log('Dump completed successfully!');
 }
 

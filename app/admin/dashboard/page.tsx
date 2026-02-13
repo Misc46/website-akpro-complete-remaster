@@ -7,17 +7,19 @@ import {
     LogOut,
     FileText,
     Activity,
-    CalendarDays
+    CalendarDays,
+    Wrench
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import DiktatManager from './DiktatManager';
 import AsistensiManager from './AsistensiManager';
 import FAQManager from './FAQManager';
+import ToolboxManager from './ToolboxManager';
 import { HelpCircle } from 'lucide-react';
 
 export default function AdminDashboard() {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<'overview' | 'diktat' | 'asistensi' | 'faq'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'diktat' | 'asistensi' | 'faq' | 'toolbox'>('overview');
     const [message, setMessage] = useState('');
 
     const handleLogout = async () => {
@@ -64,6 +66,7 @@ export default function AdminDashboard() {
                     <SidebarBtn id="diktat" icon={FileText} label="Diktat Docs" />
                     <SidebarBtn id="asistensi" icon={CalendarDays} label="Asistensi" />
                     <SidebarBtn id="faq" icon={HelpCircle} label="FAQ Editor" />
+                    <SidebarBtn id="toolbox" icon={Wrench} label="Toolbox" />
                     <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-gray-400 rounded-xl transition grayscale opacity-50 cursor-not-allowed">
                         <Database size={20} />
                         <span>Infrastructure</span>
@@ -86,7 +89,8 @@ export default function AdminDashboard() {
                         <h1 className="text-3xl font-bold font-serif text-white mb-1 uppercase tracking-tight">
                             {activeTab === 'overview' ? 'Systems Overview' :
                                 activeTab === 'diktat' ? 'Diktat Vault' :
-                                    activeTab === 'asistensi' ? 'Master Scheduler' : 'FAQ Engine'}
+                                    activeTab === 'asistensi' ? 'Master Scheduler' :
+                                        activeTab === 'toolbox' ? 'Toolbox Editor' : 'FAQ Engine'}
                         </h1>
                         <p className="text-gray-400 text-sm font-sans">Control panel for AKPRO IME FTUI infrastructure</p>
                     </div>
@@ -179,6 +183,7 @@ export default function AdminDashboard() {
                 {activeTab === 'diktat' && <DiktatManager />}
                 {activeTab === 'asistensi' && <AsistensiManager />}
                 {activeTab === 'faq' && <FAQManager />}
+                {activeTab === 'toolbox' && <ToolboxManager />}
             </main>
         </div>
     );
