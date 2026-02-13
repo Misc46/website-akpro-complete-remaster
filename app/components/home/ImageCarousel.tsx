@@ -66,24 +66,34 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
             <div className="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 border-highlight/20 z-10 transition-transform duration-500 group-hover:translate-x-1 group-hover:translate-y-1"></div>
 
             <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-border bg-muted/20 relative shadow-2xl">
-                {showcaseImages.map((img, idx) => (
-                    <div
-                        key={idx}
-                        className={`absolute inset-0 transition-all duration-1000 ease-in-out ${idx === currentIndex
-                            ? 'opacity-100 scale-100'
-                            : 'opacity-0 scale-105 pointer-events-none'
-                            }`}
-                    >
-                        <img
-                            src={img.url}
-                            alt={img.alt}
-                            className="w-full h-full object-cover"
-                            loading="eager"
-                        />
-                        {/* Overlay Gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
-                    </div>
-                ))}
+                {showcaseImages.map((img, idx) => {
+                    // Logic to load: current, next (wrap around), and previous (wrap around)
+                    const isNext = idx === (currentIndex + 1) % showcaseImages.length;
+                    const isPrev = idx === (currentIndex - 1 + showcaseImages.length) % showcaseImages.length;
+                    const shouldLoad = idx === currentIndex || isNext || isPrev;
+
+                    return (
+                        <div
+                            key={idx}
+                            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${idx === currentIndex
+                                ? 'opacity-100 scale-100'
+                                : 'opacity-0 scale-105 pointer-events-none'
+                                }`}
+                        >
+                            {shouldLoad && (
+                                <img
+                                    src={img.url}
+                                    alt={img.alt}
+                                    className="w-full h-full object-cover"
+                                    loading={idx === 0 ? "eager" : "lazy"}
+                                    fetchPriority={idx === 0 ? "high" : "low"}
+                                />
+                            )}
+                            {/* Overlay Gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+                        </div>
+                    );
+                })}
 
                 {/* Status Indicator (Mobile) */}
                 <div className="absolute top-4 right-4 z-20 md:hidden">
