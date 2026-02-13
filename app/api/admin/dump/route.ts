@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
         const diktatsCsv = Papa.unparse(diktatsRs.rows);
         fs.writeFileSync(path.join(publicDataDir, 'diktats.csv'), diktatsCsv);
 
-        // Dump Asistensis (Note: img column does not exist in asistensi_items table)
+        // Dump Asistensis
         const asistensisQuery = `
             SELECT 
                 a.id as asistensi_id,
@@ -69,10 +69,17 @@ export async function POST(req: NextRequest) {
         const asistensisCsv = Papa.unparse(asistensisRs.rows);
         fs.writeFileSync(path.join(publicDataDir, 'asistensis.csv'), asistensisCsv);
 
+        // Dump FAQs
+        const faqsRs = await db.execute('SELECT q, a FROM faqs ORDER BY order_index ASC');
+        const faqsData = faqsRs.rows.map(row => ({ q: row.q, a: row.a }));
+        const appDataDir = path.join(process.cwd(), 'app', 'data');
+        fs.writeFileSync(path.join(appDataDir, 'faqs.json'), JSON.stringify(faqsData, null, 4));
+
         return NextResponse.json({
             success: true,
             diktatsCount: diktatsRs.rows.length,
-            asistensiCount: asistensisRs.rows.length
+            asistensiCount: asistensisRs.rows.length,
+            faqsCount: faqsRs.rows.length
         });
     } catch (error: any) {
         console.error('Dump error:', error);

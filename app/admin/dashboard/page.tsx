@@ -12,10 +12,12 @@ import {
 import { useRouter } from 'next/navigation';
 import DiktatManager from './DiktatManager';
 import AsistensiManager from './AsistensiManager';
+import FAQManager from './FAQManager';
+import { HelpCircle } from 'lucide-react';
 
 export default function AdminDashboard() {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<'overview' | 'diktat' | 'asistensi'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'diktat' | 'asistensi' | 'faq'>('overview');
     const [message, setMessage] = useState('');
 
     const handleLogout = async () => {
@@ -49,7 +51,11 @@ export default function AdminDashboard() {
             {/* Sidebar */}
             <aside className="w-full md:w-64 bg-[#002A83] border-b md:border-b-0 md:border-r border-[#0036A7] p-6 flex flex-col shrink-0">
                 <div className="flex items-center gap-3 mb-10 px-2">
-                    <div className="w-8 h-8 bg-[#00B8D4] rounded-lg"></div>
+                    <img
+                        src="/Logo-Bidang-Akpro-IME-2026-DARK-removebg-preview.png"
+                        alt="AKPRO Logo"
+                        className="w-10 h-10 object-contain"
+                    />
                     <span className="font-bold font-serif text-lg tracking-tight">Admin OS</span>
                 </div>
 
@@ -57,6 +63,7 @@ export default function AdminDashboard() {
                     <SidebarBtn id="overview" icon={LayoutDashboard} label="Overview" />
                     <SidebarBtn id="diktat" icon={FileText} label="Diktat Docs" />
                     <SidebarBtn id="asistensi" icon={CalendarDays} label="Asistensi" />
+                    <SidebarBtn id="faq" icon={HelpCircle} label="FAQ Editor" />
                     <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-gray-400 rounded-xl transition grayscale opacity-50 cursor-not-allowed">
                         <Database size={20} />
                         <span>Infrastructure</span>
@@ -78,7 +85,8 @@ export default function AdminDashboard() {
                     <div>
                         <h1 className="text-3xl font-bold font-serif text-white mb-1 uppercase tracking-tight">
                             {activeTab === 'overview' ? 'Systems Overview' :
-                                activeTab === 'diktat' ? 'Diktat Vault' : 'Master Scheduler'}
+                                activeTab === 'diktat' ? 'Diktat Vault' :
+                                    activeTab === 'asistensi' ? 'Master Scheduler' : 'FAQ Engine'}
                         </h1>
                         <p className="text-gray-400 text-sm font-sans">Control panel for AKPRO IME FTUI infrastructure</p>
                     </div>
@@ -146,7 +154,7 @@ export default function AdminDashboard() {
                                                 const res = await fetch('/api/admin/dump', { method: 'POST' });
                                                 const data = await res.json();
                                                 if (res.ok) {
-                                                    setMessage(`Successfully committed ${data.diktatsCount} diktat and ${data.asistensiCount} asistensi rows to public cache.`);
+                                                    setMessage(`Successfully committed ${data.diktatsCount} diktat, ${data.asistensiCount} asistensi, and ${data.faqsCount} FAQ rows to public cache.`);
                                                 } else {
                                                     setMessage(`Error: ${data.error}`);
                                                 }
@@ -170,6 +178,7 @@ export default function AdminDashboard() {
 
                 {activeTab === 'diktat' && <DiktatManager />}
                 {activeTab === 'asistensi' && <AsistensiManager />}
+                {activeTab === 'faq' && <FAQManager />}
             </main>
         </div>
     );

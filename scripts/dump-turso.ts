@@ -74,6 +74,21 @@ async function dump() {
         console.error('Error dumping asistensis:', e);
     }
 
+    // Dump FAQs
+    console.log('Fetching faqs...');
+    try {
+        const faqsRs = await db.execute('SELECT q, a FROM faqs ORDER BY order_index ASC');
+        const faqsData = faqsRs.rows.map(row => ({ q: row.q, a: row.a }));
+        const appDataDir = path.join(process.cwd(), 'app', 'data');
+        if (!fs.existsSync(appDataDir)) {
+            fs.mkdirSync(appDataDir, { recursive: true });
+        }
+        fs.writeFileSync(path.join(appDataDir, 'faqs.json'), JSON.stringify(faqsData, null, 4));
+        console.log(`Dumped ${faqsRs.rows.length} FAQ rows to app/data/faqs.json`);
+    } catch (e) {
+        console.error('Error dumping faqs:', e);
+    }
+
     console.log('Dump completed successfully!');
 }
 

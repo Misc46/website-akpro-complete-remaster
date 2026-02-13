@@ -26,7 +26,7 @@ export const FAQSection: React.FC = () => {
                         <span className="text-[10px] font-black uppercase tracking-[0.2em]">Informasi Umum</span>
                     </div>
                     <h2 className="text-3xl font-black tracking-tight text-foreground mb-4">Pertanyaan Sering Diajukan</h2>
-                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest opacity-60">Segala yang perlu Anda ketahui tentang ekosistem AKPRO</p>
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest opacity-60">frequently asked questions</p>
                 </div>
 
                 <div className="space-y-4">
