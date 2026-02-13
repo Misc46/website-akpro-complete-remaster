@@ -1,4 +1,7 @@
-name = "web-akpro2026"
+name = "akpro2026web"
 compatibility_date = "2024-11-12"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
+
+[vars]
+NEXT_PUBLIC_USE_TURSO = "true"
