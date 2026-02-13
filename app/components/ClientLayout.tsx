@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTheme } from '../lib/ThemeContext';
+import { Moon, Sun } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
@@ -24,8 +25,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                             className="w-10 h-10 object-contain"
                         />
                         <div className="flex flex-col">
-                            <h1 className="text-sm font-black tracking-tight text-foreground">AKPRO ARCHIVE</h1>
-                            <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">DTE FTUI 2026</p>
+                            <h1 className="text-sm font-black tracking-tight text-foreground">AKADEMIS DAN KEPROFESIAN</h1>
+                            <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">IME FTUI 2026</p>
                         </div>
                     </Link>
                     <div className="flex items-center gap-8">
@@ -34,7 +35,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 href="/"
                                 className={`text-xs font-bold uppercase tracking-widest ${pathname === '/' ? 'text-highlight' : 'text-muted-foreground hover:text-foreground'} transition`}
                             >
-                                Home
+                                Beranda
                             </Link>
                             <Link
                                 href="/diktat"
@@ -52,10 +53,20 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                         <div className="flex items-center gap-3 border-l border-border pl-6">
                             <button
                                 onClick={toggleTheme}
-                                className="p-1.5 rounded-md transition text-muted-foreground hover:bg-muted hover:text-foreground"
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-muted-foreground hover:bg-muted hover:text-foreground group"
                                 title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                             >
-                                <span className="text-xs font-black tracking-widest uppercase">{isDarkMode ? 'Light' : 'Dark'}</span>
+                                {isDarkMode ? (
+                                    <>
+                                        <Sun size={14} className="group-hover:text-highlight transition-colors" />
+                                        <span className="text-[10px] font-black tracking-widest uppercase">Light</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Moon size={14} className="group-hover:text-highlight transition-colors" />
+                                        <span className="text-[10px] font-black tracking-widest uppercase">Dark</span>
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>
@@ -78,7 +89,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 alt="AKPRO Logo"
                                 className="w-8 h-8 object-contain"
                             />
-                            <span className="font-black text-xs uppercase tracking-widest text-highlight">AKPRO Archive</span>
+                            <span className="font-black text-xs uppercase tracking-widest text-highlight">Website Akpro</span>
                         </div>
                         <p className="text-xs leading-relaxed text-muted-foreground">
                             Repositori digital resmi Departemen Teknik Elektro FTUI. Dikelola oleh Bidang Akademis dan Keprofesian IME FTUI Periode 2026.
@@ -87,29 +98,29 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-12">
                         <div>
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Resources</h4>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Sumber Daya</h4>
                             <ul className="space-y-2">
-                                <li><Link href="/diktat" className="text-xs text-muted-foreground hover:text-highlight transition">Diktat Bank</Link></li>
-                                <li><Link href="/asistensi" className="text-xs text-muted-foreground hover:text-highlight transition">Tutorial Sessions</Link></li>
-                                <li><Link href="/#toolbox" className="text-xs text-muted-foreground hover:text-highlight transition">Academic Tools</Link></li>
+                                <li><Link href="/diktat" className="text-xs text-muted-foreground hover:text-highlight transition">Kumpulan Diktat</Link></li>
+                                <li><Link href="/asistensi" className="text-xs text-muted-foreground hover:text-highlight transition">Link & Jadwal Asistensi</Link></li>
+                                <li><Link href="/#toolbox" className="text-xs text-muted-foreground hover:text-highlight transition">Toolbox Akademik</Link></li>
                             </ul>
                         </div>
                         <div>
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Organization</h4>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Organisasi</h4>
                             <ul className="space-y-2">
-                                <li><a href="#" className="text-xs text-muted-foreground hover:text-highlight transition">IME FTUI</a></li>
-                                <li><a href="#" className="text-xs text-muted-foreground hover:text-highlight transition">DTE FTUI</a></li>
+                                <li><a href="https://ee.ui.ac.id/" className="text-xs text-muted-foreground hover:text-highlight transition">Website DTE</a></li>
+                                <li><a href="https://www.imeftui.com/recruitment" className="text-xs text-muted-foreground hover:text-highlight transition">Website IME</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
-                        &copy; 2026 AKPRO IME FTUI. Compiled with precision.
+                        &copy; 2026 BIDANG AKADEMIS DAN KEPROFESIAN IKATAN MAHASISWA ELEKTRO FAKULTAS TEKNIK UNIVERSITAS INDONESIA.
                     </p>
                     <div className="flex gap-4">
                         <div className="w-1.5 h-1.5 rounded-full bg-highlight animate-pulse"></div>
-                        <span className="text-[9px] font-black uppercase tracking-widest text-highlight">System Online</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-highlight">Sistem Online</span>
                     </div>
                 </div>
             </div>

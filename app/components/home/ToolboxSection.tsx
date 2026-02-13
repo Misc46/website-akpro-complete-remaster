@@ -32,9 +32,9 @@ export const ToolboxSection: React.FC<ToolboxSectionProps> = ({
                     <div>
                         <div className="inline-flex items-center gap-2 mb-4 text-highlight-text">
                             <Search size={16} />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Academic Toolbox</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Toolbox Akademik</span>
                         </div>
-                        <h2 className="text-2xl font-black tracking-tight text-foreground">Resource Index</h2>
+                        <h2 className="text-2xl font-black tracking-tight text-foreground">Indeks Sumber Daya</h2>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
@@ -96,7 +96,7 @@ export const ToolboxSection: React.FC<ToolboxSectionProps> = ({
                                         <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider line-clamp-1">{link.description}</p>
                                     </div>
                                     <div className="hidden sm:flex items-center gap-2 text-highlight font-black text-[9px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 pr-2">
-                                        <span>Access File</span>
+                                        <span>Akses File</span>
                                         <ArrowUpRight size={14} />
                                     </div>
                                 </a>

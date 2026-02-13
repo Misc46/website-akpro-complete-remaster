@@ -20,15 +20,8 @@ export default function HomePageClient() {
     const { isDarkMode } = useTheme();
     const [activeCategory, setActiveCategory] = useState('transisi');
     const [searchQuery, setSearchQuery] = useState('');
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-    // Auto-rotate carousel
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentImageIndex((prev) => (prev + 1) % showcaseImages.length);
-        }, 5000);
-        return () => clearInterval(timer);
-    }, []);
+
 
     // Prepare links for search
     const allLinks = useMemo(() => {
@@ -84,7 +77,7 @@ export default function HomePageClient() {
                                 ))
                             ) : (
                                 <div className="p-12 text-center border border-dashed border-border rounded-xl">
-                                    <p className="text-xs font-bold text-muted-foreground">No matching resources found for "{searchQuery}"</p>
+                                    <p className="text-xs font-bold text-muted-foreground">Tidak ada sumber daya yang cocok ditemukan untuk "{searchQuery}"</p>
                                 </div>
                             )}
                         </div>
@@ -100,8 +93,6 @@ export default function HomePageClient() {
                         <FAQSection />
                         <InstitutionalObjective
                             isDarkMode={isDarkMode}
-                            currentImageIndex={currentImageIndex}
-                            setCurrentImageIndex={setCurrentImageIndex}
                             showcaseImages={showcaseImages}
                         />
                     </>

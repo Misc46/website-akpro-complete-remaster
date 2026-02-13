@@ -12,10 +12,12 @@ import {
 import { useRouter } from 'next/navigation';
 import DiktatManager from './DiktatManager';
 import AsistensiManager from './AsistensiManager';
+import FAQManager from './FAQManager';
+import { HelpCircle } from 'lucide-react';
 
 export default function AdminDashboard() {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<'overview' | 'diktat' | 'asistensi'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'diktat' | 'asistensi' | 'faq'>('overview');
     const [message, setMessage] = useState('');
 
     const handleLogout = async () => {
@@ -49,7 +51,11 @@ export default function AdminDashboard() {
             {/* Sidebar */}
             <aside className="w-full md:w-64 bg-[#002A83] border-b md:border-b-0 md:border-r border-[#0036A7] p-6 flex flex-col shrink-0">
                 <div className="flex items-center gap-3 mb-10 px-2">
-                    <div className="w-8 h-8 bg-[#00B8D4] rounded-lg"></div>
+                    <img
+                        src="/Logo-Bidang-Akpro-IME-2026-DARK-removebg-preview.png"
+                        alt="AKPRO Logo"
+                        className="w-10 h-10 object-contain"
+                    />
                     <span className="font-bold font-serif text-lg tracking-tight">Admin OS</span>
                 </div>
 
@@ -57,6 +63,7 @@ export default function AdminDashboard() {
                     <SidebarBtn id="overview" icon={LayoutDashboard} label="Overview" />
                     <SidebarBtn id="diktat" icon={FileText} label="Diktat Docs" />
                     <SidebarBtn id="asistensi" icon={CalendarDays} label="Asistensi" />
+                    <SidebarBtn id="faq" icon={HelpCircle} label="FAQ Editor" />
                     <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-gray-400 rounded-xl transition grayscale opacity-50 cursor-not-allowed">
                         <Database size={20} />
                         <span>Infrastructure</span>
@@ -78,7 +85,8 @@ export default function AdminDashboard() {
                     <div>
                         <h1 className="text-3xl font-bold font-serif text-white mb-1 uppercase tracking-tight">
                             {activeTab === 'overview' ? 'Systems Overview' :
-                                activeTab === 'diktat' ? 'Diktat Vault' : 'Master Scheduler'}
+                                activeTab === 'diktat' ? 'Diktat Vault' :
+                                    activeTab === 'asistensi' ? 'Master Scheduler' : 'FAQ Engine'}
                         </h1>
                         <p className="text-gray-400 text-sm font-sans">Control panel for AKPRO IME FTUI infrastructure</p>
                     </div>
@@ -123,19 +131,46 @@ export default function AdminDashboard() {
 
                             <div className="bg-gradient-to-br from-[#002A83] to-[#013DA1] border border-[#0036A7] rounded-3xl p-8 shadow-xl flex flex-col justify-center">
                                 <h3 className="text-2xl font-bold font-serif text-white mb-4">Quick Insights</h3>
-                                <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-                                    Welcome to the command center. From here, you can manage the academic documents and session schedules for all IME FTUI students. Any changes here are reflected globally within 60 seconds.
-                                </p>
-                                <div className="space-y-3">
+                                <div className="space-y-3 mb-6">
                                     <div className="flex items-center justify-between text-xs border-b border-[#0036A7] pb-2">
-                                        <span className="text-gray-400">Total Diktats</span>
-                                        <span className="text-[#00B8D4] font-bold">42</span>
+                                        <span className="text-gray-400">Total Diktat Rows</span>
+                                        <span className="text-[#00B8D4] font-bold">211</span>
                                     </div>
                                     <div className="flex items-center justify-between text-xs border-b border-[#0036A7] pb-2">
-                                        <span className="text-gray-400">Upcoming Asistensi</span>
-                                        <span className="text-[#00B8D4] font-bold">5</span>
+                                        <span className="text-gray-400">Total Asistensi Rows</span>
+                                        <span className="text-[#00B8D4] font-bold">18</span>
                                     </div>
                                 </div>
+                                <div className="p-4 bg-[#001B55]/50 rounded-2xl border border-[#0036A7] mb-6">
+                                    <h4 className="text-xs font-bold text-[#00B8D4] uppercase tracking-widest mb-2">Public Snapshot</h4>
+                                    <p className="text-[10px] text-gray-400 leading-relaxed mb-4">
+                                        The public site reads from local CSV files to maximize performance and minimize database costs.
+                                        Click below to sync current database state to the public CSV files.
+                                    </p>
+                                    <button
+                                        onClick={async () => {
+                                            try {
+                                                setMessage('Synchronizing database to public CSVs...');
+                                                const res = await fetch('/api/admin/dump', { method: 'POST' });
+                                                const data = await res.json();
+                                                if (res.ok) {
+                                                    setMessage(`Successfully committed ${data.diktatsCount} diktat, ${data.asistensiCount} asistensi, and ${data.faqsCount} FAQ rows to public cache.`);
+                                                } else {
+                                                    setMessage(`Error: ${data.error}`);
+                                                }
+                                            } catch (e) {
+                                                setMessage('Failed to reach server. Check connection.');
+                                            }
+                                        }}
+                                        className="w-full py-2.5 bg-[#00B8D4] hover:bg-[#00D4FF] text-[#001B55] rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <Database size={14} />
+                                        Commit DB to Public CSV
+                                    </button>
+                                </div>
+                                <p className="text-gray-400 text-xs leading-relaxed italic opacity-75">
+                                    * Changes made in Diktat Docs or Asistensi manager will NOT appear publicly until you click the button above.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -143,6 +178,7 @@ export default function AdminDashboard() {
 
                 {activeTab === 'diktat' && <DiktatManager />}
                 {activeTab === 'asistensi' && <AsistensiManager />}
+                {activeTab === 'faq' && <FAQManager />}
             </main>
         </div>
     );

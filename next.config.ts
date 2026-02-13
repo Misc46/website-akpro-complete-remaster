@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    unoptimized: true,
+  },
+  // Menambahkan trailingSlash agar routing di CDN Cloudflare lebih konsisten
+  trailingSlash: true,
 };
 
 export default nextConfig;

@@ -23,7 +23,7 @@ export const FilterSelector = ({
 }: FilterSelectorProps) => (
     <div className="flex flex-col gap-4">
         <div className="flex-1">
-            <label className="block text-[10px] font-black uppercase tracking-widest mb-2 text-muted-foreground/80">Semester Level</label>
+            <label className="block text-[10px] font-black uppercase tracking-widest mb-2 text-muted-foreground/80">Tingkat Semester</label>
             <div className="relative">
                 <select
                     value={selectedYear}
@@ -37,14 +37,14 @@ export const FilterSelector = ({
             </div>
         </div>
         <div className="flex-1">
-            <label className="block text-[10px] font-black uppercase tracking-widest mb-2 text-muted-foreground/80">Study Program</label>
+            <label className="block text-[10px] font-black uppercase tracking-widest mb-2 text-muted-foreground/80">Program Studi</label>
             <div className="relative">
                 <select
                     value={selectedMajor}
                     onChange={(e) => setSelectedMajor(e.target.value)}
                     className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none transition-all cursor-pointer hover:border-highlight/40"
                 >
-                    <option value="">All Programs</option>
+                    <option value="">Semua Program Studi</option>
                     <option value="elektro">Teknik Elektro</option>
                     <option value="komputer">Teknik Komputer</option>
                     <option value="biomedik">Teknik Biomedik</option>

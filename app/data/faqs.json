@@ -1,22 +1,22 @@
 [
     {
-        "q": "What is the AKPRO Archive?",
-        "a": "The AKPRO Archive is a centralized digital repository maintained by IME FTUI. It hosts historical academic data, study guides, and verified course materials to support students throughout their degree."
+        "q": "Apa itu Arsip AKPRO?",
+        "a": "Arsip AKPRO adalah repositori digital terpusat yang dikelola oleh IME FTUI. Arsip ini menampung data akademis historis, panduan belajar, dan materi kuliah yang telah terverifikasi untuk mendukung mahasiswa selama masa perkuliahan."
     },
     {
-        "q": "How do I access specific course materials?",
-        "a": "You can use the 'Resource Index' above or the search bar in the hero section. Materials are organized by curriculum type (Transition, Academic, and Media) for streamlined navigation."
+        "q": "Bagaimana cara mengakses materi kuliah tertentu?",
+        "a": "Anda dapat menggunakan 'Indeks Sumber Daya' di atas atau kolom pencarian di Hero Section. Materi disusun berdasarkan kategori (Transisi, Akademis, dan Media Belajar) untuk mempermudah navigasi."
     },
     {
-        "q": "Can I contribute my own study notes?",
-        "a": "Yes! We encourage knowledge sharing. You can submit your verified notes or exam solutions through the AKPRO BPHSA team for review and inclusion in the archive."
+        "q": "Bisakah saya berkontribusi memberikan catatan belajar?",
+        "a": "Tentu saja! Kami sangat mendukung budaya berbagi ilmu. Anda dapat mengirimkan catatan terverifikasi atau solusi soal ujian melalui tim BPHSA AKPRO untuk ditinjau dan dimasukkan ke dalam arsip."
     },
     {
-        "q": "Who manages the tutorial schedules?",
-        "a": "Tutorials and 'Asistensi' sessions are managed by the Academic and Professional Department. Schedules are updated weekly in the Tutorial Index section of this portal."
+        "q": "Siapa yang mengelola jadwal asistensi?",
+        "a": "Kegiatan tutorial dan sesi 'Asistensi' dikelola oleh Bidang Akademis dan Keprofesian. Jadwal akan diperbarui setiap minggu pada bagian Indeks Tutorial di portal ini."
     },
     {
-        "q": "How often is the database updated?",
-        "a": "The database undergoes major updates at the start of every semester, with smaller updates occurring weekly as new materials and tutorial recordings become available."
+        "q": "Seberapa sering database diperbarui?",
+        "a": "Database diperbarui secara besar-besaran setiap awal semester, dengan pembaruan rutin setiap minggu saat ada materi baru atau rekaman asistensi yang tersedia."
     }
 ]

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
-dotenv.config({ path: path.join(process.cwd(), '.env.local') });
-import { db } from '../app/lib/db';
+dotenv.config();
+import { db } from './db-client';
 
 async function run() {
     console.log('Fixing year data...');
