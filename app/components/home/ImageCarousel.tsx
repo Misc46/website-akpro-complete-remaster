@@ -117,7 +117,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
                                 ? 'w-8 bg-highlight'
                                 : 'w-2 bg-white/40 hover:bg-white/60'
                                 }`}
-                            aria-label={`Go to image ${idx + 1}`}
+                            aria-label={`Pindah ke gambar ${idx + 1}`}
                         />
                     ))}
                 </div>

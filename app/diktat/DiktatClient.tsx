@@ -198,7 +198,7 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                                         <div className="flex items-center justify-between pt-4 border-t border-border">
                                             <div className="flex items-center gap-1.5 text-muted-foreground">
                                                 <Info size={12} />
-                                                <span className="text-[9px] font-bold uppercase tracking-widest">Google Drive Link</span>
+                                                <span className="text-[9px] font-bold uppercase tracking-widest">Link Google Drive</span>
                                             </div>
                                             <div
                                                 className="flex items-center gap-1.5 text-highlight text-[9px] font-black uppercase tracking-[0.1em] group-hover:underline"

@@ -34,7 +34,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 href="/"
                                 className={`text-xs font-bold uppercase tracking-widest ${pathname === '/' ? 'text-highlight' : 'text-muted-foreground hover:text-foreground'} transition`}
                             >
-                                Home
+                                Beranda
                             </Link>
                             <Link
                                 href="/diktat"
@@ -53,9 +53,9 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                             <button
                                 onClick={toggleTheme}
                                 className="p-1.5 rounded-md transition text-muted-foreground hover:bg-muted hover:text-foreground"
-                                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                                title={isDarkMode ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'}
                             >
-                                <span className="text-xs font-black tracking-widest uppercase">{isDarkMode ? 'Light' : 'Dark'}</span>
+                                <span className="text-xs font-black tracking-widest uppercase">{isDarkMode ? 'Terang' : 'Gelap'}</span>
                             </button>
                         </div>
                     </div>
@@ -87,15 +87,15 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-12">
                         <div>
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Resources</h4>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Sumber Daya</h4>
                             <ul className="space-y-2">
                                 <li><Link href="/diktat" className="text-xs text-muted-foreground hover:text-highlight transition">Kumpulan Diktat</Link></li>
-                                <li><Link href="/asistensi" className="text-xs text-muted-foreground hover:text-highlight transition">link & Jadwal Asistensi</Link></li>
-                                <li><Link href="/#toolbox" className="text-xs text-muted-foreground hover:text-highlight transition">Academic Tools</Link></li>
+                                <li><Link href="/asistensi" className="text-xs text-muted-foreground hover:text-highlight transition">Link & Jadwal Asistensi</Link></li>
+                                <li><Link href="/#toolbox" className="text-xs text-muted-foreground hover:text-highlight transition">Toolbox Akademik</Link></li>
                             </ul>
                         </div>
                         <div>
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Organization</h4>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Organisasi</h4>
                             <ul className="space-y-2">
                                 <li><a href="https://ee.ui.ac.id/" className="text-xs text-muted-foreground hover:text-highlight transition">Website DTE</a></li>
                                 <li><a href="https://www.imeftui.com/recruitment" className="text-xs text-muted-foreground hover:text-highlight transition">Website IME</a></li>
@@ -109,7 +109,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                     </p>
                     <div className="flex gap-4">
                         <div className="w-1.5 h-1.5 rounded-full bg-highlight animate-pulse"></div>
-                        <span className="text-[9px] font-black uppercase tracking-widest text-highlight">System Online</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-highlight">Sistem Online</span>
                     </div>
                 </div>
             </div>

@@ -29,11 +29,11 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({ link }) => {
                     </span>
                 </div>
                 <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider line-clamp-1">
-                    {link.description || 'Verified Academic Resource'}
+                    {link.description || 'Sumber Daya Akademik Terverifikasi'}
                 </p>
             </div>
             <div className="hidden sm:flex items-center gap-2 text-highlight font-black text-[9px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 pr-2">
-                <span>Open</span>
+                <span>Buka</span>
                 <ExternalLink size={14} />
             </div>
         </a>

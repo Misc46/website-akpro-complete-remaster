@@ -77,7 +77,7 @@ export default function HomePageClient() {
                                 ))
                             ) : (
                                 <div className="p-12 text-center border border-dashed border-border rounded-xl">
-                                    <p className="text-xs font-bold text-muted-foreground">No matching resources found for "{searchQuery}"</p>
+                                    <p className="text-xs font-bold text-muted-foreground">Tidak ada sumber daya yang cocok ditemukan untuk "{searchQuery}"</p>
                                 </div>
                             )}
                         </div>

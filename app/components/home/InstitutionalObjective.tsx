@@ -48,7 +48,7 @@ export const InstitutionalObjective: React.FC<InstitutionalObjectiveProps> = ({
                         />
                         <div className="h-8 w-[1px] bg-border"></div>
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-wider text-foreground">System Managed by</p>
+                            <p className="text-[10px] font-black uppercase tracking-wider text-foreground">Sistem Dikelola oleh</p>
                             <p className="text-[10px] text-highlight-text font-bold uppercase tracking-widest">Tim AKPRO IME FTUI 2026</p>
                         </div>
                     </div>

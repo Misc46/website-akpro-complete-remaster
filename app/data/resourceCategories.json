@@ -57,7 +57,7 @@
             },
             {
                 "title": "MBKM 2024",
-                "description": "Recording Sosialisasi",
+                "description": "Rekaman Sosialisasi",
                 "href": "https://youtu.be/5YZFkQfC-7g?si=GsUDP0jHBv89PTI2",
                 "icon": "Youtube"
             },
@@ -92,26 +92,26 @@
                 "icon": "FolderOpen"
             },
             {
-                "title": "DRL Playlist",
+                "title": "Playlist DRL",
                 "description": "Dasar Rangkaian Listrik",
                 "href": "https://youtube.com/playlist?list=PLvvIG2wS7Z6H11k9_Vzy9X7hBDDT5E5Gb",
                 "icon": "Youtube"
             },
             {
-                "title": "RL Pak Tomy",
-                "description": "Rangkaian Listrik Playlist",
+                "title": "Playlist RL Pak Tomy",
+                "description": "Materi Rangkaian Listrik",
                 "href": "https://youtube.com/playlist?list=PLPo1kEEL45jz3t2n0iVZBiZOXtfrZgWYP",
                 "icon": "Youtube"
             },
             {
-                "title": "DSD Playlist",
+                "title": "Playlist DSD",
                 "description": "Dasar Sistem Digital",
                 "href": "https://youtube.com/playlist?list=PLF9K2dVsV_xK8wSXt5Gi24lhYFhWx0HzA",
                 "icon": "Youtube"
             },
             {
-                "title": "MT Pak Tomy",
-                "description": "Matematika Teknik Playlist",
+                "title": "Playlist MT Pak Tomy",
+                "description": "Materi Matematika Teknik",
                 "href": "https://youtube.com/playlist?list=PLPo1kEEL45jyOsWa4zuKJymIGs9L0s1Yq",
                 "icon": "Youtube"
             }

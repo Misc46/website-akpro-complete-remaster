@@ -23,10 +23,10 @@ export const FAQSection: React.FC = () => {
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center gap-2 mb-4 text-highlight-text">
                         <Archive size={16} />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Common Inquiries</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Informasi Umum</span>
                     </div>
-                    <h2 className="text-3xl font-black tracking-tight text-foreground mb-4">Frequently Asked Questions</h2>
-                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest opacity-60">Everything you need to know about the AKPRO ecosystem</p>
+                    <h2 className="text-3xl font-black tracking-tight text-foreground mb-4">Pertanyaan Sering Diajukan</h2>
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest opacity-60">Segala yang perlu Anda ketahui tentang ekosistem AKPRO</p>
                 </div>
 
                 <div className="space-y-4">

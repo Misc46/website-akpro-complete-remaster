@@ -55,13 +55,13 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                 <div>
                     <div className="flex items-center gap-2 text-highlight-text mb-4">
                         <Calendar size={16} />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Index / Tutorial Sessions</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Indeks / Sesi Tutorial</span>
                     </div>
                     <h1 className="text-3xl font-black tracking-tight text-foreground">
-                        {currentGroup.uts_uas.toUpperCase()} {currentGroup.ganjil_genap.toUpperCase()} {currentGroup.year} Schedule
+                        Jadwal {currentGroup.uts_uas.toUpperCase()} {currentGroup.ganjil_genap.toUpperCase()} {currentGroup.year}
                     </h1>
                     <p className="text-xs font-medium mt-2 text-muted-foreground">
-                        Displaying <span className="text-foreground dark:text-white font-bold">{filtered.length}</span> upcoming or recorded sessions.
+                        Menampilkan <span className="text-foreground dark:text-white font-bold">{filtered.length}</span> sesi mendatang atau rekaman yang tersedia.
                     </p>
                 </div>
 
@@ -84,12 +84,12 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                 {/* Sidebar Filters */}
                 <aside className="space-y-8">
                     <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Quick Filter</h4>
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Filter Cepat</h4>
                         <div className="relative">
                             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                             <input
                                 type="text"
-                                placeholder="Search courses..."
+                                placeholder="Cari mata kuliah..."
                                 className="w-full bg-muted border border-border rounded-lg py-2.5 pl-9 pr-3 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-highlight/50 transition"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -110,7 +110,7 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
 
                     {archiveGroups.length > 0 && (
                         <div>
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Archive</h4>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Arsip</h4>
                             <div className="grid gap-2">
                                 {archiveGroups.map(group => (
                                     <button
@@ -148,7 +148,7 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                                             </span>
                                         ))}
                                         <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${isDarkMode ? 'bg-muted text-muted-foreground' : 'bg-highlight/10 text-highlight'}`}>
-                                            YEAR {item.year.join(' ')}
+                                            TAHUN {item.year.join(' ')}
                                         </span>
                                     </div>
 
@@ -160,7 +160,7 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                                                 <User size={14} />
                                             </div>
                                             <div>
-                                                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Peer Tutor</p>
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Pengasis</p>
                                                 <p className="text-xs font-bold">{item.person.map((p: any) => p.name).join(', ')}</p>
                                             </div>
                                         </div>
@@ -169,7 +169,7 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                                                 <Clock size={14} />
                                             </div>
                                             <div>
-                                                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Scheduled Time</p>
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Waktu Terjadwal</p>
                                                 <p className="text-xs font-bold text-highlight">
                                                     {new Date(item.date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' })} @ {new Date(item.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                                                 </p>
@@ -182,19 +182,19 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                                     {item.zoomMeetingsLink && (
                                         <a href={item.zoomMeetingsLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-2.5 rounded-lg bg-accent text-white text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all">
                                             <Video size={14} />
-                                            Join Session
+                                            Gabung Sesi
                                         </a>
                                     )}
                                     {item.recordingsLink && (
                                         <a href={item.recordingsLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-2.5 rounded-lg border border-border bg-background text-foreground text-[10px] font-black uppercase tracking-widest hover:border-highlight/20 transition-all">
                                             <LinkIcon size={14} />
-                                            Watch Record
+                                            Tonton Rekaman
                                         </a>
                                     )}
                                     {!item.zoomMeetingsLink && !item.recordingsLink && (
                                         <div className="flex items-center justify-center gap-2 py-2.5 text-muted-foreground text-[9px] font-bold uppercase tracking-widest">
                                             <Info size={14} />
-                                            Links Pending
+                                            Link Belum Tersedia
                                         </div>
                                     )}
                                 </div>
@@ -203,7 +203,7 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                     ) : (
                         <div className="py-24 text-center border-2 border-dashed border-border rounded-2xl">
                             <AlertCircle size={32} className="mx-auto text-muted-foreground mb-4 opacity-20" />
-                            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">No sessions found for this criteria.</p>
+                            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Tidak ada sesi yang ditemukan untuk kriteria ini.</p>
                         </div>
                     )}
                 </div>
