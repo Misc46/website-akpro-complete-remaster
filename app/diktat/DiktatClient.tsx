@@ -182,7 +182,7 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                                                 className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                                             />
                                         ) : (
-                                            <FileText size={48} className="text-highlight/20" />
+                                            <FileText size={48} className="text-border" />
                                         )}
                                         <div className="absolute top-3 left-3 flex flex-wrap gap-1">
                                             {item.major.map((m: string) => (
@@ -213,7 +213,7 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                         </div>
                     ) : (
                         <div className="py-24 text-center border-2 border-dashed border-border rounded-2xl">
-                            <Info size={32} className="mx-auto text-muted-foreground mb-4 opacity-20" />
+                            <Info size={32} className="mx-auto text-border mb-4" />
                             <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Tidak ada dokumen yang ditemukan.</p>
                         </div>
                     )}
