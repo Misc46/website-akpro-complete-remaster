@@ -38,9 +38,11 @@ export default function DiktatManager() {
                 if (data.master.length > 0 && !formData.diktat_id) {
                     setFormData(prev => ({ ...prev, diktat_id: data.master[0].id }));
                 }
+            } else {
+                setError(data.details || data.error || 'Failed to fetch data');
             }
-        } catch (err) {
-            setError('Failed to fetch data');
+        } catch (err: any) {
+            setError(err.message || 'Network error');
         } finally {
             setLoading(false);
         }

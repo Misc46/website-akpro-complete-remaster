@@ -18,9 +18,11 @@ export default function FAQManager() {
             if (res.ok) {
                 setFaqs(data);
                 setNewData(prev => ({ ...prev, order_index: data.length }));
+            } else {
+                setError(data.details || data.error || 'Failed to fetch FAQs');
             }
-        } catch (err) {
-            setError('Failed to fetch FAQs');
+        } catch (err: any) {
+            setError(err.message || 'Failed to fetch FAQs');
         } finally {
             setLoading(false);
         }

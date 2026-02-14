@@ -42,9 +42,11 @@ export default function AsistensiManager() {
                 if (data.master.length > 0 && !formData.asistensi_id) {
                     setFormData(prev => ({ ...prev, asistensi_id: data.master[0].id }));
                 }
+            } else {
+                setError(data.details || data.error || 'Failed to fetch data');
             }
-        } catch (err) {
-            setError('Failed to fetch data');
+        } catch (err: any) {
+            setError(err.message || 'Network error');
         } finally {
             setLoading(false);
         }
