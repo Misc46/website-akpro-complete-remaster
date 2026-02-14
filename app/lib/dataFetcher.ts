@@ -30,16 +30,20 @@ const getDataFromKv = async (key: string) => {
     try {
         const env = (process as any).env;
         const kv = (globalThis as any).PUBLIC_DATA || env?.PUBLIC_DATA;
-        if (kv) {
-            const data = await kv.get(key);
-            if (data) {
-                try {
-                    return JSON.parse(data);
-                } catch {
-                    // If not JSON, it's probably CSV
-                    const parsed = Papa.parse(data, { header: true, skipEmptyLines: true });
-                    return parsed.data;
-                }
+
+        if (!kv) {
+            console.log('KV Binding PUBLIC_DATA not found in environment');
+            return null;
+        }
+
+        const data = await kv.get(key);
+        if (data) {
+            try {
+                return JSON.parse(data);
+            } catch {
+                // If not JSON, it's probably CSV
+                const parsed = Papa.parse(data, { header: true, skipEmptyLines: true });
+                return parsed.data;
             }
         }
     } catch (e) {

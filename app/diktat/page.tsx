@@ -2,8 +2,7 @@ import React from 'react';
 import { fetchDiktatData } from '../lib/dataFetcher';
 import DiktatClient from './DiktatClient';
 
-// Enable Incremental Static Regeneration (ISR) - revalidate every 60 seconds
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function DiktatPage() {
     // This runs on the server
