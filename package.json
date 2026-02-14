@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run db:dump && next build",
     "start": "next start",
     "lint": "eslint",
     "db:dump": "tsx scripts/dump-turso.ts",

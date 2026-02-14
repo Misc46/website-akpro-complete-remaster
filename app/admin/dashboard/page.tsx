@@ -146,16 +146,20 @@ export default function AdminDashboard() {
                             <div className="p-6 bg-[#001B55]/50 rounded-2xl border border-[#0036A7] mb-6">
                                 <h4 className="text-xs font-bold text-[#00B8D4] uppercase tracking-widest mb-2">Live Site Sync</h4>
                                 <p className="text-xs text-gray-300 leading-relaxed mb-6">
-                                    Pull the latest state from your Turso database and publish it to the live site instantly.
+                                    Pull the latest data from the database and trigger a site rebuild.
+                                    Changes will appear on the public site in ~2-3 minutes.
                                 </p>
                                 <button
                                     onClick={async () => {
                                         try {
-                                            setMessage('Publishing database updates to live site...');
+                                            setMessage('⏳ Publishing updates and triggering rebuild...');
                                             const res = await fetch('/api/admin/dump', { method: 'POST' });
                                             const data = await res.json();
                                             if (res.ok) {
-                                                setMessage(`Success: Published ${data.diktatsCount} diktats, ${data.asistensiCount} asistensi, and ${data.faqsCount} FAQs.`);
+                                                const deployMsg = data.deployStatus === 'triggered'
+                                                    ? '🚀 Rebuild triggered! Changes will be live in ~2-3 minutes.'
+                                                    : '⚠️ Data saved but deploy hook not configured. Add CLOUDFLARE_DEPLOY_HOOK env var.';
+                                                setMessage(`✅ Published ${data.diktatsCount} diktats, ${data.asistensiCount} asistensi, ${data.faqsCount} FAQs. ${deployMsg}`);
                                             } else {
                                                 setMessage(`Error: ${data.error}`);
                                             }
@@ -175,9 +179,9 @@ export default function AdminDashboard() {
                                     <Database size={16} />
                                 </div>
                                 <div>
-                                    <h5 className="text-xs font-bold text-yellow-500 uppercase">Architecture Note</h5>
+                                    <h5 className="text-xs font-bold text-yellow-500 uppercase">How It Works</h5>
                                     <p className="text-[10px] text-gray-400 italic">
-                                        Manual sync is required because the public site is "db-less" for maximum speed and zero costs.
+                                        Clicking "Publish" triggers a full site rebuild with the latest database data. The site stays static for maximum speed.
                                     </p>
                                 </div>
                             </div>

@@ -123,19 +123,27 @@ export async function POST(req: NextRequest) {
             console.log('Successfully saved to KV');
         }
 
+        // Trigger Cloudflare Pages rebuild via Deploy Hook
+        let deployStatus = 'skipped';
+        const deployHookUrl = process.env.CLOUDFLARE_DEPLOY_HOOK;
+        if (deployHookUrl) {
+            try {
+                const hookRes = await fetch(deployHookUrl, { method: 'POST' });
+                deployStatus = hookRes.ok ? 'triggered' : `failed (${hookRes.status})`;
+            } catch (e) {
+                deployStatus = 'error';
+                console.error('Deploy hook error:', e);
+            }
+        }
+
         return NextResponse.json({
             success: true,
             kvStatus: kv ? 'updated' : 'unavailable',
+            deployStatus,
             diktatsCount: diktatsRs.rows.length,
             asistensiCount: asistensisRs.rows.length,
             faqsCount: faqsRs.rows.length,
             toolboxCount: toolboxItemsRs.rows.length,
-            data: {
-                diktatsCsv,
-                asistensisCsv,
-                faqsJson: faqsData,
-                toolboxJson: toolboxCategories
-            }
         });
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : 'Unknown error';
