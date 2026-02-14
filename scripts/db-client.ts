@@ -6,19 +6,18 @@ let client: Client | null = null;
 export const getDb = (): Client => {
     if (client) return client;
 
-    let url = process.env.TURSO_DATABASE_URL || '';
+    const url = process.env.TURSO_DATABASE_URL || '';
     const authToken = process.env.TURSO_AUTH_TOKEN || '';
 
     if (!url) {
+        console.error('DB Config Error: TURSO_DATABASE_URL is missing');
         throw new Error('TURSO_DATABASE_URL is not defined. Please check your environment variables.');
     }
 
-    if (url.startsWith('libsql://')) {
-        url = url.replace('libsql://', 'https://');
-    }
+    console.log('Initializing Turso Client with URL:', url.substring(0, 15) + '...');
 
     client = createClient({
-        url,
+        url: url.startsWith('libsql://') ? url.replace('libsql://', 'https://') : url,
         authToken,
     }) as Client;
 
@@ -27,5 +26,8 @@ export const getDb = (): Client => {
 
 // For backward compatibility with existing code
 export const db = {
-    execute: (args: any) => getDb().execute(args)
+    execute: (args: any) => {
+        const c = getDb();
+        return c.execute(args);
+    }
 } as Client;
