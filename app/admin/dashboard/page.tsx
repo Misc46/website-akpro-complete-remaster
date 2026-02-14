@@ -146,19 +146,19 @@ export default function AdminDashboard() {
                                     </div>
                                 </div>
                                 <div className="p-4 bg-[#001B55]/50 rounded-2xl border border-[#0036A7] mb-6">
-                                    <h4 className="text-xs font-bold text-[#00B8D4] uppercase tracking-widest mb-2">Public Snapshot</h4>
+                                    <h4 className="text-xs font-bold text-[#00B8D4] uppercase tracking-widest mb-2">Live Site Sync</h4>
                                     <p className="text-[10px] text-gray-400 leading-relaxed mb-4">
-                                        The public site reads from local CSV files to maximize performance and minimize database costs.
-                                        Click below to sync current database state to the public CSV files.
+                                        The public site uses a high-performance Cloudflare KV cache.
+                                        Click below to pull the latest state from the database and publish it to the live site instantly.
                                     </p>
                                     <button
                                         onClick={async () => {
                                             try {
-                                                setMessage('Synchronizing database to public CSVs...');
+                                                setMessage('Publishing database updates to live site...');
                                                 const res = await fetch('/api/admin/dump', { method: 'POST' });
                                                 const data = await res.json();
                                                 if (res.ok) {
-                                                    setMessage(`Successfully committed ${data.diktatsCount} diktat, ${data.asistensiCount} asistensi, and ${data.faqsCount} FAQ rows to public cache.`);
+                                                    setMessage(`Marketplace Success: Published ${data.diktatsCount} diktats, ${data.asistensiCount} asistensi, and ${data.faqsCount} FAQs to live site.`);
                                                 } else {
                                                     setMessage(`Error: ${data.error}`);
                                                 }
@@ -166,14 +166,14 @@ export default function AdminDashboard() {
                                                 setMessage('Failed to reach server. Check connection.');
                                             }
                                         }}
-                                        className="w-full py-2.5 bg-[#00B8D4] hover:bg-[#00D4FF] text-[#001B55] rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2"
+                                        className="w-full py-2.5 bg-[#00B8D4] hover:bg-[#00D4FF] text-[#001B55] rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,184,212,0.3)]"
                                     >
-                                        <Database size={14} />
-                                        Commit DB to Public CSV
+                                        <Activity size={14} />
+                                        Publish Updates to Live Site
                                     </button>
                                 </div>
                                 <p className="text-gray-400 text-xs leading-relaxed italic opacity-75">
-                                    * Changes made in Diktat Docs or Asistensi manager will NOT appear publicly until you click the button above.
+                                    * Changes made in any manager will NOT appear publicly until you Publish Updates.
                                 </p>
                             </div>
                         </div>

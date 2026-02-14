@@ -13,10 +13,14 @@ import { InstitutionalObjective } from './components/home/InstitutionalObjective
 import { SearchResultItem } from './components/home/SearchResultItem';
 
 // Data
-import resourceCategoriesData from './data/resourceCategories.json';
 import showcaseImages from './data/showcaseImages.json';
 
-export default function HomePageClient() {
+interface HomePageClientProps {
+    resourceCategories: any[];
+    faqs: any[];
+}
+
+export default function HomePageClient({ resourceCategories, faqs }: HomePageClientProps) {
     const { isDarkMode } = useTheme();
     const [activeCategory, setActiveCategory] = useState('transisi');
     const [searchQuery, setSearchQuery] = useState('');
@@ -25,10 +29,10 @@ export default function HomePageClient() {
 
     // Prepare links for search
     const allLinks = useMemo(() => {
-        return resourceCategoriesData.flatMap(cat => {
+        return resourceCategories.flatMap((cat: any) => {
             if (cat.isGrouped) {
-                return cat.groups?.flatMap(group =>
-                    group.links.map(link => ({
+                return cat.groups?.flatMap((group: any) =>
+                    group.links.map((link: any) => ({
                         ...link,
                         description: '',
                         categoryLabel: group.name,
@@ -36,13 +40,13 @@ export default function HomePageClient() {
                     }))
                 ) || [];
             }
-            return cat.links?.map(link => ({
+            return cat.links?.map((link: any) => ({
                 ...link,
                 description: link.description || '',
                 categoryLabel: cat.label
             })) || [];
         });
-    }, []);
+    }, [resourceCategories]);
 
     // Filter links based on search query
     const searchResults = useMemo(() => {
@@ -86,11 +90,11 @@ export default function HomePageClient() {
                     <>
                         <DirectorySection />
                         <ToolboxSection
-                            categories={resourceCategoriesData}
+                            categories={resourceCategories}
                             activeCategory={activeCategory}
                             setActiveCategory={setActiveCategory}
                         />
-                        <FAQSection />
+                        <FAQSection faqs={faqs} />
                         <InstitutionalObjective
                             isDarkMode={isDarkMode}
                             showcaseImages={showcaseImages}

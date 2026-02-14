@@ -1,10 +1,13 @@
 "use client";
 
-import React from 'react';
 import { Archive, ChevronDown } from 'lucide-react';
-import faqs from '../../data/faqs.json';
 
-export const FAQSection: React.FC = () => {
+interface FAQItem {
+    q: string;
+    a: string;
+}
+
+export const FAQSection: React.FC<{ faqs: FAQItem[] }> = ({ faqs }) => {
     const toggleFaq = (idx: number) => {
         const el = document.getElementById(`faq-ans-${idx}`);
         const icon = document.getElementById(`faq-icon-${idx}`);

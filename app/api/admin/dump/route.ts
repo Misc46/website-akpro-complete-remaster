@@ -106,10 +106,26 @@ export async function POST(req: NextRequest) {
             };
         });
 
-        // Return the data as JSON so the admin can download it
-        // File writing is handled locally via `npm run db:dump`
+        // Save to Cloudflare KV if available (for instant production updates)
+        const env = (process as any).env;
+        const kv = (globalThis as any).PUBLIC_DATA || env?.PUBLIC_DATA;
+
+        if (kv) {
+            console.log('Saving dump to Cloudflare KV...');
+            await Promise.all([
+                kv.put('diktats_csv', diktatsCsv),
+                kv.put('asistensis_csv', asistensisCsv),
+                kv.put('diktats_json', JSON.stringify(diktatsRs.rows)),
+                kv.put('asistensis_json', JSON.stringify(asistensisRs.rows)),
+                kv.put('faqs_json', JSON.stringify(faqsData)),
+                kv.put('toolbox_json', JSON.stringify(toolboxCategories))
+            ]);
+            console.log('Successfully saved to KV');
+        }
+
         return NextResponse.json({
             success: true,
+            kvStatus: kv ? 'updated' : 'unavailable',
             diktatsCount: diktatsRs.rows.length,
             asistensiCount: asistensisRs.rows.length,
             faqsCount: faqsRs.rows.length,

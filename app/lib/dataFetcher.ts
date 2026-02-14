@@ -25,6 +25,29 @@ try {
     console.warn('asistensis.json not found, falling back to empty');
 }
 
+// Helper to read from Cloudflare KV
+const getDataFromKv = async (key: string) => {
+    try {
+        const env = (process as any).env;
+        const kv = (globalThis as any).PUBLIC_DATA || env?.PUBLIC_DATA;
+        if (kv) {
+            const data = await kv.get(key);
+            if (data) {
+                try {
+                    return JSON.parse(data);
+                } catch {
+                    // If not JSON, it's probably CSV
+                    const parsed = Papa.parse(data, { header: true, skipEmptyLines: true });
+                    return parsed.data;
+                }
+            }
+        }
+    } catch (e) {
+        console.warn(`Error reading ${key} from KV:`, e);
+    }
+    return null;
+};
+
 // Helper to read local CSV (only works in Node.js environments)
 const readLocalCsv = async (filename: string) => {
     // Check if we are in a Node.js environment with fs support
@@ -44,9 +67,12 @@ const readLocalCsv = async (filename: string) => {
 
 export const fetchDiktatData = async (): Promise<DiktatData[]> => {
     try {
-        // Try CSV first if in Node, otherwise use bundled JSON
-        const csvRows = await readLocalCsv('diktats.csv');
-        const rows = csvRows || localDiktats;
+        // Try KV first (Highest priority - instant updates)
+        const kvRows = await getDataFromKv('diktats_json');
+        // Then try local CSV (Node.js dev environment)
+        const csvRows = kvRows ? null : await readLocalCsv('diktats.csv');
+        // Finally fall back to bundled JSON (Build-time backup)
+        const rows = kvRows || csvRows || localDiktats;
 
         const grouped: Record<string, DiktatData> = {};
 
@@ -89,8 +115,9 @@ export const fetchDiktatData = async (): Promise<DiktatData[]> => {
 
 export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
     try {
-        const csvRows = await readLocalCsv('asistensis.csv');
-        const rows = csvRows || localAsistensis;
+        const kvRows = await getDataFromKv('asistensis_json');
+        const csvRows = kvRows ? null : await readLocalCsv('asistensis.csv');
+        const rows = kvRows || csvRows || localAsistensis;
 
         const grouped: Record<string, AsistensiData> = {};
 
@@ -129,6 +156,60 @@ export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
         });
     } catch (error) {
         console.error('Error fetching asistensi data:', error);
+        return [];
+    }
+};
+
+export const fetchFaqData = async (): Promise<any[]> => {
+    try {
+        const kvData = await getDataFromKv('faqs_json');
+        if (kvData) return kvData;
+
+        // Fallback to local JSON if in Node
+        if (typeof fs !== 'undefined') {
+            try {
+                const filePath = path.join(process.cwd(), 'app', 'data', 'faqs.json');
+                if (fs.existsSync(filePath)) {
+                    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+                }
+            } catch { }
+        }
+
+        // Bundled fallback
+        try {
+            return require('../data/faqs.json');
+        } catch {
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching FAQ data:', error);
+        return [];
+    }
+};
+
+export const fetchResourceCategories = async (): Promise<any[]> => {
+    try {
+        const kvData = await getDataFromKv('toolbox_json');
+        if (kvData) return kvData;
+
+        // Fallback to local JSON if in Node
+        if (typeof fs !== 'undefined') {
+            try {
+                const filePath = path.join(process.cwd(), 'app', 'data', 'resourceCategories.json');
+                if (fs.existsSync(filePath)) {
+                    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+                }
+            } catch { }
+        }
+
+        // Bundled fallback
+        try {
+            return require('../data/resourceCategories.json');
+        } catch {
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching resource categories:', error);
         return [];
     }
 };

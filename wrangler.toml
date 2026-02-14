@@ -5,3 +5,8 @@ pages_build_output_dir = ".vercel/output/static"
 
 [vars]
 NEXT_PUBLIC_USE_TURSO = "true"
+
+
+[[kv_namespaces]]
+binding = "PUBLIC_DATA"
+id = "768e1916351445518db68fdf03327be9"
