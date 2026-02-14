@@ -22,8 +22,12 @@ export async function GET(req: NextRequest) {
     try {
         const rs = await db.execute('SELECT * FROM faqs ORDER BY order_index ASC');
         return NextResponse.json(rs.rows);
-    } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
+    } catch (error: any) {
+        console.error('GET FAQ Error:', error);
+        return NextResponse.json({
+            error: 'Failed to fetch FAQ data',
+            details: error.message
+        }, { status: 500 });
     }
 }
 

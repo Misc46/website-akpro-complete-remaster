@@ -69,8 +69,12 @@ export async function GET(req: NextRequest) {
 
         // Also return flat item list for easier editing
         return NextResponse.json({ categories, items: itemsRs.rows });
-    } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch toolbox data' }, { status: 500 });
+    } catch (error: any) {
+        console.error('GET Toolbox Error:', error);
+        return NextResponse.json({
+            error: 'Failed to fetch toolbox data',
+            details: error.message
+        }, { status: 500 });
     }
 }
 

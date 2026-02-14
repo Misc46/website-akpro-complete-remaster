@@ -27,14 +27,17 @@ export async function GET(req: NextRequest) {
             master: asistensis.rows,
             items: items.rows.map(row => ({
                 ...row,
-                major: JSON.parse(row.major as string),
-                year: JSON.parse(row.year as string),
-                person: JSON.parse(row.person as string)
+                major: JSON.parse(row.major as string || '[]'),
+                year: JSON.parse(row.year as string || '[]'),
+                person: JSON.parse(row.person as string || '[]')
             }))
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error('GET Asistensi Error:', error);
-        return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
+        return NextResponse.json({
+            error: 'Failed to fetch asistensi data',
+            details: error.message
+        }, { status: 500 });
     }
 }
 
@@ -60,9 +63,12 @@ export async function POST(req: NextRequest) {
         });
 
         return NextResponse.json({ success: true });
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: 'Failed to create' }, { status: 500 });
+    } catch (error: any) {
+        console.error('POST Asistensi Error:', error);
+        return NextResponse.json({
+            error: 'Failed to create asistensi item',
+            details: error.message
+        }, { status: 500 });
     }
 }
 
@@ -76,8 +82,12 @@ export async function DELETE(req: NextRequest) {
             args: [id]
         });
         return NextResponse.json({ success: true });
-    } catch (error) {
-        return NextResponse.json({ error: 'Failed to delete' }, { status: 500 });
+    } catch (error: any) {
+        console.error('DELETE Asistensi Error:', error);
+        return NextResponse.json({
+            error: 'Failed to delete asistensi item',
+            details: error.message
+        }, { status: 500 });
     }
 }
 
@@ -104,8 +114,11 @@ export async function PATCH(req: NextRequest) {
         });
 
         return NextResponse.json({ success: true });
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: 'Failed to update' }, { status: 500 });
+    } catch (error: any) {
+        console.error('PATCH Asistensi Error:', error);
+        return NextResponse.json({
+            error: 'Failed to update asistensi item',
+            details: error.message
+        }, { status: 500 });
     }
 }

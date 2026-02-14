@@ -27,12 +27,16 @@ export async function GET(req: NextRequest) {
             master: diktats.rows,
             items: items.rows.map(row => ({
                 ...row,
-                major: JSON.parse(row.major as string),
-                year: JSON.parse(row.year as string)
+                major: JSON.parse(row.major as string || '[]'),
+                year: JSON.parse(row.year as string || '[]')
             }))
         });
-    } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
+    } catch (error: any) {
+        console.error('GET Diktat Error:', error);
+        return NextResponse.json({
+            error: 'Failed to fetch diktat data',
+            details: error.message
+        }, { status: 500 });
     }
 }
 

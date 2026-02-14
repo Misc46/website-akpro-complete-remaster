@@ -36,11 +36,18 @@ async function dump() {
         ORDER BY d.year DESC, d.ganjil_genap ASC, d.uts_uas DESC
     `;
 
+    const appDataDir = path.join(process.cwd(), 'app', 'data');
+    if (!fs.existsSync(appDataDir)) {
+        fs.mkdirSync(appDataDir, { recursive: true });
+    }
+
     try {
         const diktatsRs = await db.execute(diktatsQuery);
         const diktatsCsv = Papa.unparse(diktatsRs.rows);
         fs.writeFileSync(path.join(publicDataDir, 'diktats.csv'), diktatsCsv);
-        console.log(`Dumped ${diktatsRs.rows.length} diktat rows to public/data/diktats.csv`);
+        // Save as JSON for easier import on Cloudflare
+        fs.writeFileSync(path.join(appDataDir, 'diktats.json'), JSON.stringify(diktatsRs.rows, null, 4));
+        console.log(`Dumped ${diktatsRs.rows.length} diktat rows to public/data/diktats.csv and app/data/diktats.json`);
     } catch (e) {
         console.error('Error dumping diktats:', e);
     }
@@ -59,7 +66,8 @@ async function dump() {
             i.person,
             i.date,
             i.zoom_meetings_link,
-            i.recordings_link
+            i.recordings_link,
+            i.img
         FROM asistensis a
         LEFT JOIN asistensi_items i ON a.id = i.asistensi_id
         ORDER BY a.year DESC, a.ganjil_genap ASC, a.uts_uas DESC
@@ -69,7 +77,9 @@ async function dump() {
         const asistensisRs = await db.execute(asistensisQuery);
         const asistensisCsv = Papa.unparse(asistensisRs.rows);
         fs.writeFileSync(path.join(publicDataDir, 'asistensis.csv'), asistensisCsv);
-        console.log(`Dumped ${asistensisRs.rows.length} asistensi rows to public/data/asistensis.csv`);
+        // Save as JSON for easier import on Cloudflare
+        fs.writeFileSync(path.join(appDataDir, 'asistensis.json'), JSON.stringify(asistensisRs.rows, null, 4));
+        console.log(`Dumped ${asistensisRs.rows.length} asistensi rows to public/data/asistensis.csv and app/data/asistensis.json`);
     } catch (e) {
         console.error('Error dumping asistensis:', e);
     }

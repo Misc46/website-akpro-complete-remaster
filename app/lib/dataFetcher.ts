@@ -8,28 +8,59 @@ import {
 } from './dataUtils';
 
 // Helper to read local CSV
+// Import JSON data directly - this is bundled at build time and works on Cloudflare Edge
+// We use require to avoid compile-time errors if the files haven't been generated yet during dev
+let localDiktats: any[] = [];
+let localAsistensis: any[] = [];
+
+try {
+    localDiktats = require('../data/diktats.json');
+} catch (e) {
+    console.warn('diktats.json not found, falling back to empty');
+}
+
+try {
+    localAsistensis = require('../data/asistensis.json');
+} catch (e) {
+    console.warn('asistensis.json not found, falling back to empty');
+}
+
+// Helper to read local CSV (only works in Node.js environments)
 const readLocalCsv = async (filename: string) => {
-    const filePath = path.join(process.cwd(), 'public', 'data', filename);
-    if (!fs.existsSync(filePath)) return [];
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-    const parsed = Papa.parse(fileContent, { header: true, skipEmptyLines: true });
-    return parsed.data;
+    // Check if we are in a Node.js environment with fs support
+    if (typeof fs !== 'undefined' && fs.readFileSync) {
+        try {
+            const filePath = path.join(process.cwd(), 'public', 'data', filename);
+            if (!fs.existsSync(filePath)) return null;
+            const fileContent = fs.readFileSync(filePath, 'utf-8');
+            const parsed = Papa.parse(fileContent, { header: true, skipEmptyLines: true });
+            return parsed.data;
+        } catch (e) {
+            return null;
+        }
+    }
+    return null;
 };
 
 export const fetchDiktatData = async (): Promise<DiktatData[]> => {
     try {
-        const rows = await readLocalCsv('diktats.csv');
+        // Try CSV first if in Node, otherwise use bundled JSON
+        const csvRows = await readLocalCsv('diktats.csv');
+        const rows = csvRows || localDiktats;
+
         const grouped: Record<string, DiktatData> = {};
 
         for (const row of rows as any[]) {
             const id = row.diktat_id;
+            if (!id) continue;
+
             if (!grouped[id]) {
                 grouped[id] = {
                     id,
                     year: parseInt(row.academic_year),
                     uts_uas: row.uts_uas,
                     ganjil_genap: row.ganjil_genap,
-                    is_active: row.is_active === '1' || row.is_active === 'true',
+                    is_active: row.is_active === 1 || row.is_active === '1' || row.is_active === 'true' || row.is_active === true,
                     content: []
                 };
             }
@@ -37,8 +68,8 @@ export const fetchDiktatData = async (): Promise<DiktatData[]> => {
             if (row.item_name) {
                 grouped[id].content.push({
                     name: row.item_name,
-                    major: JSON.parse(row.major || '[]'),
-                    year: JSON.parse(row.target_year || '[]'),
+                    major: typeof row.major === 'string' ? JSON.parse(row.major || '[]') : (row.major || []),
+                    year: typeof row.target_year === 'string' ? JSON.parse(row.target_year || '[]') : (row.target_year || []),
                     googleDriveLink: row.google_drive_link,
                     img: row.img || null
                 });
@@ -46,24 +77,27 @@ export const fetchDiktatData = async (): Promise<DiktatData[]> => {
         }
 
         return Object.values(grouped).sort((a, b) => {
-            // Sort by Year DESC, then Ganjil/Genap ASC, then UTS/UAS DESC
             if (b.year !== a.year) return b.year - a.year;
             if (a.ganjil_genap !== b.ganjil_genap) return a.ganjil_genap.localeCompare(b.ganjil_genap);
             return b.uts_uas.localeCompare(a.uts_uas);
         });
     } catch (error) {
-        console.error('Error fetching diktat data form CSV:', error);
+        console.error('Error fetching diktat data:', error);
         return [];
     }
 };
 
 export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
     try {
-        const rows = await readLocalCsv('asistensis.csv');
+        const csvRows = await readLocalCsv('asistensis.csv');
+        const rows = csvRows || localAsistensis;
+
         const grouped: Record<string, AsistensiData> = {};
 
         for (const row of rows as any[]) {
             const id = row.asistensi_id;
+            if (!id) continue;
+
             if (!grouped[id]) {
                 grouped[id] = {
                     id,
@@ -77,9 +111,9 @@ export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
             if (row.item_name) {
                 grouped[id].content.push({
                     name: row.item_name,
-                    major: JSON.parse(row.major || '[]'),
-                    year: JSON.parse(row.target_year || '[]'),
-                    person: JSON.parse(row.person || '[]'),
+                    major: typeof row.major === 'string' ? JSON.parse(row.major || '[]') : (row.major || []),
+                    year: typeof row.target_year === 'string' ? JSON.parse(row.target_year || '[]') : (row.target_year || []),
+                    person: typeof row.person === 'string' ? JSON.parse(row.person || '[]') : (row.person || []),
                     date: row.date,
                     zoomMeetingsLink: row.zoom_meetings_link,
                     recordingsLink: row.recordings_link,
@@ -94,7 +128,7 @@ export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
             return b.uts_uas.localeCompare(a.uts_uas);
         });
     } catch (error) {
-        console.error('Error fetching asistensi data from CSV:', error);
+        console.error('Error fetching asistensi data:', error);
         return [];
     }
 };
