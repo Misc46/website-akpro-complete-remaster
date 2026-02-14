@@ -1,38 +1,24 @@
 import Papa from 'papaparse';
-import fs from 'fs';
-import path from 'path';
 import {
     DiktatData,
     AsistensiData,
     AsistensiItem
 } from './dataUtils';
 
-// Helper to read local CSV
-// Import JSON data directly - this is bundled at build time and works on Cloudflare Edge
-// We use require to avoid compile-time errors if the files haven't been generated yet during dev
-let localDiktats: any[] = [];
-let localAsistensis: any[] = [];
+// Static JSON imports — these get bundled at build time by webpack/turbopack.
+// They work on BOTH Node.js and Cloudflare Edge because they become inline data.
+// If the files don't exist yet (first build), they'll be empty arrays.
+import localDiktats from '../data/diktats.json';
+import localAsistensis from '../data/asistensis.json';
+import localFaqs from '../data/faqs.json';
+import localResourceCategories from '../data/resourceCategories.json';
 
-try {
-    localDiktats = require('../data/diktats.json');
-} catch (e) {
-    console.warn('diktats.json not found, falling back to empty');
-}
-
-try {
-    localAsistensis = require('../data/asistensis.json');
-} catch (e) {
-    console.warn('asistensis.json not found, falling back to empty');
-}
-
-// Helper to read from Cloudflare KV
+// Helper to read from Cloudflare KV (works on Edge, no-ops locally)
 const getDataFromKv = async (key: string) => {
     try {
-        const env = (process as any).env;
-        const kv = (globalThis as any).PUBLIC_DATA || env?.PUBLIC_DATA;
+        const kv = (globalThis as any).PUBLIC_DATA || (process as any).env?.PUBLIC_DATA;
 
-        if (!kv) {
-            console.log('KV Binding PUBLIC_DATA not found in environment');
+        if (!kv || typeof kv.get !== 'function') {
             return null;
         }
 
@@ -41,7 +27,6 @@ const getDataFromKv = async (key: string) => {
             try {
                 return JSON.parse(data);
             } catch {
-                // If not JSON, it's probably CSV
                 const parsed = Papa.parse(data, { header: true, skipEmptyLines: true });
                 return parsed.data;
             }
@@ -52,31 +37,12 @@ const getDataFromKv = async (key: string) => {
     return null;
 };
 
-// Helper to read local CSV (only works in Node.js environments)
-const readLocalCsv = async (filename: string) => {
-    // Check if we are in a Node.js environment with fs support
-    if (typeof fs !== 'undefined' && fs.readFileSync) {
-        try {
-            const filePath = path.join(process.cwd(), 'public', 'data', filename);
-            if (!fs.existsSync(filePath)) return null;
-            const fileContent = fs.readFileSync(filePath, 'utf-8');
-            const parsed = Papa.parse(fileContent, { header: true, skipEmptyLines: true });
-            return parsed.data;
-        } catch (e) {
-            return null;
-        }
-    }
-    return null;
-};
-
 export const fetchDiktatData = async (): Promise<DiktatData[]> => {
     try {
-        // Try KV first (Highest priority - instant updates)
+        // 1. Try KV (live updates from admin "Publish" button)
         const kvRows = await getDataFromKv('diktats_json');
-        // Then try local CSV (Node.js dev environment)
-        const csvRows = kvRows ? null : await readLocalCsv('diktats.csv');
-        // Finally fall back to bundled JSON (Build-time backup)
-        const rows = kvRows || csvRows || localDiktats;
+        // 2. Fall back to bundled JSON (from last build)
+        const rows = kvRows || localDiktats;
 
         const grouped: Record<string, DiktatData> = {};
 
@@ -120,8 +86,7 @@ export const fetchDiktatData = async (): Promise<DiktatData[]> => {
 export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
     try {
         const kvRows = await getDataFromKv('asistensis_json');
-        const csvRows = kvRows ? null : await readLocalCsv('asistensis.csv');
-        const rows = kvRows || csvRows || localAsistensis;
+        const rows = kvRows || localAsistensis;
 
         const grouped: Record<string, AsistensiData> = {};
 
@@ -167,24 +132,7 @@ export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
 export const fetchFaqData = async (): Promise<any[]> => {
     try {
         const kvData = await getDataFromKv('faqs_json');
-        if (kvData) return kvData;
-
-        // Fallback to local JSON if in Node
-        if (typeof fs !== 'undefined') {
-            try {
-                const filePath = path.join(process.cwd(), 'app', 'data', 'faqs.json');
-                if (fs.existsSync(filePath)) {
-                    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-                }
-            } catch { }
-        }
-
-        // Bundled fallback
-        try {
-            return require('../data/faqs.json');
-        } catch {
-            return [];
-        }
+        return kvData || localFaqs || [];
     } catch (error) {
         console.error('Error fetching FAQ data:', error);
         return [];
@@ -194,27 +142,9 @@ export const fetchFaqData = async (): Promise<any[]> => {
 export const fetchResourceCategories = async (): Promise<any[]> => {
     try {
         const kvData = await getDataFromKv('toolbox_json');
-        if (kvData) return kvData;
-
-        // Fallback to local JSON if in Node
-        if (typeof fs !== 'undefined') {
-            try {
-                const filePath = path.join(process.cwd(), 'app', 'data', 'resourceCategories.json');
-                if (fs.existsSync(filePath)) {
-                    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-                }
-            } catch { }
-        }
-
-        // Bundled fallback
-        try {
-            return require('../data/resourceCategories.json');
-        } catch {
-            return [];
-        }
+        return kvData || localResourceCategories || [];
     } catch (error) {
         console.error('Error fetching resource categories:', error);
         return [];
     }
 };
-
