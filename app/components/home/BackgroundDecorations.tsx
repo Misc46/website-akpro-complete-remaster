@@ -1,13 +1,13 @@
 "use client";
 
-import React from 'react';
+import React, { memo } from 'react';
 
 interface BackgroundDecorationsProps {
     isDarkMode: boolean;
     intensity?: 'default' | 'subtle';
 }
 
-export const BackgroundDecorations: React.FC<BackgroundDecorationsProps> = ({ isDarkMode, intensity = 'default' }) => {
+export const BackgroundDecorations: React.FC<BackgroundDecorationsProps> = memo(({ isDarkMode, intensity = 'default' }) => {
     const isSubtle = intensity === 'subtle';
     return (
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -51,4 +51,6 @@ export const BackgroundDecorations: React.FC<BackgroundDecorationsProps> = ({ is
             )}
         </div>
     );
-};
+});
+
+BackgroundDecorations.displayName = 'BackgroundDecorations';

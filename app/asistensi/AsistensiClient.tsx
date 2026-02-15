@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Calendar, List, Clock, User, Link as LinkIcon, Video, AlertCircle, Sparkles, Archive, ChevronRight, FileText, Search, Info, MapPin } from 'lucide-react';
-import { BackgroundDecorations } from '../components/home/BackgroundDecorations';
+import React, { useState, useMemo } from 'react';
+import { Calendar, Clock, User, Link as LinkIcon, Video, AlertCircle, FileText, Search, Info } from 'lucide-react';
 import { FilterSelector } from '../components/FilterSelector';
 import { useTheme } from '../lib/ThemeContext';
+import { BackgroundDecorations } from '../components/home/BackgroundDecorations';
 import {
     filterContent,
     AsistensiData,
@@ -22,8 +22,8 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
     const [searchQuery, setSearchQuery] = useState('');
 
     // Sort logic helper for chronological order (Descending)
-    const academicSort = (data: AsistensiData[]) => {
-        return [...data].sort((a, b) => {
+    const sortedData = useMemo(() => {
+        return [...initialData].sort((a, b) => {
             if (b.year !== a.year) return b.year - a.year;
             if (a.ganjil_genap !== b.ganjil_genap) {
                 return a.ganjil_genap === 'ganjil' ? -1 : 1;
@@ -33,24 +33,29 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
             }
             return 0;
         });
-    };
+    }, [initialData]);
 
-    const sortedData = academicSort(initialData);
     const latestAsistensiId = sortedData[0]?.id;
-
     const [activeGroupId, setActiveGroupId] = useState<string | undefined>(latestAsistensiId);
 
-    const currentGroup = sortedData.find(d => d.id === activeGroupId) || sortedData[0];
-    const archiveGroups = sortedData.filter(d => d.id !== activeGroupId);
+    const currentGroup = useMemo(() =>
+        sortedData.find(d => d.id === activeGroupId) || sortedData[0]
+        , [sortedData, activeGroupId]);
+
+    const archiveGroups = useMemo(() =>
+        sortedData.filter(d => d.id !== activeGroupId)
+        , [sortedData, activeGroupId]);
 
     if (!currentGroup) return <div className={`p-24 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Tidak ada data asistensi tersedia</div>;
 
-    const filtered = filterContent(currentGroup.content, selectedYear, selectedMajor).filter(item =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filtered = useMemo(() => {
+        return filterContent(currentGroup.content, selectedYear, selectedMajor).filter(item =>
+            item.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }, [currentGroup, selectedYear, selectedMajor, searchQuery]);
 
     return (
-        <div className="relative">
+        <div className="relative min-h-screen">
             <BackgroundDecorations isDarkMode={isDarkMode} intensity="subtle" />
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* Context Header */}
@@ -73,7 +78,7 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                             <button
                                 key={g.id}
                                 onClick={() => setActiveGroupId(g.id)}
-                                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeGroupId === g.id
+                                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest ${activeGroupId === g.id
                                     ? 'bg-background text-highlight-text shadow-sm'
                                     : 'text-muted-foreground hover:text-foreground'}`}
                             >
@@ -93,7 +98,7 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                                 <input
                                     type="text"
                                     placeholder="Cari mata kuliah..."
-                                    className="w-full bg-muted border border-border rounded-lg py-2.5 pl-9 pr-3 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-highlight/50 transition"
+                                    className="w-full bg-muted border border-border rounded-lg py-2.5 pl-9 pr-3 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-highlight/50"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
@@ -120,9 +125,9 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                                             key={group.id}
                                             onClick={() => {
                                                 setActiveGroupId(group.id);
-                                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                window.scrollTo({ top: 0 });
                                             }}
-                                            className={`flex items-center justify-between p-3 rounded-lg border text-left transition-all ${activeGroupId === group.id
+                                            className={`flex items-center justify-between p-3 rounded-lg border text-left ${activeGroupId === group.id
                                                 ? 'bg-highlight/10 border-highlight text-highlight-text'
                                                 : 'border-border bg-background text-muted-foreground hover:border-highlight/40 hover:text-foreground'}`}
                                         >
@@ -130,7 +135,6 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                                                 <FileText size={14} />
                                                 <span className="text-[10px] font-bold uppercase tracking-widest">{group.uts_uas} {group.ganjil_genap} {group.year}</span>
                                             </div>
-                                            <ChevronRight size={12} />
                                         </button>
                                     ))}
                                 </div>
@@ -142,7 +146,7 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                     <div className="space-y-4">
                         {filtered.length > 0 ? (
                             filtered.map((item: AsistensiItem, idx: number) => (
-                                <div key={idx} className={`group flex flex-col md:flex-row border border-border rounded-xl overflow-hidden transition-all hover:border-highlight/50 ${isDarkMode ? 'bg-muted/10' : 'bg-background shadow-sm'}`}>
+                                <div key={idx} className={`group flex flex-col md:flex-row border border-border rounded-xl overflow-hidden ${isDarkMode ? 'bg-muted/10' : 'bg-background shadow-sm'}`}>
                                     <div className="p-6 flex-1">
                                         <div className="flex flex-wrap gap-1.5 mb-4">
                                             {item.major.map((m: string) => (
@@ -183,13 +187,13 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
 
                                     <div className={`md:w-56 p-6 border-t md:border-t-0 md:border-l border-border flex flex-col justify-center gap-2 ${isDarkMode ? 'bg-muted/30' : 'bg-muted/50'}`}>
                                         {item.zoomMeetingsLink && (
-                                            <a href={item.zoomMeetingsLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-2.5 rounded-lg bg-accent text-white text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all">
+                                            <a href={item.zoomMeetingsLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-2.5 rounded-lg bg-accent text-white text-[10px] font-black uppercase tracking-widest hover:bg-accent/90">
                                                 <Video size={14} />
                                                 Gabung Sesi
                                             </a>
                                         )}
                                         {item.recordingsLink && (
-                                            <a href={item.recordingsLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-2.5 rounded-lg border border-border bg-background text-foreground text-[10px] font-black uppercase tracking-widest hover:border-highlight/20 transition-all">
+                                            <a href={item.recordingsLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-2.5 rounded-lg border border-border bg-background text-foreground text-[10px] font-black uppercase tracking-widest hover:border-highlight/20">
                                                 <LinkIcon size={14} />
                                                 Tonton Rekaman
                                             </a>

@@ -1,0 +1,24 @@
+<svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="100" fill="#020617"/>
+  <defs>
+    <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.6" />
+      <stop offset="50%" style="stop-color:#ef4444;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+  <g stroke-width="2" fill="none">
+    <path d="M0 20 Q 75 -10, 150 20 T 300 20" stroke="#3b82f6" opacity="0.3"/>
+    <path d="M0 30 Q 75 0, 150 30 T 300 30" stroke="#8b5cf6" opacity="0.3"/>
+    <path d="M0 40 Q 75 10, 150 40 T 300 40" stroke="#ec4899" opacity="0.3"/>
+    <path d="M0 50 Q 75 20, 150 50 T 300 50" stroke="#ef4444" opacity="0.3"/>
+    <path d="M0 60 Q 75 30, 150 60 T 300 60" stroke="#f59e0b" opacity="0.3"/>
+    <path d="M0 70 Q 75 40, 150 70 T 300 70" stroke="#10b981" opacity="0.3"/>
+    <path d="M0 80 Q 75 50, 150 80 T 300 80" stroke="#0ea5e9" opacity="0.3"/>
+  </g>
+  <g opacity="0.15" stroke="#ffffff" stroke-width="0.3">
+    <path d="M0 0 L300 100 M20 0 L300 90 M40 0 L300 80 M60 0 L300 70 M80 0 L300 60 M100 0 L300 50 M120 0 L300 40 M140 0 L300 30"/>
+    <path d="M300 0 L0 100 M280 0 L0 90 M260 0 L0 80 M240 0 L0 70 M220 0 L0 60 M200 0 L0 50 M180 0 L0 40 M160 0 L0 30"/>
+  </g>
+  <path d="M0 50 L300 50" stroke="#ffffff" stroke-width="0.5" opacity="0.1"/>
+</svg>

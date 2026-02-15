@@ -1,0 +1,23 @@
+<svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="100" fill="#000000"/>
+  <g opacity="0.4">
+    <circle cx="20" cy="20" r="1.5" fill="#3b82f6"/>
+    <circle cx="50" cy="80" r="1.5" fill="#ef4444"/>
+    <circle cx="80" cy="30" r="1.5" fill="#10b981"/>
+    <circle cx="120" cy="70" r="1.5" fill="#f59e0b"/>
+    <circle cx="160" cy="20" r="1.5" fill="#8b5cf6"/>
+    <circle cx="200" cy="90" r="1.5" fill="#ec4899"/>
+    <circle cx="240" cy="40" r="1.5" fill="#0ea5e9"/>
+    <circle cx="280" cy="60" r="1.5" fill="#3b82f6"/>
+    <circle cx="150" cy="50" r="1.5" fill="#ffffff"/>
+    <circle cx="70" cy="10" r="1.5" fill="#ffffff"/>
+    <circle cx="230" cy="80" r="1.5" fill="#ffffff"/>
+    <path d="M20 20 L50 80 L120 70 L230 80 L280 60 L240 40 L160 20 L70 10 Z" stroke="#3b82f6" stroke-width="0.3" fill="none"/>
+    <path d="M50 80 L80 30 L160 20 L150 50 L50 80" stroke="#ef4444" stroke-width="0.2" fill="none"/>
+    <path d="M120 70 L200 90 L280 60 L150 50 L120 70" stroke="#10b981" stroke-width="0.2" fill="none"/>
+  </g>
+  <g opacity="0.12" stroke="#ffffff" stroke-width="0.2">
+    <path d="M0 5h300M0 10h300M0 15h300M0 20h300M0 25h300M0 30h300M0 35h300M0 40h300M0 45h300M0 50h300M0 55h300M0 60h300M0 65h300M0 70h300M0 75h300M0 80h300M0 85h300M0 90h300M0 95h300"/>
+    <path d="M5 0v100M10 0v100M15 0v100M20 0v100M25 0v100M30 0v100M35 0v100M40 0v100M45 0v100M50 0v100M55 0v100M60 0v100M65 0v100M70 0v100M75 0v100M80 0v100M85 0v100M90 0v100M95 0v100M100 0v100M110 0v100M120 0v100M130 0v100M140 0v100M150 0v100M160 0v100M170 0v100M180 0v100M190 0v100M200 0v100M210 0v100M220 0v100M230 0v100M240 0v100M250 0v100M260 0v100M270 0v100M280 0v100M290 0v100"/>
+  </g>
+</svg>

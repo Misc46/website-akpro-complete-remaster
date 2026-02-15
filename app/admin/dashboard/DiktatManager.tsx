@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Plus, Trash2, ExternalLink, AlertCircle, Eye, EyeOff, FolderPlus } from 'lucide-react';
 
 export default function DiktatManager() {
@@ -121,6 +121,28 @@ export default function DiktatManager() {
         }
     };
 
+    // Sort Master Groups based on Public Page Logic
+    const sortedMaster = useMemo(() => {
+        return [...master].sort((a, b) => {
+            if (b.year !== a.year) return b.year - a.year;
+            if (a.ganjil_genap !== b.ganjil_genap) {
+                return a.ganjil_genap === 'ganjil' ? -1 : 1;
+            }
+            if (a.uts_uas !== b.uts_uas) {
+                return b.uts_uas === 'uas' ? 1 : -1;
+            }
+            return 0;
+        });
+    }, [master]);
+
+    // Sort documents for registry
+    const sortedItems = useMemo(() => {
+        return [...items].sort((a, b) => {
+            if (a.diktat_id !== b.diktat_id) return b.diktat_id.localeCompare(a.diktat_id);
+            return a.name.localeCompare(b.name);
+        });
+    }, [items]);
+
     if (loading) return <div className="text-white italic">Loading Diktat Engine...</div>;
 
     return (
@@ -190,7 +212,7 @@ export default function DiktatManager() {
             <div className="bg-[#002A83] border border-[#0036A7] rounded-3xl p-6 shadow-xl">
                 <h2 className="text-xl font-bold font-serif text-white mb-4">Master Visibility Control</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                    {master.map(m => (
+                    {sortedMaster.map(m => (
                         <button
                             key={m.id}
                             onClick={() => toggleVisibility(m.id, m.is_active)}
@@ -220,7 +242,7 @@ export default function DiktatManager() {
                                 onChange={(e) => setFormData(prev => ({ ...prev, diktat_id: e.target.value }))}
                                 className="w-full bg-[#001B55] border border-[#0036A7] text-white px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-[#00B8D4]"
                             >
-                                {master.map(m => (
+                                {sortedMaster.map(m => (
                                     <option key={m.id} value={m.id}>{m.id}</option>
                                 ))}
                             </select>
@@ -323,7 +345,7 @@ export default function DiktatManager() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[#0036A7]">
-                            {items.map(item => (
+                            {sortedItems.map(item => (
                                 <tr key={item.id} className="hover:bg-[#0036A7]/30 transition">
                                     <td className="px-6 py-4 font-bold text-white text-sm">{item.name}</td>
                                     <td className="px-6 py-4 text-gray-400 text-xs">{item.diktat_id}</td>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { memo } from 'react';
 import { getSemester } from '../lib/dataUtils';
 import { ChevronDown } from 'lucide-react';
 
@@ -13,7 +13,7 @@ interface FilterSelectorProps {
     isDarkMode: boolean;
 }
 
-export const FilterSelector = ({
+export const FilterSelector = memo(({
     selectedYear,
     setSelectedYear,
     selectedMajor,
@@ -28,7 +28,7 @@ export const FilterSelector = ({
                 <select
                     value={selectedYear}
                     onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                    className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none transition-all cursor-pointer hover:border-highlight/40"
+                    className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none cursor-pointer"
                 >
                     <option value={1}>Semester {getSemester(1, ganjilGenap)}</option>
                     <option value={2}>Semester {getSemester(2, ganjilGenap)}</option>
@@ -42,7 +42,7 @@ export const FilterSelector = ({
                 <select
                     value={selectedMajor}
                     onChange={(e) => setSelectedMajor(e.target.value)}
-                    className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none transition-all cursor-pointer hover:border-highlight/40"
+                    className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none cursor-pointer"
                 >
                     <option value="">Semua Program Studi</option>
                     <option value="elektro">Teknik Elektro</option>
@@ -53,4 +53,6 @@ export const FilterSelector = ({
             </div>
         </div>
     </div>
-);
+));
+
+FilterSelector.displayName = 'FilterSelector';
