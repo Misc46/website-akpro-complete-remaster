@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Image from 'next/image';
 import { GraduationCap } from 'lucide-react';
 import { ImageCarousel } from './ImageCarousel';
 
@@ -38,13 +39,15 @@ export const InstitutionalObjective: React.FC<InstitutionalObjectiveProps> = ({
                     </div>
 
                     <div className="mt-12 flex items-center gap-6 pt-12 border-t border-border">
-                        <img
+                        <Image
                             src={isDarkMode
-                                ? "/Logo-Bidang-Akpro-IME-2026-DARK-removebg-preview.png"
-                                : "/Logo-Bidang-Akpro-IME-2026-LIGHT-removebg-preview.png"
+                                ? "/Logo-Bidang-Akpro-IME-2026-DARK-removebg-preview.webp"
+                                : "/Logo-Bidang-Akpro-IME-2026-LIGHT-removebg-preview.webp"
                             }
                             alt="AKPRO Logo"
-                            className="w-12 h-12 object-contain"
+                            width={48}
+                            height={48}
+                            className="object-contain"
                         />
                         <div className="h-8 w-[1px] bg-border"></div>
                         <div>

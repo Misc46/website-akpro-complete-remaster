@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 
 interface ImageCarouselProps {
@@ -81,12 +82,13 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
                                 }`}
                         >
                             {shouldLoad && (
-                                <img
+                                <Image
                                     src={img.url}
                                     alt={img.alt}
-                                    className="w-full h-full object-cover"
-                                    loading={idx === 0 ? "eager" : "lazy"}
-                                    fetchPriority={idx === 0 ? "high" : "low"}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                    className="object-cover"
+                                    priority={idx === 0}
                                 />
                             )}
                             {/* Overlay Gradient */}
