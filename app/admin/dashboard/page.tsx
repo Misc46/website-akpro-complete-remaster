@@ -158,9 +158,7 @@ export default function AdminDashboard() {
                                             if (res.ok) {
                                                 const deployMsg = data.deployStatus === 'triggered'
                                                     ? '🚀 Rebuild triggered! Changes will be live in ~2-3 minutes.'
-                                                    : data.deployStatus === 'skipped'
-                                                        ? '⚠️ Data saved but deploy hook not configured. Add CLOUDFLARE_DEPLOY_HOOK env var.'
-                                                        : `⚠️ Deploy hook failed with status: ${data.deployStatus}. Check your Cloudflare settings.`;
+                                                    : '⚠️ Data saved but deploy hook not configured. Add CLOUDFLARE_DEPLOY_HOOK env var.';
                                                 setMessage(`✅ Published ${data.diktatsCount} diktats, ${data.asistensiCount} asistensi, ${data.faqsCount} FAQs. ${deployMsg}`);
                                             } else {
                                                 setMessage(`Error: ${data.error}`);

@@ -5,6 +5,7 @@ pages_build_output_dir = ".vercel/output/static"
 
 [vars]
 NEXT_PUBLIC_USE_TURSO = "true"
+CLOUDFLARE_DEPLOY_HOOK = "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/c6da8fc1-4850-49cb-9b72-c7cd1a4c949a"
 
 
 [[kv_namespaces]]
