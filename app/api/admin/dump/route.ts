@@ -125,15 +125,20 @@ export async function POST(req: NextRequest) {
 
         // Trigger Cloudflare Pages rebuild via Deploy Hook
         let deployStatus = 'skipped';
-        const deployHookUrl = process.env.CLOUDFLARE_DEPLOY_HOOK;
+        const runtimeEnv = (process as any).env || {};
+        const deployHookUrl = runtimeEnv.CLOUDFLARE_DEPLOY_HOOK || (globalThis as any).CLOUDFLARE_DEPLOY_HOOK;
+        
         if (deployHookUrl) {
             try {
                 const hookRes = await fetch(deployHookUrl, { method: 'POST' });
                 deployStatus = hookRes.ok ? 'triggered' : `failed (${hookRes.status})`;
             } catch (e) {
-                deployStatus = 'error';
+                deployStatus = `error: ${e instanceof Error ? e.message : 'Unknown'}`;
                 console.error('Deploy hook error:', e);
             }
+        } else {
+            // Debug: Log if the env is missing
+            console.warn('CLOUDFLARE_DEPLOY_HOOK is missing from environment');
         }
 
         return NextResponse.json({
