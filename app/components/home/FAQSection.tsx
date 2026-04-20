@@ -26,10 +26,10 @@ export const FAQSection: React.FC<{ faqs: FAQItem[] }> = ({ faqs }) => {
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center gap-2 mb-4 text-highlight-text">
                         <Archive size={16} />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Informasi Umum</span>
+                        <span className="text-xs font-black uppercase tracking-[0.2em]">Informasi Umum</span>
                     </div>
                     <h2 className="text-3xl font-black tracking-tight text-foreground mb-4">Pertanyaan Sering Diajukan</h2>
-                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest opacity-60">frequently asked questions</p>
+                    <p className="text-sm text-muted-foreground font-medium uppercase tracking-widest opacity-60">frequently asked questions</p>
                 </div>
 
                 <div className="space-y-4">
@@ -39,11 +39,11 @@ export const FAQSection: React.FC<{ faqs: FAQItem[] }> = ({ faqs }) => {
                                 onClick={() => toggleFaq(idx)}
                                 className="w-full flex items-center justify-between p-6 text-left"
                             >
-                                <span className="text-sm font-bold text-foreground group-hover:text-highlight transition-colors">{faq.q}</span>
+                                <span className="text-base font-bold text-foreground group-hover:text-highlight transition-colors">{faq.q}</span>
                                 <ChevronDown id={`faq-icon-${idx}`} size={18} className="text-muted-foreground transition-transform duration-300" />
                             </button>
                             <div id={`faq-ans-${idx}`} className="hidden px-6 pb-6 animate-in fade-in slide-in-from-top-2 duration-300">
-                                <p className="text-xs leading-relaxed text-muted-foreground font-medium border-t border-border/50 pt-4">
+                                <p className="text-sm leading-relaxed text-muted-foreground font-medium border-t border-border/50 pt-4">
                                     {faq.a}
                                 </p>
                             </div>

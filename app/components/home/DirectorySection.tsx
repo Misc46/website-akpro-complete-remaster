@@ -16,8 +16,8 @@ export const DirectorySection: React.FC = () => {
                         <ArrowUpRight size={20} className="text-muted-foreground group-hover:text-highlight transition-all" />
                     </div>
                     <h3 className="text-xl font-bold mb-2 text-foreground">Kumpulan Diktat</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed mb-6 font-medium">Kumpulan pembahasan soal yang berkaitan dengan materi UTS/UAS.</p>
-                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-highlight">
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-medium">Kumpulan pembahasan soal yang berkaitan dengan materi UTS/UAS.</p>
+                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-highlight">
                         <span>Lihat Diktat</span>
                         <ChevronRight size={14} />
                     </div>
@@ -31,8 +31,8 @@ export const DirectorySection: React.FC = () => {
                         <ArrowUpRight size={20} className="text-muted-foreground group-hover:text-highlight transition-all" />
                     </div>
                     <h3 className="text-xl font-bold mb-2 text-foreground">Link & Jadwal Asistensi</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed mb-6 font-medium">Pembahasan materi dan soal-soal yang berhubungan dengan materi UTS/UAS melalui sesi live Zoom meeting atau video Youtube.</p>
-                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-highlight">
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-medium">Pembahasan materi dan soal-soal yang berhubungan dengan materi UTS/UAS melalui sesi live Zoom meeting atau video Youtube.</p>
+                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-highlight">
                         <span>Lihat Jadwal</span>
                         <ChevronRight size={14} />
                     </div>
@@ -43,11 +43,11 @@ export const DirectorySection: React.FC = () => {
                         <div className="p-3 bg-accent text-accent-foreground rounded-lg">
                             <ShieldCheck size={24} />
                         </div>
-                        <div className="px-2 py-1 rounded bg-muted text-[8px] font-black uppercase tracking-widest text-muted-foreground">Segera Hadir</div>
+                        <div className="px-2 py-1 rounded bg-muted text-[10px] font-black uppercase tracking-widest text-muted-foreground">Segera Hadir</div>
                     </div>
                     <h3 className="text-xl font-bold mb-2 text-foreground">Aktor</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed mb-6 font-medium">Akpro tutor, request asistensi matkul untuk kuis ke tim bp/bphsa akpro.</p>
-                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-medium">Akpro tutor, request asistensi matkul untuk kuis ke tim bp/bphsa akpro.</p>
+                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground opacity-50">
                         <span>Hubungi BP/BPHSA</span>
                         <ChevronRight size={14} />
                     </div>

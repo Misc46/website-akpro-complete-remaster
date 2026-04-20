@@ -47,6 +47,26 @@
   --color-card: var(--card);
   --font-sans: var(--font-poppins);
   --font-serif: var(--font-merriweather);
+
+  /* Larger typography scale */
+  --font-size-xs: 0.8125rem;
+  --font-size-sm: 0.9375rem;
+  --font-size-base: 1.0625rem;
+  --font-size-lg: 1.1875rem;
+  --font-size-xl: 1.3125rem;
+  --font-size-2xl: 1.625rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
+}
+
+:root {
+  font-size: 100%;
+}
+
+@media (max-width: 768px) {
+  :root {
+    font-size: 106.25%; /* 17px on mobile for better readability */
+  }
 }
 
 html {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, memo } from 'react';
+import React, { useState, useMemo, memo, useEffect } from 'react';
 import {
     Calendar,
     Clock,
@@ -14,7 +14,11 @@ import {
     LayoutList,
     CalendarDays,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    X,
+    ExternalLink,
+    PlayCircle,
+    ChevronDown
 } from 'lucide-react';
 import { FilterSelector } from '../components/FilterSelector';
 import { useTheme } from '../lib/ThemeContext';
@@ -30,6 +34,7 @@ interface AsistensiClientProps {
 }
 
 const CalendarView = memo(({ items, isDarkMode }: { items: AsistensiItem[], isDarkMode: boolean }) => {
+    const [selectedItem, setSelectedItem] = useState<AsistensiItem | null>(null);
     const [currentDate, setCurrentDate] = useState(() => {
         if (items.length > 0) {
             return new Date(items[0].date);
@@ -37,131 +42,380 @@ const CalendarView = memo(({ items, isDarkMode }: { items: AsistensiItem[], isDa
         return new Date();
     });
 
-    const daysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
-    const firstDayOfMonth = (year: number, month: number) => new Date(year, month, 1).getDay();
+    // Auto-sync calendar view when items change (e.g. switching archive or applying filters)
+    useEffect(() => {
+        if (items.length > 0) {
+            const firstDate = new Date(items[0].date);
+            setCurrentDate(firstDate);
+        }
+    }, [items]);
 
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
+    const startOfWeek = (date: Date) => {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust to Monday
+        return new Date(d.setDate(diff));
+    };
+
+    const weekStart = startOfWeek(currentDate);
+    const weekDays = useMemo(() => {
+        const days = [];
+        for (let i = 0; i < 7; i++) { // Sun-Sat
+            const d = new Date(weekStart);
+            d.setDate(weekStart.getDate() + i);
+            days.push(d);
+        }
+        return days;
+    }, [weekStart]);
+
+    const prevWeek = () => {
+        const d = new Date(currentDate);
+        d.setDate(d.getDate() - 7);
+        setCurrentDate(d);
+    };
+
+    const nextWeek = () => {
+        const d = new Date(currentDate);
+        d.setDate(d.getDate() + 7);
+        setCurrentDate(d);
+    };
+
+    const dayNames = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+    
+    // Calculate relevant time range
+    const { startHour, endHour, timeSlots } = useMemo(() => {
+        const weekItems = items.filter(item => {
+            const d = new Date(item.date);
+            const ws = new Date(weekStart);
+            const we = new Date(weekStart);
+            we.setDate(we.getDate() + 7);
+            return d >= ws && d < we;
+        });
+
+        if (weekItems.length === 0) {
+            const defaultStart = 8;
+            const defaultEnd = 17;
+            const slots = [];
+            for (let i = defaultStart; i <= defaultEnd; i++) {
+                slots.push(`${i}.00`, `${i}.30`);
+            }
+            return { startHour: defaultStart, endHour: defaultEnd, timeSlots: slots };
+        }
+
+        let min = 23;
+        let max = 0;
+        weekItems.forEach(item => {
+            const d = new Date(item.date);
+            const h = d.getHours();
+            if (h < min) min = h;
+            if (h > max) max = h;
+        });
+
+        const s = Math.max(0, min - 1);
+        const e = Math.min(23, max + 2); // Buffer for session duration
+        const slots = [];
+        for (let i = s; i <= e; i++) {
+            slots.push(`${i}.00`, `${i}.30`);
+        }
+        return { startHour: s, endHour: e, timeSlots: slots };
+    }, [items, weekStart]);
+
+    const getItemsForDay = (date: Date) => {
+        return items.filter(item => {
+            const itemDate = new Date(item.date);
+            return itemDate.getDate() === date.getDate() &&
+                   itemDate.getMonth() === date.getMonth() &&
+                   itemDate.getFullYear() === date.getFullYear();
+        });
+    };
+
+    // Calculate position in grid based on dynamic startHour
+    const getGridPosition = (dateValue: string | Date) => {
+        const date = new Date(dateValue);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const totalMinutesFromStart = (hours - startHour) * 60 + minutes;
+        // Each 30 mins = 1 grid row.
+        return Math.max(1, (totalMinutesFromStart / 30) + 1);
+    };
+
+    // Assume average duration is 100 minutes if not specified, 
+    // but we can try to find a duration if possible or use a default.
+    const getGridSpan = () => {
+        // Most asistensi sessions are ~1.5 to 2 hours
+        return 3.33; // ~100 minutes (3.33 slots of 30 mins)
+    };
 
     const monthNames = [
         "Januari", "Februari", "Maret", "April", "Mei", "Juni",
         "Juli", "Agustus", "September", "Oktober", "November", "Desember"
     ];
 
-    const prevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
-    const nextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
-
-    const calendarDays = useMemo(() => {
-        const totalDays = daysInMonth(year, month);
-        const startDay = firstDayOfMonth(year, month);
-        const days = [];
-
-        // Padding for previous month
-        const prevMonthTotalDays = daysInMonth(year, month - 1);
-        for (let i = startDay - 1; i >= 0; i--) {
-            days.push({ day: prevMonthTotalDays - i, currentMonth: false, date: new Date(year, month - 1, prevMonthTotalDays - i) });
-        }
-
-        // Current month days
-        for (let i = 1; i <= totalDays; i++) {
-            days.push({ day: i, currentMonth: true, date: new Date(year, month, i) });
-        }
-
-        // Padding for next month
-        const remainingCells = 42 - days.length; // 6 rows * 7 days
-        for (let i = 1; i <= remainingCells; i++) {
-            days.push({ day: i, currentMonth: false, date: new Date(year, month + 1, i) });
-        }
-
-        return days;
-    }, [year, month]);
-
-    const getItemsForDay = (date: Date) => {
-        return items.filter(item => {
-            const itemDate = new Date(item.date);
-            return itemDate.getDate() === date.getDate() &&
-                itemDate.getMonth() === date.getMonth() &&
-                itemDate.getFullYear() === date.getFullYear();
-        });
-    };
-
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
-            <div className="flex items-center justify-between bg-muted/30 border border-border p-4 rounded-xl">
-                <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
-                    {monthNames[month]} {year}
-                </h3>
+            {/* Header / Week Navigation */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-muted/30 border border-border p-4 rounded-2xl gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="p-2.5 bg-highlight/10 text-highlight rounded-xl">
+                        <CalendarDays size={20} />
+                    </div>
+                    <div>
+                        <h3 className="font-black text-lg text-foreground leading-tight">
+                            Minggu ke-{Math.ceil(currentDate.getDate() / 7)}
+                        </h3>
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                            {monthNames[weekStart.getMonth()]} {weekStart.getFullYear()}
+                        </p>
+                    </div>
+                </div>
                 <div className="flex items-center gap-2">
-                    <button onClick={prevMonth} className="p-2 hover:bg-muted rounded-lg transition-colors border border-border">
-                        <ChevronLeft size={18} />
+                    <button onClick={prevWeek} className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 hover:bg-muted rounded-xl transition-all border border-border text-[10px] font-black uppercase tracking-widest">
+                        <ChevronLeft size={16} />
+                        <span>Sebelumnya</span>
                     </button>
-                    <button onClick={nextMonth} className="p-2 hover:bg-muted rounded-lg transition-colors border border-border">
-                        <ChevronRight size={18} />
+                    <button onClick={nextWeek} className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 hover:bg-muted rounded-xl transition-all border border-border text-[10px] font-black uppercase tracking-widest">
+                        <span>Berikutnya</span>
+                        <ChevronRight size={16} />
                     </button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-7 gap-px bg-border border border-border rounded-xl overflow-hidden shadow-sm">
-                {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((day) => (
-                    <div key={day} className="bg-muted/50 p-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-center">
-                        {day}
-                    </div>
-                ))}
+            {/* Schedule Grid */}
+            <div className="relative border border-border rounded-xl md:rounded-2xl overflow-hidden bg-background shadow-xl">
+                <div className="">
+                    <div className="grid grid-cols-[50px_repeat(7,1fr)] w-full">
+                        {/* Empty top-left corner */}
+                        <div className="bg-muted/50 border-b border-r border-border py-1 px-2 flex items-center justify-center">
+                            <span className="text-[8px] font-black uppercase text-muted-foreground tracking-widest">Jam</span>
+                        </div>
 
-                {calendarDays.map((dateObj, idx) => {
-                    const dayItems = getItemsForDay(dateObj.date);
-                    const isToday = new Date().toDateString() === dateObj.date.toDateString();
-
-                    return (
-                        <div
-                            key={idx}
-                            className={`min-h-[120px] p-2 transition-colors ${dateObj.currentMonth
-                                    ? (isDarkMode ? 'bg-muted/5' : 'bg-background')
-                                    : (isDarkMode ? 'bg-muted/10 opacity-40' : 'bg-muted/20 opacity-50')
-                                } ${isToday ? 'ring-1 ring-inset ring-highlight/50' : ''}`}
-                        >
-                            <div className="flex justify-between items-center mb-2">
-                                <span className={`text-[10px] font-bold ${isToday ? 'bg-highlight text-white w-5 h-5 flex items-center justify-center rounded-full' : 'text-muted-foreground'
+                        {/* Day Headers */}
+                        {weekDays.map((day, idx) => {
+                            const isToday = new Date().toDateString() === day.toDateString();
+                            return (
+                                <div 
+                                    key={idx} 
+                                    className={`py-1.5 px-0.5 text-center border-b border-r border-border last:border-r-0 ${
+                                        isToday ? 'bg-highlight/5' : 'bg-muted/30'
+                                    }`}
+                                >
+                                    <span className={`text-[8px] md:text-[9px] font-black uppercase tracking-[0.1em] block mb-0 ${
+                                        isToday ? 'text-highlight' : 'text-muted-foreground'
                                     }`}>
-                                    {dateObj.day}
-                                </span>
-                                {dayItems.length > 0 && (
-                                    <span className="text-[8px] font-black bg-highlight/10 text-highlight px-1.5 py-0.5 rounded">
-                                        {dayItems.length} Sesi
+                                        {dayNames[idx]}
                                     </span>
-                                )}
-                            </div>
+                                    <span className={`text-sm md:text-base font-black ${
+                                        isToday ? 'text-highlight' : 'text-foreground'
+                                    }`}>
+                                        {day.getDate()}
+                                    </span>
+                                </div>
+                            );
+                        })}
 
-                            <div className="space-y-1">
-                                {dayItems.map((item, i) => (
-                                    <div
-                                        key={i}
-                                        className="p-1.5 rounded bg-muted/40 border border-border/50 text-[9px] font-bold leading-tight line-clamp-2 hover:border-highlight/30 transition-colors cursor-default"
-                                        title={item.name}
-                                    >
-                                        <div className="flex items-center gap-1 text-[8px] opacity-60 mb-0.5">
-                                            <Clock size={8} />
-                                            {new Date(item.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                        {/* Grid Body */}
+                        <div className="relative col-span-8">
+                            <div 
+                                className="grid grid-cols-[50px_repeat(7,1fr)]"
+                                style={{ 
+                                    gridTemplateRows: `repeat(${timeSlots.length}, 28px)` 
+                                }}
+                            >
+                                {/* Time Labels & Grid Lines */}
+                                {timeSlots.map((time, idx) => (
+                                    <React.Fragment key={idx}>
+                                        <div className="border-r border-b border-border bg-muted/10 px-1 py-0.5 text-right flex items-center justify-end">
+                                            <span className={`text-[8px] md:text-[10px] font-bold ${idx % 2 === 0 ? 'text-foreground/70' : 'text-muted-foreground/30'}`}>
+                                                {time}
+                                            </span>
                                         </div>
-                                        {item.name}
-                                    </div>
+                                        {[...Array(7)].map((_, dayIdx) => (
+                                            <div 
+                                                key={dayIdx} 
+                                                className={`border-r border-b border-border/30 last:border-r-0 ${
+                                                    idx % 2 === 0 ? 'bg-background' : 'bg-muted/5'
+                                                }`}
+                                            />
+                                        ))}
+                                    </React.Fragment>
                                 ))}
+
+                                {/* Events (Absolute Positioned over Grid) */}
+                                <div className="absolute inset-0 pointer-events-none p-px">
+                                    <div className="grid grid-cols-[50px_repeat(7,1fr)] h-full w-full">
+                                        <div className="col-start-1" /> {/* Reserved for time labels */}
+                                        
+                                        {weekDays.map((day, dayIdx) => (
+                                            <div key={dayIdx} className="relative h-full border-r border-border/0 last:border-r-0">
+                                                {getItemsForDay(day).map((item, i) => {
+                                                    const rowStart = getGridPosition(item.date);
+                                                    const rowSpan = getGridSpan();
+                                                    
+                                                    return (
+                                                        <div
+                                                            key={i}
+                                                            onClick={() => setSelectedItem(item)}
+                                                            className="absolute left-[2px] right-[2px] rounded-lg p-2 shadow-md border-l-4 pointer-events-auto transition-all hover:scale-[1.05] hover:z-20 cursor-pointer group active:scale-95"
+                                                            style={{
+                                                                top: `${(rowStart - 1) * 28}px`,
+                                                                height: `${rowSpan * 28}px`,
+                                                                backgroundColor: isDarkMode ? 'rgba(0, 42, 131, 0.85)' : 'rgba(224, 247, 250, 0.95)',
+                                                                borderColor: '#00b4d4',
+                                                                backdropFilter: 'blur(10px)',
+                                                            }}
+                                                        >
+                                                            <div className="flex flex-col h-full overflow-hidden">
+                                                                <div className="flex items-center gap-1 mb-1">
+                                                                    <div className="p-0.5 bg-highlight/20 text-highlight rounded">
+                                                                        <Clock size={10} />
+                                                                    </div>
+                                                                    <span className="text-[10px] font-black text-highlight uppercase tracking-widest whitespace-nowrap">
+                                                                        {new Date(item.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                                                                    </span>
+                                                                </div>
+                                                                <h4 className="text-xs font-black text-foreground line-clamp-3 leading-tight mb-1 group-hover:text-highlight transition-colors">
+                                                                    {item.name}
+                                                                </h4>
+                                                                <p className="text-[10px] font-bold text-muted-foreground/80 flex items-center gap-1 mt-auto">
+                                                                    <User size={10} />
+                                                                    <span className="truncate">{item.person[0]?.name}</span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    );
-                })}
+                    </div>
+                </div>
             </div>
 
-            <div className="flex items-center gap-4 text-[10px] text-muted-foreground font-medium bg-muted/20 p-4 rounded-xl border border-border/50">
-                <div className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-highlight"></div>
-                    <span>Hari Ini</span>
+            {/* Legend / Info */}
+            <div className="flex flex-wrap items-center gap-6 p-4 rounded-2xl bg-muted/20 border border-border/50">
+                <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-highlight"></div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Hari Ini</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded bg-muted/40 border border-border/50"></div>
-                    <span>Sesi Terjadwal</span>
+                <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded bg-accent border border-accent/20"></div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Sesi Terjadwal</span>
+                </div>
+                <div className="ml-auto flex items-center gap-2 text-muted-foreground/50">
+                    <Info size={14} />
+                    <span className="text-[9px] font-medium italic">Klik sesi untuk detail atau rotasi ke horizontal di mobile.</span>
                 </div>
             </div>
+
+            {/* Detail Modal */}
+            {selectedItem && (
+                <div 
+                    className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-300"
+                    onClick={() => setSelectedItem(null)}
+                >
+                    <div 
+                        className="bg-background border-2 border-border w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Simple Modal Header */}
+                        <div className="bg-muted p-4 flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-foreground">
+                                <CalendarDays size={20} />
+                                <span className="text-xs font-black uppercase tracking-widest">Detail Sesi</span>
+                            </div>
+                            <button 
+                                onClick={() => setSelectedItem(null)}
+                                className="p-2 hover:bg-background/50 text-foreground rounded-lg transition-colors border border-border"
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
+
+                        {/* Modal Body */}
+                        <div className="p-6 space-y-6">
+                            <div>
+                                <h2 className="text-2xl font-black text-foreground leading-tight">
+                                    {selectedItem.name}
+                                </h2>
+                                <div className="flex flex-wrap gap-2 mt-3">
+                                    {selectedItem.major.map((m, idx) => (
+                                        <span key={idx} className="px-2 py-0.5 bg-muted text-muted-foreground text-[10px] font-black uppercase tracking-widest rounded-md">
+                                            {m}
+                                        </span>
+                                    ))}
+                                    {selectedItem.year.map((y, idx) => (
+                                        <span key={idx} className="px-2 py-0.5 bg-highlight text-foreground text-[10px] font-black uppercase tracking-widest rounded-md">
+                                            Angkatan {y}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="p-4 bg-muted/30 rounded-2xl border border-border">
+                                    <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                                        <Clock size={14} />
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Waktu</span>
+                                    </div>
+                                    <p className="font-black text-foreground">
+                                        {new Date(selectedItem.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB
+                                    </p>
+                                </div>
+                                <div className="p-4 bg-muted/30 rounded-2xl border border-border">
+                                    <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                                        <Calendar size={14} />
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Tanggal</span>
+                                    </div>
+                                    <p className="font-black text-foreground">
+                                        {new Date(selectedItem.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                                    <User size={14} />
+                                    <span className="text-[10px] font-black uppercase tracking-widest">Pengajar</span>
+                                </div>
+                                <div className="space-y-3">
+                                    {selectedItem.person.map((p, idx) => (
+                                        <div key={idx} className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl border border-border/50">
+                                            <div className="w-10 h-10 bg-accent text-white rounded-lg flex items-center justify-center font-black">
+                                                {p.name.charAt(0)}
+                                            </div>
+                                            <p className="font-bold text-foreground">{p.name}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3 pt-4">
+                                <a 
+                                    href={selectedItem.zoomMeetingsLink} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-center gap-2 py-4 bg-highlight text-foreground font-black rounded-xl hover:brightness-95 active:scale-95 transition-all shadow-lg shadow-highlight/10"
+                                >
+                                    <ExternalLink size={18} />
+                                    <span>Buka Zoom</span>
+                                </a>
+                                <a 
+                                    href={selectedItem.recordingsLink} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-center gap-2 py-4 bg-muted text-foreground border border-border font-black rounded-2xl hover:bg-muted/80 active:scale-95 transition-all"
+                                >
+                                    <PlayCircle size={18} />
+                                    <span>Rekaman</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 });
@@ -191,13 +445,13 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
 
     const latestAsistensiId = sortedData[0]?.id;
     const [activeGroupId, setActiveGroupId] = useState<string | undefined>(latestAsistensiId);
+    const [isArchiveOpen, setIsArchiveOpen] = useState(false);
+
+    const activeGroups = useMemo(() => sortedData.slice(0, 3), [sortedData]);
+    const archiveGroups = useMemo(() => sortedData.slice(3), [sortedData]);
 
     const currentGroup = useMemo(() =>
         sortedData.find(d => d.id === activeGroupId) || sortedData[0]
-        , [sortedData, activeGroupId]);
-
-    const archiveGroups = useMemo(() =>
-        sortedData.filter(d => d.id !== activeGroupId)
         , [sortedData, activeGroupId]);
 
     if (!currentGroup) return <div className={`p-24 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Tidak ada data asistensi tersedia</div>;
@@ -246,20 +500,20 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                             </button>
                         </div>
 
-                        <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-muted border border-border">
-                            {sortedData.map(g => (
-                                <button
-                                    key={g.id}
-                                    onClick={() => setActiveGroupId(g.id)}
-                                    className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest ${activeGroupId === g.id
-                                        ? 'bg-background text-highlight-text shadow-sm'
-                                        : 'text-muted-foreground hover:text-foreground'}`}
-                                >
-                                    {g.uts_uas} {g.ganjil_genap} {g.year}
-                                </button>
-                            ))}
-                        </div>
+                    <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-muted border border-border">
+                        {activeGroups.map(g => (
+                            <button
+                                key={g.id}
+                                onClick={() => setActiveGroupId(g.id)}
+                                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest ${activeGroupId === g.id
+                                    ? 'bg-background text-highlight-text shadow-sm'
+                                    : 'text-muted-foreground hover:text-foreground'}`}
+                            >
+                                {g.uts_uas} {g.ganjil_genap} {g.year}
+                            </button>
+                        ))}
                     </div>
+                </div>
                 </div>
 
                 <div className="grid lg:grid-cols-[280px_1fr] gap-12">
@@ -292,25 +546,45 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
 
                         {archiveGroups.length > 0 && (
                             <div>
-                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Arsip</h4>
-                                <div className="grid gap-2">
-                                    {archiveGroups.map(group => (
-                                        <button
-                                            key={group.id}
-                                            onClick={() => {
-                                                setActiveGroupId(group.id);
-                                                window.scrollTo({ top: 0 });
-                                            }}
-                                            className={`flex items-center justify-between p-3 rounded-lg border text-left ${activeGroupId === group.id
-                                                ? 'bg-highlight/10 border-highlight text-highlight-text'
-                                                : 'border-border bg-background text-muted-foreground hover:border-highlight/40 hover:text-foreground'}`}
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <FileText size={14} />
-                                                <span className="text-[10px] font-bold uppercase tracking-widest">{group.uts_uas} {group.ganjil_genap} {group.year}</span>
-                                            </div>
-                                        </button>
-                                    ))}
+                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-foreground">Arsip Periode</h4>
+                                <div className="relative">
+                                    <button
+                                        onClick={() => setIsArchiveOpen(!isArchiveOpen)}
+                                        className={`w-full flex items-center justify-between px-4 py-3 text-xs border font-sans font-bold bg-background text-foreground rounded-xl focus:ring-1 focus:ring-highlight focus:border-highlight outline-none cursor-pointer hover:border-highlight/40 ${isArchiveOpen ? 'border-highlight ring-1 ring-highlight' : 'border-border'}`}
+                                    >
+                                        <span>
+                                            {archiveGroups.find(g => g.id === activeGroupId)
+                                                ? (() => {
+                                                    const group = archiveGroups.find(g => g.id === activeGroupId)!;
+                                                    return `${group.uts_uas.toUpperCase()} ${group.ganjil_genap.toUpperCase()} ${group.year}`;
+                                                })()
+                                                : "Pilih Periode Arsip..."}
+                                        </span>
+                                        <ChevronDown size={14} className={`text-muted-foreground ${isArchiveOpen ? 'rotate-180' : ''}`} />
+                                    </button>
+
+                                    {isArchiveOpen && (
+                                        <div className="mt-2 flex flex-col gap-2 animate-in slide-in-from-top-2 duration-200">
+                                            {archiveGroups.map(group => (
+                                                <button
+                                                    key={group.id}
+                                                    onClick={() => {
+                                                        setActiveGroupId(group.id);
+                                                        setIsArchiveOpen(false);
+                                                        window.scrollTo({ top: 0 });
+                                                    }}
+                                                    className={`flex items-center justify-between w-full text-left px-4 py-3 rounded-lg border ${activeGroupId === group.id
+                                                        ? 'bg-highlight/10 border-highlight text-highlight-text'
+                                                        : 'bg-muted/30 border-transparent hover:bg-muted hover:border-border text-muted-foreground hover:text-foreground'}`}
+                                                >
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest">
+                                                        {group.uts_uas} {group.ganjil_genap} {group.year}
+                                                    </span>
+                                                    {activeGroupId === group.id && <div className="w-1.5 h-1.5 rounded-full bg-highlight"></div>}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}

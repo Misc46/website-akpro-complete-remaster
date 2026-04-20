@@ -81,7 +81,7 @@ export default function HomePageClient({ resourceCategories, faqs }: HomePageCli
                                 ))
                             ) : (
                                 <div className="p-12 text-center border border-dashed border-border rounded-xl">
-                                    <p className="text-xs font-bold text-muted-foreground">Tidak ada sumber daya yang cocok ditemukan untuk "{searchQuery}"</p>
+                                    <p className="text-sm font-bold text-muted-foreground">Tidak ada sumber daya yang cocok ditemukan untuk "{searchQuery}"</p>
                                 </div>
                             )}
                         </div>

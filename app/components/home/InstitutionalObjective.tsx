@@ -24,12 +24,12 @@ export const InstitutionalObjective: React.FC<InstitutionalObjectiveProps> = ({
                 <div>
                     <div className="inline-flex items-center gap-2 mb-6 text-highlight-text">
                         <GraduationCap size={16} />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Selaras | Efektif | Berdaya</span>
+                        <span className="text-xs font-black uppercase tracking-[0.2em]">Selaras | Efektif | Berdaya</span>
                     </div>
                     <h2 className="text-3xl font-black mb-8 leading-tight text-foreground">
                         Bidang Akademis dan Keprofesian IME FTUI 2026.
                     </h2>
-                    <div className="space-y-6 text-sm font-medium leading-relaxed text-muted-foreground">
+                    <div className="space-y-6 text-base font-medium leading-relaxed text-muted-foreground">
                         <p>
                             Akpro IME FTUI merupakan bidang yang bertanggung jawab dalam mengadvokasi, mewadahi, serta memfasilitasi warga Departemen Teknik Elektro dalam aspek akademis dan keprofesian.
                         </p>
@@ -51,8 +51,8 @@ export const InstitutionalObjective: React.FC<InstitutionalObjectiveProps> = ({
                         />
                         <div className="h-8 w-[1px] bg-border"></div>
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-wider text-foreground">Sistem Dikelola oleh</p>
-                            <p className="text-[10px] text-highlight-text font-bold uppercase tracking-widest">Tim AKPRO IME FTUI 2026</p>
+                            <p className="text-xs font-black uppercase tracking-wider text-foreground">Sistem Dikelola oleh</p>
+                            <p className="text-xs text-highlight-text font-bold uppercase tracking-widest">Tim AKPRO IME FTUI 2026</p>
                         </div>
                     </div>
                 </div>

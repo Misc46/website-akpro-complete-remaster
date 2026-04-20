@@ -32,9 +32,9 @@ export const ToolboxSection: React.FC<ToolboxSectionProps> = ({
                     <div>
                         <div className="inline-flex items-center gap-2 mb-4 text-highlight-text">
                             <Search size={16} />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Toolbox Akademik</span>
+                            <span className="text-xs font-black uppercase tracking-[0.2em]">Toolbox Akademik</span>
                         </div>
-                        <h2 className="text-2xl font-black tracking-tight text-foreground">Indeks Sumber Daya</h2>
+                        <h2 className="text-3xl font-black tracking-tight text-foreground">Indeks Sumber Daya</h2>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
@@ -42,7 +42,7 @@ export const ToolboxSection: React.FC<ToolboxSectionProps> = ({
                             <button
                                 key={cat.id}
                                 onClick={() => setActiveCategory(cat.id)}
-                                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeCategory === cat.id
+                                className={`px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeCategory === cat.id
                                     ? 'bg-highlight text-highlight-foreground shadow-md'
                                     : 'bg-background border border-border text-muted-foreground hover:border-highlight/50'}`}
                             >
@@ -57,7 +57,7 @@ export const ToolboxSection: React.FC<ToolboxSectionProps> = ({
                         <div className="grid md:grid-cols-3 gap-6">
                             {activeCatData.groups?.map((group: any) => (
                                 <div key={group.name} className="p-6 border border-border rounded-xl bg-card shadow-sm">
-                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 text-highlight-text underline decoration-highlight/30 underline-offset-4">
+                                    <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 text-highlight-text underline decoration-highlight/30 underline-offset-4">
                                         <FolderOpen size={14} />
                                         {group.name}
                                     </h4>
@@ -68,10 +68,10 @@ export const ToolboxSection: React.FC<ToolboxSectionProps> = ({
                                                 href={link.href}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center justify-between p-3 rounded-lg text-[11px] font-bold text-muted-foreground bg-muted/20 hover:bg-highlight/5 hover:text-highlight border border-transparent hover:border-highlight/20 transition-all group/link"
+                                                className="flex items-center justify-between p-3.5 rounded-lg text-sm font-bold text-muted-foreground bg-muted/20 hover:bg-highlight/5 hover:text-highlight border border-transparent hover:border-highlight/20 transition-all group/link"
                                             >
                                                 <span className="truncate pr-4">{link.title}</span>
-                                                <ExternalLink size={12} className="shrink-0 opacity-40 group-hover/link:opacity-100" />
+                                                <ExternalLink size={14} className="shrink-0 opacity-40 group-hover/link:opacity-100" />
                                             </a>
                                         ))}
                                     </div>
@@ -92,10 +92,10 @@ export const ToolboxSection: React.FC<ToolboxSectionProps> = ({
                                         {getIcon(link.icon)}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h4 className="text-sm font-bold text-foreground mb-0.5">{link.title}</h4>
-                                        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider line-clamp-1">{link.description}</p>
+                                        <h4 className="text-base font-bold text-foreground mb-0.5">{link.title}</h4>
+                                        <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider line-clamp-1">{link.description}</p>
                                     </div>
-                                    <div className="hidden sm:flex items-center gap-2 text-highlight font-black text-[9px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 pr-2">
+                                    <div className="hidden sm:flex items-center gap-2 text-highlight font-black text-[11px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 pr-2">
                                         <span>Akses File</span>
                                         <ArrowUpRight size={14} />
                                     </div>

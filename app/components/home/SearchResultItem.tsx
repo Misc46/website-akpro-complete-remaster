@@ -23,16 +23,16 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({ link }) => {
             </div>
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                    <h4 className="text-sm font-bold truncate text-foreground">{link.title}</h4>
-                    <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 border border-border/50 px-1.5 py-0.5 rounded-full">
+                    <h4 className="text-base font-bold truncate text-foreground">{link.title}</h4>
+                    <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 border border-border/50 px-1.5 py-0.5 rounded-full">
                         {link.categoryLabel}
                     </span>
                 </div>
-                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider line-clamp-1">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider line-clamp-1">
                     {link.description || 'Sumber Daya Akademik Terverifikasi'}
                 </p>
             </div>
-            <div className="hidden sm:flex items-center gap-2 text-highlight font-black text-[9px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 pr-2">
+            <div className="hidden sm:flex items-center gap-2 text-highlight font-black text-[11px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 pr-2">
                 <span>Buka</span>
                 <ExternalLink size={14} />
             </div>
