@@ -30,8 +30,8 @@ export const FilterSelector = memo(({
                     onChange={(e) => setSelectedYear(parseInt(e.target.value))}
                     className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none cursor-pointer"
                 >
-                    <option value={1}>Semester {getSemester(1, ganjilGenap)}</option>
-                    <option value={2}>Semester {getSemester(2, ganjilGenap)}</option>
+                    <option value={1} className="bg-background text-foreground">Semester {getSemester(1, ganjilGenap)}</option>
+                    <option value={2} className="bg-background text-foreground">Semester {getSemester(2, ganjilGenap)}</option>
                 </select>
                 <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
             </div>
@@ -44,10 +44,10 @@ export const FilterSelector = memo(({
                     onChange={(e) => setSelectedMajor(e.target.value)}
                     className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none cursor-pointer"
                 >
-                    <option value="">Semua Program Studi</option>
-                    <option value="elektro">Teknik Elektro</option>
-                    <option value="komputer">Teknik Komputer</option>
-                    <option value="biomedik">Teknik Biomedik</option>
+                    <option value="" className="bg-background text-foreground">Semua Program Studi</option>
+                    <option value="elektro" className="bg-background text-foreground">Teknik Elektro</option>
+                    <option value="komputer" className="bg-background text-foreground">Teknik Komputer</option>
+                    <option value="biomedik" className="bg-background text-foreground">Teknik Biomedik</option>
                 </select>
                 <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
             </div>

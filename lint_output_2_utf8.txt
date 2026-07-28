@@ -1,0 +1,220 @@
+﻿
+> website-akpro@0.1.0 lint
+> eslint
+
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\HomePageClient.tsx
+   3:27   warning  'useEffect' is defined but never used                            @typescript-eslint/no-unused-vars
+  19:25   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  20:11   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  32:49   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  34:52   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  35:44   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  43:42   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  84:141  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  84:155  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\admin\dashboard\AsistensiManager.tsx
+    7:42  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+    8:40  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+   48:23  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+   57:8   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   95:18  warning  'err' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+  100:31  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  132:18  warning  'err' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+  146:18  warning  'err' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+  385:62  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\admin\dashboard\DiktatManager.tsx
+    7:42  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+    8:40  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+   44:23  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+   53:8   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   71:18  warning  'err' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+   92:18  warning  'err' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+  106:18  warning  'err' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+  119:18  warning  'err' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+  354:65  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\admin\dashboard\FAQManager.tsx
+   7:38  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:23  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  51:18  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+  71:18  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+  85:18  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+  90:32  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\admin\dashboard\page.tsx
+   31:93   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   31:151  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   57:21   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  169:50   warning  'e' is defined but never used                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  187:50   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  187:58   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\admin\login\page.tsx
+   5:10  warning  'Lock' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  32:18  warning  'err' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  44:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\api\admin\asistensi\route.ts
+   35:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   66:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   85:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  117:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\api\admin\diktat\route.ts
+  34:21  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  71:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  86:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\api\admin\dump\route.ts
+  129:15  warning  'env' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  130:35  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  130:67  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\api\admin\faq\route.ts
+  25:21  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  63:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  78:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\api\admin\login\route.ts
+   2:8   warning  'bcrypt' is defined but never used  @typescript-eslint/no-unused-vars
+  45:14  warning  'error' is defined but never used   @typescript-eslint/no-unused-vars
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\api\admin\master-group\route.ts
+  44:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\api\admin\sync\route.ts
+   5:10  warning  'convertMajorCode' is defined but never used  @typescript-eslint/no-unused-vars
+  60:21  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\api\admin\toolbox\route.ts
+   72:21  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   94:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  112:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  128:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\api\notes\route.ts
+   9:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  10:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\asistensi\AsistensiClient.tsx
+  205:22   error  React Hook "useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  347:115  error  Unexpected any. Specify a different type                                                                                    @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\components\ClientLayout.tsx
+  14:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  79:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\components\FilterSelector.tsx
+  22:5  warning  'isDarkMode' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\components\home\BackgroundDecorations.tsx
+  24:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  25:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  26:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  27:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  28:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  29:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  30:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  31:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  42:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  43:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  44:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  45:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  46:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  47:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  48:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  49:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\components\home\HeroSection.tsx
+  14:5  warning  'isDarkMode' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\components\home\ImageCarousel.tsx
+  48:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\components\home\ImageCarousel.tsx:48:13
+  46 |     useEffect(() => {
+  47 |         if (progress >= 100) {
+> 48 |             nextImage();
+     |             ^^^^^^^^^ Avoid calling setState() directly within an effect
+  49 |         }
+  50 |     }, [progress, nextImage]);
+  51 |  react-hooks/set-state-in-effect
+  84:33  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @next/next/no-img-element
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\components\home\InstitutionalObjective.tsx
+  41:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\components\home\SearchResultItem.tsx
+   5:24  warning  'Search' is defined but never used        @typescript-eslint/no-unused-vars
+   8:11  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:34  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\components\home\ToolboxSection.tsx
+   8:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  21:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  58:64  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  65:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  83:63  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\diktat\DiktatClient.tsx
+  36:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  46:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\diktat\notes\NotesClient.tsx
+  56:18  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\lib\ThemeContext.tsx
+  19:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\lib\ThemeContext.tsx:19:13
+  17 |         const saved = localStorage.getItem('theme');
+  18 |         if (saved !== null) {
+> 19 |             setIsDarkMode(saved === 'dark');
+     |             ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |         }
+  21 |     }, []);
+  22 |  react-hooks/set-state-in-effect
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\app\lib\dataFetcher.ts
+    5:5   warning  'AsistensiItem' is defined but never used  @typescript-eslint/no-unused-vars
+   20:35  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+   20:67  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+   50:35  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+   94:35  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  133:47  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  143:58  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\scripts\db-client.ts
+  29:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\scripts\fix-asistensi-schema.ts
+  10:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\scripts\fix-years.ts
+  2:8  warning  'path' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\scripts\migrate-faqs.ts
+  21:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Miscelouis\Desktop\Uni-files\website-akpro-complete-remaster\scripts\migrate-toolbox.ts
+  80:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  82:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 117 problems (59 errors, 58 warnings)
+

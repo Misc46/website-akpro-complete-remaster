@@ -1,11 +1,29 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Plus, Trash2, ExternalLink, AlertCircle, Eye, EyeOff, FolderPlus } from 'lucide-react';
 
+interface DiktatMaster {
+    id: string;
+    year: number;
+    ganjil_genap: string;
+    uts_uas: string;
+    is_active: number;
+}
+
+interface DiktatItem {
+    id: number;
+    diktat_id: string;
+    name: string;
+    major: string[];
+    year: number[];
+    google_drive_link: string;
+    img?: string;
+}
+
 export default function DiktatManager() {
-    const [master, setMaster] = useState<any[]>([]);
-    const [items, setItems] = useState<any[]>([]);
+    const [master, setMaster] = useState<DiktatMaster[]>([]);
+    const [items, setItems] = useState<DiktatItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showMasterForm, setShowMasterForm] = useState(false);
@@ -28,7 +46,7 @@ export default function DiktatManager() {
         type: 'diktat'
     });
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const res = await fetch('/api/admin/diktat');
             const data = await res.json();
@@ -41,16 +59,17 @@ export default function DiktatManager() {
             } else {
                 setError(data.details || data.error || 'Failed to fetch data');
             }
-        } catch (err: any) {
-            setError(err.message || 'Network error');
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Network error';
+            setError(message);
         } finally {
             setLoading(false);
         }
-    };
+    }, [formData.diktat_id]);
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -68,7 +87,7 @@ export default function DiktatManager() {
                 const d = await res.json();
                 setError(d.error || 'Failed to save');
             }
-        } catch (err) {
+        } catch (_err) {
             setError('Network error');
         }
     };
@@ -89,7 +108,7 @@ export default function DiktatManager() {
                 const d = await res.json();
                 setError(d.error || 'Failed to create master group');
             }
-        } catch (err) {
+        } catch (_err) {
             setError('Network error');
         }
     };
@@ -103,7 +122,7 @@ export default function DiktatManager() {
                 body: JSON.stringify({ id })
             });
             if (res.ok) fetchData();
-        } catch (err) {
+        } catch (_err) {
             setError('Delete failed');
         }
     };
@@ -116,7 +135,7 @@ export default function DiktatManager() {
                 body: JSON.stringify({ id, is_active: !currentStatus })
             });
             if (res.ok) fetchData();
-        } catch (err) {
+        } catch (_err) {
             setError('Update failed');
         }
     };
@@ -351,7 +370,7 @@ export default function DiktatManager() {
                                     <td className="px-6 py-4 text-gray-400 text-xs">{item.diktat_id}</td>
                                     <td className="px-6 py-4">
                                         <div className="flex gap-1">
-                                            {item.major.map((m: any) => (
+                                            {item.major.map((m: string) => (
                                                 <span key={m} className="px-2 py-0.5 bg-[#00B8D4]/10 text-[#00B8D4] rounded text-[10px] uppercase font-bold">{m}</span>
                                             ))}
                                         </div>

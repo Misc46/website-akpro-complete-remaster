@@ -4,8 +4,8 @@ import { jwtVerify } from 'jose';
 export async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
 
-    // Only protect /admin/dashboard
-    if (path.startsWith('/admin/dashboard')) {
+    // Only protect /admin/dashboard and /admin/requests
+    if (path.startsWith('/admin/dashboard') || path.startsWith('/admin/requests')) {
         const token = req.cookies.get('admin_token')?.value;
 
         if (!token) {
@@ -26,5 +26,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/admin/dashboard/:path*'],
+    matcher: ['/admin/dashboard/:path*', '/admin/requests/:path*'],
 };

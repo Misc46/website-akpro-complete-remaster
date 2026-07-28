@@ -1,17 +1,24 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Trash2, Edit2, Save, X, AlertCircle, HelpCircle } from 'lucide-react';
 
+interface FAQItem {
+    id: number;
+    q: string;
+    a: string;
+    order_index: number;
+}
+
 export default function FAQManager() {
-    const [faqs, setFaqs] = useState<any[]>([]);
+    const [faqs, setFaqs] = useState<FAQItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editData, setEditData] = useState({ q: '', a: '', order_index: 0 });
     const [newData, setNewData] = useState({ q: '', a: '', order_index: 0 });
 
-    const fetchFaqs = async () => {
+    const fetchFaqs = useCallback(async () => {
         try {
             const res = await fetch('/api/admin/faq');
             const data = await res.json();
@@ -21,16 +28,17 @@ export default function FAQManager() {
             } else {
                 setError(data.details || data.error || 'Failed to fetch FAQs');
             }
-        } catch (err: any) {
-            setError(err.message || 'Failed to fetch FAQs');
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Failed to fetch FAQs';
+            setError(message);
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchFaqs();
-    }, []);
+    }, [fetchFaqs]);
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -48,7 +56,7 @@ export default function FAQManager() {
                 const d = await res.json();
                 setError(d.error || 'Failed to create FAQ');
             }
-        } catch (err) {
+        } catch (_err) {
             setError('Network error');
         }
     };
@@ -68,7 +76,7 @@ export default function FAQManager() {
                 const d = await res.json();
                 setError(d.error || 'Failed to update FAQ');
             }
-        } catch (err) {
+        } catch (_err) {
             setError('Network error');
         }
     };
@@ -82,12 +90,12 @@ export default function FAQManager() {
                 body: JSON.stringify({ id })
             });
             if (res.ok) fetchFaqs();
-        } catch (err) {
+        } catch (_err) {
             setError('Delete failed');
         }
     };
 
-    const startEditing = (faq: any) => {
+    const startEditing = (faq: FAQItem) => {
         setEditingId(faq.id);
         setEditData({ q: faq.q, a: faq.a, order_index: faq.order_index });
     };

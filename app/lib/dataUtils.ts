@@ -42,6 +42,41 @@ export interface AsistensiData {
     content: AsistensiItem[];
 }
 
+export interface NoteData {
+    id: number;
+    title: string;
+    subject: string;
+    author_name?: string;
+    image_base64?: string;
+    status: 'pending' | 'approved' | 'rejected';
+    created_at: string;
+}
+
+export interface FAQData {
+    q: string;
+    a: string;
+}
+
+export interface ToolboxLink {
+    title: string;
+    description?: string;
+    href: string;
+    icon?: string;
+}
+
+export interface ToolboxGroup {
+    name: string;
+    links: { title: string; href: string }[];
+}
+
+export interface ToolboxCategory {
+    id: number | string;
+    label: string;
+    isGrouped?: boolean;
+    groups?: ToolboxGroup[];
+    links?: ToolboxLink[];
+}
+
 export const getLatestData = <T extends { year: number; uts_uas: string; ganjil_genap: string }>(dataList: T[]): T | null => {
     if (!dataList.length) return null;
     const sorted = [...dataList].sort((a, b) => {

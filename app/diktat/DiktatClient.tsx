@@ -125,18 +125,27 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-muted border border-border">
-                        {sortedData.slice(0, 3).map(g => (
-                            <button
-                                key={g.id}
-                                onClick={() => setActiveGroupId(g.id)}
-                                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest ${activeGroupId === g.id
-                                    ? 'bg-background text-highlight-text shadow-sm'
-                                    : 'text-muted-foreground hover:text-foreground'}`}
-                            >
-                                {g.uts_uas} {g.ganjil_genap} {g.year}
-                            </button>
-                        ))}
+                    <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-muted border border-border">
+                            {sortedData.slice(0, 3).map(g => (
+                                <button
+                                    key={g.id}
+                                    onClick={() => setActiveGroupId(g.id)}
+                                    className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest ${activeGroupId === g.id
+                                        ? 'bg-background text-highlight-text shadow-sm'
+                                        : 'text-muted-foreground hover:text-foreground'}`}
+                                >
+                                    {g.uts_uas} {g.ganjil_genap} {g.year}
+                                </button>
+                            ))}
+                        </div>
+                        <a
+                            href="/diktat/notes"
+                            className="px-4 py-3 rounded-xl bg-highlight text-highlight-foreground text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-highlight/20 flex items-center gap-2"
+                        >
+                            <FileText size={14} />
+                            Bank Catatan
+                        </a>
                     </div>
                 </div>
 
