@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MATKUL_SEMESTER_2, MATKUL_SEMESTER_4 } from "@/app/lib/db/schema";
 
+export const runtime = 'edge';
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const semester = searchParams.get("semester");

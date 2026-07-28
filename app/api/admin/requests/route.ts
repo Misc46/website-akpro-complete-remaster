@@ -3,6 +3,8 @@ import { requests, pengasis } from "@/app/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
+export const runtime = 'edge';
+
 export async function GET() {
   try {
     const allRequests = await db.select().from(requests).orderBy(desc(requests.createdAt));

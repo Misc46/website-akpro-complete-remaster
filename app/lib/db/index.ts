@@ -1,9 +1,6 @@
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import * as schema from './schema';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const rawUrl = process.env.TURSO_DATABASE_URL || '';
 const authToken = process.env.TURSO_AUTH_TOKEN || '';
