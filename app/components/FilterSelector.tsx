@@ -35,9 +35,9 @@ export const FilterSelector = memo(({
                         onChange={(e) => setSelectedYear(parseInt(e.target.value))}
                         className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none cursor-pointer"
                     >
-                        <option value={0}>Semua Semester</option>
+                        <option value={0} className="bg-background text-foreground">Semua Semester</option>
                         {years.map((y) => (
-                            <option key={y} value={y}>
+                            <option key={y} value={y} className="bg-background text-foreground">
                                 Semester {getSemester(y, ganjilGenap)}
                             </option>
                         ))}
@@ -45,24 +45,24 @@ export const FilterSelector = memo(({
                     <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                 </div>
             </div>
-        <div className="flex-1">
-            <label className="block text-[10px] font-black uppercase tracking-widest mb-2 text-muted-foreground/80">Program Studi</label>
-            <div className="relative">
-                <select
-                    value={selectedMajor}
-                    onChange={(e) => setSelectedMajor(e.target.value)}
-                    className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none cursor-pointer"
-                >
-                    <option value="">Semua Program Studi</option>
-                    <option value="elektro">Teknik Elektro</option>
-                    <option value="komputer">Teknik Komputer</option>
-                    <option value="biomedik">Teknik Biomedik</option>
-                </select>
-                <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            <div className="flex-1">
+                <label className="block text-[10px] font-black uppercase tracking-widest mb-2 text-muted-foreground/80">Program Studi</label>
+                <div className="relative">
+                    <select
+                        value={selectedMajor}
+                        onChange={(e) => setSelectedMajor(e.target.value)}
+                        className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none cursor-pointer"
+                    >
+                        <option value="" className="bg-background text-foreground">Semua Program Studi</option>
+                        <option value="elektro" className="bg-background text-foreground">Teknik Elektro</option>
+                        <option value="komputer" className="bg-background text-foreground">Teknik Komputer</option>
+                        <option value="biomedik" className="bg-background text-foreground">Teknik Biomedik</option>
+                    </select>
+                    <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
 });
 
 FilterSelector.displayName = 'FilterSelector';

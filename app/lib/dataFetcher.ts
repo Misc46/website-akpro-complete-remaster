@@ -2,8 +2,15 @@ import Papa from 'papaparse';
 import {
     DiktatData,
     AsistensiData,
-    AsistensiItem
+    AsistensiItem,
+    NoteData,
+    FAQData,
+    ToolboxCategory
 } from './dataUtils';
+
+interface KVNamespace {
+    get(key: string): Promise<string | null>;
+}
 
 // Static JSON imports — these get bundled at build time by webpack/turbopack.
 // They work on BOTH Node.js and Cloudflare Edge because they become inline data.
@@ -14,9 +21,10 @@ import localFaqs from '../data/faqs.json';
 import localResourceCategories from '../data/resourceCategories.json';
 
 // Helper to read from Cloudflare KV (works on Edge, no-ops locally)
-const getDataFromKv = async (key: string) => {
+const getDataFromKv = async (key: string): Promise<any> => {
     try {
-        const kv = (globalThis as any).PUBLIC_DATA || (process as any).env?.PUBLIC_DATA;
+        const env = process.env as Record<string, unknown>;
+        const kv = ((globalThis as Record<string, unknown>).PUBLIC_DATA || env?.PUBLIC_DATA) as KVNamespace | undefined;
 
         if (!kv || typeof kv.get !== 'function') {
             return null;
@@ -42,11 +50,11 @@ export const fetchDiktatData = async (): Promise<DiktatData[]> => {
         // 1. Try KV (live updates from admin "Publish" button)
         const kvRows = await getDataFromKv('diktats_json');
         // 2. Fall back to bundled JSON (from last build)
-        const rows = kvRows || localDiktats;
+        const rows = (kvRows || localDiktats) as any[];
 
         const grouped: Record<string, DiktatData> = {};
 
-        for (const row of rows as any[]) {
+        for (const row of rows) {
             const id = row.diktat_id;
             if (!id) continue;
 
@@ -86,11 +94,11 @@ export const fetchDiktatData = async (): Promise<DiktatData[]> => {
 export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
     try {
         const kvRows = await getDataFromKv('asistensis_json');
-        const rows = kvRows || localAsistensis;
+        const rows = (kvRows || localAsistensis) as any[];
 
         const grouped: Record<string, AsistensiData> = {};
 
-        for (const row of rows as any[]) {
+        for (const row of rows) {
             const id = row.asistensi_id;
             if (!id) continue;
 
@@ -129,22 +137,40 @@ export const fetchAsistensiData = async (): Promise<AsistensiData[]> => {
     }
 };
 
-export const fetchFaqData = async (): Promise<any[]> => {
+export const fetchFaqData = async (): Promise<FAQData[]> => {
     try {
         const kvData = await getDataFromKv('faqs_json');
-        return kvData || localFaqs || [];
+        return (kvData || localFaqs || []) as FAQData[];
     } catch (error) {
         console.error('Error fetching FAQ data:', error);
         return [];
     }
 };
 
-export const fetchResourceCategories = async (): Promise<any[]> => {
+export const fetchResourceCategories = async (): Promise<ToolboxCategory[]> => {
     try {
         const kvData = await getDataFromKv('toolbox_json');
-        return kvData || localResourceCategories || [];
+        return (kvData || localResourceCategories || []) as ToolboxCategory[];
     } catch (error) {
         console.error('Error fetching resource categories:', error);
         return [];
     }
+};
+
+export const fetchNotesData = async (): Promise<NoteData[]> => {
+    try {
+        // 1. Try KV
+        const kvData = await getDataFromKv('approved_notes_json');
+        if (kvData) return kvData;
+
+        // 2. Fallback to API/DB (Internal fetch)
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL;
+        if (baseUrl) {
+            const res = await fetch(`${baseUrl}/api/notes`);
+            if (res.ok) return await res.json();
+        }
+    } catch (error) {
+        console.error('Error fetching notes data:', error);
+    }
+    return [];
 };

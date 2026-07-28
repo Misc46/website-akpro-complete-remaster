@@ -25,7 +25,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
         setProgress(0);
     }, [showcaseImages.length]);
 
-    // Independent progress timer
+    // Unified progress and switch logic
     useEffect(() => {
         if (isPaused) return;
 
@@ -36,19 +36,16 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
         const timer = setInterval(() => {
             setProgress(prev => {
                 const next = prev + step;
-                return next >= 100 ? 100 : next;
+                if (next >= 100) {
+                    nextImage();
+                    return 0;
+                }
+                return next;
             });
         }, intervalTime);
 
         return () => clearInterval(timer);
-    }, [isPaused, currentIndex]);
-
-    // Handle the actual switch when progress completes
-    useEffect(() => {
-        if (progress >= 100) {
-            nextImage();
-        }
-    }, [progress, nextImage]);
+    }, [isPaused, nextImage]);
 
     const handleManualChange = (index: number) => {
         if (index === currentIndex) return;

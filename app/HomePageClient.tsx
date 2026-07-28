@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTheme } from './lib/ThemeContext';
 
 // Components
@@ -11,13 +11,14 @@ import { ToolboxSection } from './components/home/ToolboxSection';
 import { FAQSection } from './components/home/FAQSection';
 import { InstitutionalObjective } from './components/home/InstitutionalObjective';
 import { SearchResultItem } from './components/home/SearchResultItem';
+import { FAQData, ToolboxCategory } from './lib/dataUtils';
 
 // Data
 import showcaseImages from './data/showcaseImages.json';
 
 interface HomePageClientProps {
-    resourceCategories: any[];
-    faqs: any[];
+    resourceCategories: ToolboxCategory[];
+    faqs: FAQData[];
 }
 
 export default function HomePageClient({ resourceCategories, faqs }: HomePageClientProps) {
@@ -25,14 +26,12 @@ export default function HomePageClient({ resourceCategories, faqs }: HomePageCli
     const [activeCategory, setActiveCategory] = useState('transisi');
     const [searchQuery, setSearchQuery] = useState('');
 
-
-
     // Prepare links for search
     const allLinks = useMemo(() => {
-        return resourceCategories.flatMap((cat: any) => {
+        return resourceCategories.flatMap((cat: ToolboxCategory) => {
             if (cat.isGrouped) {
-                return cat.groups?.flatMap((group: any) =>
-                    group.links.map((link: any) => ({
+                return cat.groups?.flatMap((group) =>
+                    group.links.map((link) => ({
                         ...link,
                         description: '',
                         categoryLabel: group.name,
@@ -40,7 +39,7 @@ export default function HomePageClient({ resourceCategories, faqs }: HomePageCli
                     }))
                 ) || [];
             }
-            return cat.links?.map((link: any) => ({
+            return cat.links?.map((link) => ({
                 ...link,
                 description: link.description || '',
                 categoryLabel: cat.label
@@ -81,7 +80,7 @@ export default function HomePageClient({ resourceCategories, faqs }: HomePageCli
                                 ))
                             ) : (
                                 <div className="p-12 text-center border border-dashed border-border rounded-xl">
-                                    <p className="text-sm font-bold text-muted-foreground">Tidak ada sumber daya yang cocok ditemukan untuk "{searchQuery}"</p>
+                                    <p className="text-sm font-bold text-muted-foreground">Tidak ada sumber daya yang cocok ditemukan untuk &quot;{searchQuery}&quot;</p>
                                 </div>
                             )}
                         </div>

@@ -38,21 +38,20 @@ export const DirectorySection: React.FC = () => {
                     </div>
                 </Link>
 
-                <div className="group p-8 border border-border rounded-2xl bg-card shadow-sm relative overflow-hidden">
+                <Link href="/request" className="group p-8 border border-border rounded-2xl bg-card shadow-sm relative overflow-hidden">
                     <div className="flex justify-between items-start mb-6">
                         <div className="p-3 bg-accent text-accent-foreground rounded-lg">
                             <ShieldCheck size={24} />
                         </div>
-                        <div className="px-2 py-1 rounded bg-muted text-[10px] font-black uppercase tracking-widest text-muted-foreground">Segera Hadir</div>
                     </div>
                     <h3 className="text-xl font-bold mb-2 text-foreground">Aktor</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-medium">Akpro tutor, request asistensi matkul untuk kuis ke tim bp/bphsa akpro.</p>
-                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground opacity-50">
-                        <span>Hubungi BP/BPHSA</span>
+                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-highlight">
+                        <span>Daftar Sekarang</span>
                         <ChevronRight size={14} />
                     </div>
                     <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-accent/5 rounded-full"></div>
-                </div>
+                </Link>
             </div>
         </section>
     );

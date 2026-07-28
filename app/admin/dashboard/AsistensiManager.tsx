@@ -1,11 +1,31 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Trash2, Video, Link as LinkIcon, AlertCircle, FolderPlus, Edit2, X } from 'lucide-react';
 
+interface AsistensiMaster {
+    id: string;
+    year: number;
+    ganjil_genap: string;
+    uts_uas: string;
+}
+
+interface AsistensiItem {
+    id: number;
+    asistensi_id: string;
+    name: string;
+    major: string[];
+    year: number[];
+    person: { name: string }[];
+    date: string;
+    zoom_meetings_link?: string;
+    recordings_link?: string;
+    img?: string;
+}
+
 export default function AsistensiManager() {
-    const [master, setMaster] = useState<any[]>([]);
-    const [items, setItems] = useState<any[]>([]);
+    const [master, setMaster] = useState<AsistensiMaster[]>([]);
+    const [items, setItems] = useState<AsistensiItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showMasterForm, setShowMasterForm] = useState(false);
@@ -32,7 +52,7 @@ export default function AsistensiManager() {
         type: 'asistensi'
     });
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const res = await fetch('/api/admin/asistensi');
             const data = await res.json();
@@ -45,16 +65,17 @@ export default function AsistensiManager() {
             } else {
                 setError(data.details || data.error || 'Failed to fetch data');
             }
-        } catch (err: any) {
-            setError(err.message || 'Network error');
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Network error';
+            setError(message);
         } finally {
             setLoading(false);
         }
-    };
+    }, [formData.asistensi_id]);
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const resetForm = () => {
         setFormData({
@@ -92,12 +113,12 @@ export default function AsistensiManager() {
                 const d = await res.json();
                 setError(d.error || 'Failed to save');
             }
-        } catch (err) {
+        } catch (_err) {
             setError('Network error');
         }
     };
 
-    const handleEdit = (item: any) => {
+    const handleEdit = (item: AsistensiItem) => {
         setEditingId(item.id);
         setFormData({
             asistensi_id: item.asistensi_id,
@@ -129,7 +150,7 @@ export default function AsistensiManager() {
                 const d = await res.json();
                 setError(d.error || 'Failed to create master group');
             }
-        } catch (err) {
+        } catch (_err) {
             setError('Network error');
         }
     };
@@ -143,7 +164,7 @@ export default function AsistensiManager() {
                 body: JSON.stringify({ id })
             });
             if (res.ok) fetchData();
-        } catch (err) {
+        } catch (_err) {
             setError('Delete failed');
         }
     };
@@ -382,7 +403,7 @@ export default function AsistensiManager() {
                                         <p className="text-[10px] text-gray-400">{new Date(item.date).toLocaleString('id-ID')}</p>
                                     </td>
                                     <td className="px-6 py-4 text-gray-300 text-sm">
-                                        {item.person.map((p: any) => p.name).join(', ')}
+                                        {item.person.map((p: { name: string }) => p.name).join(', ')}
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex gap-3 text-gray-400">

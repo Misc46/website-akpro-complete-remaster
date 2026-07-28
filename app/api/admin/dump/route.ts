@@ -5,6 +5,11 @@ import Papa from 'papaparse';
 
 export const runtime = 'edge';
 
+interface KVNamespace {
+    get(key: string): Promise<string | null>;
+    put(key: string, value: string): Promise<void>;
+}
+
 async function verifyAuth(req: NextRequest) {
     const token = req.cookies.get('admin_token')?.value;
     if (!token) return false;
@@ -106,11 +111,30 @@ export async function POST(req: NextRequest) {
             };
         });
 
-        // Save to Cloudflare KV if available (for instant production updates)
-        const env = (process as any).env;
-        const kv = (globalThis as any).PUBLIC_DATA || env?.PUBLIC_DATA;
+        const toolboxCount = toolboxItemsRs.rows.length;
 
-        if (kv) {
+        // Dump Approved Notes
+        const notesRs = await db.execute("SELECT id, title, subject, author_name, created_at, image_data FROM notes WHERE status = 'approved' ORDER BY created_at DESC");
+        const notesData = notesRs.rows.map(row => {
+            let base64 = null;
+            if (row.image_data) {
+                base64 = `data:image/jpeg;base64,${Buffer.from(row.image_data as unknown as ArrayBuffer).toString('base64')}`;
+            }
+            return {
+                id: row.id,
+                title: row.title,
+                subject: row.subject,
+                author_name: row.author_name,
+                created_at: row.created_at,
+                image_base64: base64
+            };
+        });
+
+        // Save to Cloudflare KV if available (for instant production updates)
+        const env = process.env as Record<string, unknown>;
+        const kv = ((globalThis as Record<string, unknown>).PUBLIC_DATA || env?.PUBLIC_DATA) as KVNamespace | undefined;
+
+        if (kv && typeof kv.put === 'function') {
             console.log('Saving dump to Cloudflare KV...');
             await Promise.all([
                 kv.put('diktats_csv', diktatsCsv),
@@ -118,7 +142,8 @@ export async function POST(req: NextRequest) {
                 kv.put('diktats_json', JSON.stringify(diktatsRs.rows)),
                 kv.put('asistensis_json', JSON.stringify(asistensisRs.rows)),
                 kv.put('faqs_json', JSON.stringify(faqsData)),
-                kv.put('toolbox_json', JSON.stringify(toolboxCategories))
+                kv.put('toolbox_json', JSON.stringify(toolboxCategories)),
+                kv.put('approved_notes_json', JSON.stringify(notesData))
             ]);
             console.log('Successfully saved to KV');
         }
@@ -143,7 +168,8 @@ export async function POST(req: NextRequest) {
             diktatsCount: diktatsRs.rows.length,
             asistensiCount: asistensisRs.rows.length,
             faqsCount: faqsRs.rows.length,
-            toolboxCount: toolboxItemsRs.rows.length,
+            toolboxCount,
+            notesCount: notesRs.rows.length
         });
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : 'Unknown error';

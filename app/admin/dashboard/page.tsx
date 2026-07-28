@@ -10,16 +10,39 @@ import {
     CalendarDays,
     Wrench
 } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import DiktatManager from './DiktatManager';
 import AsistensiManager from './AsistensiManager';
 import FAQManager from './FAQManager';
 import ToolboxManager from './ToolboxManager';
-import { HelpCircle } from 'lucide-react';
+import NotesManager from './NotesManager';
+import AktorManager from './AktorManager';
+import { HelpCircle, StickyNote, ShieldCheck } from 'lucide-react';
+
+const StatusCard = ({ title, value, statusColor }: { title: string, value: string, statusColor: string }) => (
+    <div className="bg-[#002A83] border border-[#0036A7] p-6 rounded-2xl">
+        <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">{title}</p>
+        <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-bold text-white font-serif">{value}</h3>
+            <div className={`w-2 h-2 rounded-full ${statusColor} animate-pulse`}></div>
+        </div>
+    </div>
+);
+
+const SidebarBtn = ({ id, icon: Icon, label, activeTab, setActiveTab }: { id: string, icon: React.ElementType, label: string, activeTab: string, setActiveTab: (id: any) => void }) => (
+    <button
+        onClick={() => setActiveTab(id)}
+        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition ${activeTab === id ? 'bg-[#00B8D4] text-[#001B55]' : 'text-gray-400 hover:bg-[#0036A7] hover:text-white'}`}
+    >
+        <Icon size={20} />
+        <span>{label}</span>
+    </button>
+);
 
 export default function AdminDashboard() {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<'overview' | 'diktat' | 'asistensi' | 'faq' | 'toolbox' | 'infrastructure'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'diktat' | 'asistensi' | 'faq' | 'toolbox' | 'notes' | 'aktor' | 'infrastructure'>('overview');
     const [message, setMessage] = useState('');
 
     const handleLogout = async () => {
@@ -28,46 +51,31 @@ export default function AdminDashboard() {
         router.refresh();
     };
 
-    const StatusCard = ({ title, value, statusColor }: { title: string, value: string, statusColor: string }) => (
-        <div className="bg-[#002A83] border border-[#0036A7] p-6 rounded-2xl">
-            <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">{title}</p>
-            <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-white font-serif">{value}</h3>
-                <div className={`w-2 h-2 rounded-full ${statusColor} animate-pulse`}></div>
-            </div>
-        </div>
-    );
-
-    const SidebarBtn = ({ id, icon: Icon, label }: { id: any, icon: any, label: string }) => (
-        <button
-            onClick={() => setActiveTab(id)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition ${activeTab === id ? 'bg-[#00B8D4] text-[#001B55]' : 'text-gray-400 hover:bg-[#0036A7] hover:text-white'}`}
-        >
-            <Icon size={20} />
-            <span>{label}</span>
-        </button>
-    );
-
     return (
         <div className="min-h-screen bg-[#001B55] text-white font-sans flex flex-col md:flex-row">
             {/* Sidebar */}
             <aside className="w-full md:w-64 bg-[#002A83] border-b md:border-b-0 md:border-r border-[#0036A7] p-6 flex flex-col shrink-0">
                 <div className="flex items-center gap-3 mb-10 px-2">
-                    <img
-                        src="/Logo-Bidang-Akpro-IME-2026-DARK-removebg-preview.png"
-                        alt="AKPRO Logo"
-                        className="w-10 h-10 object-contain"
-                    />
+                    <div className="w-10 h-10 relative">
+                        <Image
+                            src="/Logo-Bidang-Akpro-IME-2026-DARK-removebg-preview.png"
+                            alt="AKPRO Logo"
+                            fill
+                            className="object-contain"
+                        />
+                    </div>
                     <span className="font-bold font-serif text-lg tracking-tight">Admin OS</span>
                 </div>
 
                 <nav className="flex-grow space-y-2">
-                    <SidebarBtn id="overview" icon={LayoutDashboard} label="Overview" />
-                    <SidebarBtn id="diktat" icon={FileText} label="Diktat Docs" />
-                    <SidebarBtn id="asistensi" icon={CalendarDays} label="Asistensi" />
-                    <SidebarBtn id="faq" icon={HelpCircle} label="FAQ Editor" />
-                    <SidebarBtn id="toolbox" icon={Wrench} label="Toolbox" />
-                    <SidebarBtn id="infrastructure" icon={Database} label="Infrastructure" />
+                    <SidebarBtn id="overview" icon={LayoutDashboard} label="Overview" activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <SidebarBtn id="diktat" icon={FileText} label="Diktat Docs" activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <SidebarBtn id="asistensi" icon={CalendarDays} label="Asistensi" activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <SidebarBtn id="faq" icon={HelpCircle} label="FAQ Editor" activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <SidebarBtn id="toolbox" icon={Wrench} label="Toolbox" activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <SidebarBtn id="aktor" icon={ShieldCheck} label="Aktor Requests" activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <SidebarBtn id="notes" icon={StickyNote} label="Notes Queue" activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <SidebarBtn id="infrastructure" icon={Database} label="Infrastructure" activeTab={activeTab} setActiveTab={setActiveTab} />
                 </nav>
 
                 <button
@@ -88,7 +96,9 @@ export default function AdminDashboard() {
                                 activeTab === 'diktat' ? 'Diktat Vault' :
                                     activeTab === 'asistensi' ? 'Master Scheduler' :
                                         activeTab === 'toolbox' ? 'Toolbox Editor' :
-                                            activeTab === 'infrastructure' ? 'Systems & Cache' : 'FAQ Engine'}
+                                            activeTab === 'aktor' ? 'Aktor Requests' :
+                                                activeTab === 'notes' ? 'Notes Moderation' :
+                                                    activeTab === 'infrastructure' ? 'Systems & Cache' : 'FAQ Engine'}
                         </h1>
                         <p className="text-gray-400 text-sm font-sans">Control panel for AKPRO IME FTUI infrastructure</p>
                     </div>
@@ -163,7 +173,7 @@ export default function AdminDashboard() {
                                             } else {
                                                 setMessage(`Error: ${data.error}`);
                                             }
-                                        } catch (e) {
+                                        } catch (_e) {
                                             setMessage('Failed to reach server. Check connection.');
                                         }
                                     }}
@@ -181,7 +191,7 @@ export default function AdminDashboard() {
                                 <div>
                                     <h5 className="text-xs font-bold text-yellow-500 uppercase">How It Works</h5>
                                     <p className="text-[10px] text-gray-400 italic">
-                                        Clicking "Publish" triggers a full site rebuild with the latest database data. The site stays static for maximum speed.
+                                        Clicking &quot;Publish&quot; triggers a full site rebuild with the latest database data. The site stays static for maximum speed.
                                     </p>
                                 </div>
                             </div>
@@ -193,6 +203,8 @@ export default function AdminDashboard() {
                 {activeTab === 'asistensi' && <AsistensiManager />}
                 {activeTab === 'faq' && <FAQManager />}
                 {activeTab === 'toolbox' && <ToolboxManager />}
+                {activeTab === 'aktor' && <AktorManager />}
+                {activeTab === 'notes' && <NotesManager />}
             </main>
         </div>
     );
