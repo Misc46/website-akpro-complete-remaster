@@ -2,6 +2,7 @@
 
 import { db } from "@/app/lib/db";
 import { requests } from "@/app/lib/db/schema";
+import { sendAktorRequestNotification } from "@/app/lib/fonnte";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
@@ -73,9 +74,25 @@ export async function submitRequest(
       })
       .returning({ id: requests.id });
 
+    const requestId = inserted[0].id;
+
     revalidatePath("/admin/requests");
 
-    return { success: true, id: inserted[0].id };
+    // Fire-and-forget: notify AKPRO 26 WhatsApp group via Fonnte.
+    // We do NOT await so the user never waits on this.
+    void sendAktorRequestNotification({
+      id: requestId,
+      namaLengkap: parsed.data.namaLengkap,
+      kontak: parsed.data.kontak,
+      jurusan: parsed.data.jurusan,
+      angkatan: parsed.data.angkatan,
+      matkul: parsed.data.matkul,
+      tanggal: parsed.data.tanggal,
+      jam: parsed.data.jam,
+      buktiBayarUrl: parsed.data.buktiBayarUrl,
+    });
+
+    return { success: true, id: requestId };
   } catch (e) {
     console.error("Error submitting request:", e);
     return { success: false, errors: { form: ["Terjadi kesalahan saat menyimpan data"] } };
