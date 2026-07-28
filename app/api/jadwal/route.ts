@@ -3,6 +3,8 @@ import { db } from "@/app/lib/db";
 import { jadwalAsis } from "@/app/lib/db/schema";
 import { eq, and, or, isNull } from "drizzle-orm";
 
+export const runtime = 'edge';
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const matkul = searchParams.get("matkul");
