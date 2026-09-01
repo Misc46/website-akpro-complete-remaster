@@ -1,5 +1,19 @@
 [
     {
+        "asistensi_id": "Asistensi_uts_ganjil_2026",
+        "academic_year": 2026,
+        "uts_uas": "uts",
+        "ganjil_genap": "ganjil",
+        "item_name": null,
+        "major": null,
+        "target_year": null,
+        "person": null,
+        "date": null,
+        "zoom_meetings_link": null,
+        "recordings_link": null,
+        "img": null
+    },
+    {
         "asistensi_id": "Asistensi_uts_genap_2026",
         "academic_year": 2026,
         "uts_uas": "uts",

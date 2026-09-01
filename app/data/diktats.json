@@ -1,5 +1,17 @@
 [
     {
+        "diktat_id": "Diktat_uts_ganjil_2026",
+        "academic_year": 2026,
+        "uts_uas": "uts",
+        "ganjil_genap": "ganjil",
+        "is_active": 0,
+        "item_name": null,
+        "major": null,
+        "target_year": null,
+        "google_drive_link": null,
+        "img": null
+    },
+    {
         "diktat_id": "Diktat_uts_genap_2026",
         "academic_year": 2026,
         "uts_uas": "uts",

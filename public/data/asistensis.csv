@@ -1,4 +1,5 @@
 asistensi_id,academic_year,uts_uas,ganjil_genap,item_name,major,target_year,person,date,zoom_meetings_link,recordings_link,img
+Asistensi_uts_ganjil_2026,2026,uts,ganjil,,,,,,,,
 Asistensi_uts_genap_2026,2026,uts,genap,Algoritma dan Pemrograman,"[""elektro""]",[1],"[{""name"":""Nabil Putra""}]",2026-03-28T19:00,,https://youtu.be/NvkHuodeU6A,
 Asistensi_uts_genap_2026,2026,uts,genap,Aljabar Linier,"[""komputer"",""biomedik""]",[1],"[{""name"":""Ruby Umar""}]",2026-03-28T10:00,,https://youtu.be/EuCMEnu_cJM,
 Asistensi_uts_genap_2026,2026,uts,genap,Dasar Sistem Digital,"[""elektro"",""biomedik""]",[1],"[{""name"":""Novan Agung""}]",2026-03-27T19:00,,https://youtu.be/zOB3o7uLaaw,

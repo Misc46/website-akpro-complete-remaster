@@ -1,4 +1,5 @@
 diktat_id,academic_year,uts_uas,ganjil_genap,is_active,item_name,major,target_year,google_drive_link,img
+Diktat_uts_ganjil_2026,2026,uts,ganjil,0,,,,,
 Diktat_uts_genap_2026,2026,uts,genap,0,Aljabar Linier,"[""komputer"",""biomedik""]",[1],https://drive.google.com/file/d/1CcVsCpNSVhkx5nJr35SZYQKgruvMsjEh/view?usp=drive_link,
 Diktat_uts_genap_2026,2026,uts,genap,0,Dasar Sistem Digital,"[""biomedik"",""elektro""]",[1],https://drive.google.com/file/d/1dpAZBlbdD58mFdcyGQ_YPf64mw1vcJ9e/view?usp=drive_link,
 Diktat_uts_genap_2026,2026,uts,genap,0,Elektromagnetika,"[""elektro""]",[2],https://drive.google.com/file/d/1YWsKoa-uBoPupR1OPY8o1x52-OmC0lEH/view?usp=drive_link,
