@@ -1,105 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Website AKPRO IME FTUI Remaster
 
-## Getting Started
+Official academic and professional web portal for **Akademik dan Keprofesian (AKPRO) Ikatan Mahasiswa Elektro (IME) FTUI 2026**.
 
-First, run the development server:
+The platform is designed to provide electrical, computer, and biomedical engineering students at Universitas Indonesia with centralized, lightning-fast access to study materials, past exams, tutoring/mentorship sessions, academic utilities, and institutional resources.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🚀 Architecture & Core Features
+
+- **⚡ Blazing Fast Static Delivery**: Hybrid build architecture compiling relational database entries into edge-cached static artifacts with zero client-side database latency.
+- **📚 Diktat & Exam Archive (`/diktat`)**: Search, filter, and access past examination papers, curated question banks, and course summaries across academic years, semesters (Ganjil/Genap), exam periods (UTS/UAS), and study programs (Elektro, Komputer, Biomedik).
+- **🗓️ Asistensi & Mentorship Hub (`/asistensi`)**: Schedule explorer with list and interactive calendar views for tutorial sessions, Zoom meeting links, speaker details, and recorded session archives.
+- **🧰 Academic Toolbox & Direct Links**: Curated academic portals, syllabus archives, UI/FTUI utilities, and resource directories.
+- **❓ FAQ Engine**: Interactive search and answers for frequently asked academic & administrative questions.
+- **🔐 Dedicated Admin OS (`/admin`)**:
+  - Secure JWT & bcrypt authenticated admin panel.
+  - Complete CRUD management for Diktat records, Asistensi sessions, FAQs, and Toolbox items.
+  - One-click live site synchronization and Cloudflare Pages deployment webhook integration.
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend & Framework
+- **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
+- **Core**: React 19, TypeScript 5
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Parsing**: PapaParse
+
+### Backend & Database
+- **Database**: [Turso Database](https://turso.tech/) (Managed distributed LibSQL / SQLite)
+- **ORM & Client**: [Drizzle ORM](https://orm.drizzle.team/) & `@libsql/client`
+- **Auth & Security**: `jose` (JWT) & `bcryptjs`
+- **Edge Storage**: Cloudflare KV bindings for live edge overrides
+
+### Deployment & Hosting
+- **Platform**: [Cloudflare Pages](https://pages.cloudflare.com/) (`@cloudflare/next-on-pages` / Wrangler)
+
+---
+
+## 📂 Project Structure
+
+```
+├── app/
+│   ├── admin/                # Admin OS dashboard, managers, and login
+│   ├── api/admin/            # Secure Edge & serverless API routes (auth, CRUD, sync)
+│   ├── asistensi/            # Asistensi schedule & calendar page
+│   ├── components/           # UI components (Hero, Navbar, Layout, FilterSelector, etc.)
+│   ├── data/                 # Bundled build-time JSON caches (diktats, asistensi, faqs)
+│   ├── diktat/               # Diktat archive & study resources page
+│   ├── lib/                  # Shared utilities, data fetchers, and theme context
+│   ├── globals.css           # Global Tailwind CSS styles and theme variables
+│   ├── layout.tsx            # Root layout and metadata
+│   └── page.tsx              # Home portal page
+├── public/                   # Static assets, branding logos, and CSV dumps
+├── scripts/                  # Turso database dump scripts and migration utilities
+├── wrangler.toml             # Cloudflare Pages & KV configuration
+└── package.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⚙️ Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Prerequisites
+- **Node.js**: 20+ installed
+- **Package Manager**: `npm`, `pnpm`, or `bun`
 
-## Learn More
+### 2. Environment Variables
+Create a `.env` file in the root directory:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+# Database (Turso)
+TURSO_DATABASE_URL="libsql://your-turso-db.turso.io"
+TURSO_AUTH_TOKEN="your-turso-auth-token"
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Authentication
+JWT_SECRET="your-secure-random-secret-key"
+ADMIN_PASSWORD_HASH="bcrypt-hashed-admin-password"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Live Deployment Hook (Optional - for admin one-click build trigger)
+CLOUDFLARE_DEPLOY_HOOK="https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/..."
+```
 
-## Deploy on Vercel
+### 3. Install Dependencies
+```bash
+npm install
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4. Seed / Dump Database to Local Cache
+Before building or running locally, sync latest data from Turso to generate local JSON caches:
+```bash
+npm run db:dump
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 5. Run Development Server
+```bash
+npm run dev
+```
 
-## OPTIMIZATIONS
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The current data loading process follows an **N+1 Fetch Pattern**, where a master CSV is fetched first, followed by sequential fetches for each item's details. This leads to significant latency. Below are strategies to optimize performance:
+---
 
-### 1. Parallel Data Fetching
-Instead of fetching secondary CSVs one by one in a loop, use `Promise.all()` to trigger all network requests simultaneously.
-*   **Implementation:** Map the master rows to a list of promises and await them once.
+## 🚢 Build & Deployment
 
-### 2. Next.js Data Fetching (ISR/SSG)
-Since the data in Google Sheets changes infrequently, use **Incremental Static Regeneration (ISR)**.
-*   **Strategy:** Fetch data during build time or in the background on the server.
-*   **Benefit:** Reduces client-side load time to near zero as data is served from a cache/CDN.
+### Production Build
+```bash
+npm run build
+```
+*Note: `npm run build` will automatically run `npm run db:dump` before building the Next.js static output.*
 
-### 3. Client-Side Caching (SWR or React Query)
-Utilize libraries like `swr` or `@tanstack/react-query` to manage data fetching state.
-*   **Benefit:** Provides out-of-the-box caching, background revalidation (Stale-While-Revalidate), and deduplication of requests.
+### Deploying to Cloudflare Pages
+```bash
+npm run pages:deploy
+```
+Or connect your GitHub repository directly to **Cloudflare Pages** using the build settings:
+- **Build command**: `npm run build`
+- **Output directory**: `.vercel/output/static`
 
-### 4. Optimize CSV Parsing
-Currently, the application uses a custom `parseCsv` utility.
-*   **Improvement:** Use `PapaParse`, which is highly optimized for performance and can handle large CSV files without blocking the main thread.
+---
 
-### 5. Backend Consolidation
-If possible, consolidate multiple Google Sheet tabs into a single "Publish" sheet.
-*   **Benefit:** Reduces the number of HTTP requests from $N+1$ to exactly $1$.
+## 📄 License
 
-### 6. Perceived Performance
-Implement **Skeleton Screens** or **Progressive Image Loading**.
-*   **Benefit:** Users see the structure of the page immediately, reducing the frustration of waiting for a blank screen or a spinner.
-
-### 7. Local Database (SQLite)
-Transition from remote CSV fetching to a local SQLite database.
-*   **Strategy:** Use a build-time script or a GitHub Action to fetch Google Sheets data once and populate a `.sqlite` file in the project. The Next.js application then queries this file using an ORM like **Prisma** or **Drizzle**.
-*   **Benefit:** 
-    *   **Near-Instant Reads:** SQLite reads are orders of magnitude faster than network-bound CSV fetches.
-    *   **Relational Power:** Easily handle complex relationships between Diktat, Asistensi, and Courses.
-    *   **Offline Support:** No reliance on Google Sheets availability during runtime.
-    *   **Simplified Logic:** Replace complex CSV parsers and array filters with declarative SQL queries (`WHERE major = 'elektro'`).
-
-### 8. Cloud Database (Production Grade API)
-For 24/7 availability and ultra-low latency, move away from CSV files to a managed cloud database.
-*   **Options:**
-    *   **Turso (LibSQL):** An edge-hosted version of SQLite. Perfect for this project because it's extremely fast and fits the "minimal configuration" vibe.
-    *   **Supabase (Postgres):** A powerful relational database that also provides a built-in REST API and real-time features.
-    *   **MongoDB Atlas (NoSQL):** Great if your data structure becomes more nested and document-like over time.
-    *   **Upstash (Redis):** If you only need a super-fast cache layer on top of Google Sheets.
-*   **Strategy:** Create a simple synchronization script that triggers via a Webhook (e.g., when you edit the Google Sheet) to update your Cloud DB.
-*   **Benefit:** Zero-loading time for users, better security, and true 24/7 uptime without relying on Google Sheets' public CSV export availability.
-
-## RECOMMENDED FOR SCALE & COST (FREE TIER)
-
-Since you have hundreds of active users and want to keep it "Free," the best path is:
-
-### 1. **The "Static Hybrid" Approach (Next.js ISR + SQLite)**
-*   **Cost:** $0
-*   **Performance:** ~10ms (Instant)
-*   **How:** Use Next.js **Incremental Static Regeneration**. Every time someone visits the page, they get a cached version. The cache updates in the background (e.g., every 60 seconds). You don't even need a database; you can just fetch the CSVs on the server side once per minute instead of once per user. Vercel handles the heavy lifting.
-
-### 2. **Turso (Managed SQLite)**
-*   **Cost:** $0 (Free tier is massive)
-*   **Scale:** Their free tier allows **1 billion row reads** and **25 million row writes** per month.
-*   **Why:** You can have hundreds of active users performing complex searches, and you will never hit the limit for a project of this size. It's the most "bulletproof" free database right now.
-
-### 3. **Supabase (Self-Hosting potential)**
-*   **Cost:** $0 (Free tier includes 500MB, plenty for text data)
-*   **Scale:** Very high. Thousands of active users can query it simultaneously via their PostgREST API.
-
-### **Final Verdict:**
-If you want the absolute best speed for $0 with hundreds of users, **Option 1 (ISR)** is your best friend. It makes your site's speed independent of your database speed.
+Maintained with 💙 by **Bidang Akademik dan Keprofesian (AKPRO) IME FTUI 2026**.
