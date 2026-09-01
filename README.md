@@ -1,127 +1,126 @@
 # Website AKPRO IME FTUI Remaster
 
-Official academic and professional web portal for **Akademik dan Keprofesian (AKPRO) Ikatan Mahasiswa Elektro (IME) FTUI 2026**.
+Academic and professional web portal for Departemen Akademik dan Keprofesian (AKPRO) Ikatan Mahasiswa Elektro (IME) FTUI.
 
-The platform is designed to provide electrical, computer, and biomedical engineering students at Universitas Indonesia with centralized, lightning-fast access to study materials, past exams, tutoring/mentorship sessions, academic utilities, and institutional resources.
-
----
-
-## 🚀 Architecture & Core Features
-
-- **⚡ Blazing Fast Static Delivery**: Hybrid build architecture compiling relational database entries into edge-cached static artifacts with zero client-side database latency.
-- **📚 Diktat & Exam Archive (`/diktat`)**: Search, filter, and access past examination papers, curated question banks, and course summaries across academic years, semesters (Ganjil/Genap), exam periods (UTS/UAS), and study programs (Elektro, Komputer, Biomedik).
-- **🗓️ Asistensi & Mentorship Hub (`/asistensi`)**: Schedule explorer with list and interactive calendar views for tutorial sessions, Zoom meeting links, speaker details, and recorded session archives.
-- **🧰 Academic Toolbox & Direct Links**: Curated academic portals, syllabus archives, UI/FTUI utilities, and resource directories.
-- **❓ FAQ Engine**: Interactive search and answers for frequently asked academic & administrative questions.
-- **🔐 Dedicated Admin OS (`/admin`)**:
-  - Secure JWT & bcrypt authenticated admin panel.
-  - Complete CRUD management for Diktat records, Asistensi sessions, FAQs, and Toolbox items.
-  - One-click live site synchronization and Cloudflare Pages deployment webhook integration.
+This platform provides centralized access to academic archives, past examination papers, tutoring and mentorship schedules, reference toolboxes, and departmental administrative systems.
 
 ---
 
-## 🛠️ Tech Stack
+## Architecture & Features
 
-### Frontend & Framework
-- **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
-- **Core**: React 19, TypeScript 5
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Parsing**: PapaParse
-
-### Backend & Database
-- **Database**: [Turso Database](https://turso.tech/) (Managed distributed LibSQL / SQLite)
-- **ORM & Client**: [Drizzle ORM](https://orm.drizzle.team/) & `@libsql/client`
-- **Auth & Security**: `jose` (JWT) & `bcryptjs`
-- **Edge Storage**: Cloudflare KV bindings for live edge overrides
-
-### Deployment & Hosting
-- **Platform**: [Cloudflare Pages](https://pages.cloudflare.com/) (`@cloudflare/next-on-pages` / Wrangler)
+- **Static Pre-Rendering & Edge Delivery**: Employs a build-time pre-rendering strategy that queries the Turso database and bundles data into localized JSON artifacts, eliminating runtime database latency for end users while supporting Cloudflare KV bindings for dynamic overrides.
+- **Diktat & Examination Repository (`/diktat`)**: Search, filter, and access study materials and past exam problems categorized by academic year, semester (Ganjil/Genap), exam phase (UTS/UAS), and major (Teknik Elektro, Teknik Komputer, Teknik Biomedik).
+- **Asistensi & Mentorship Management (`/asistensi`)**: Schedule directory with dual list and interactive calendar interfaces, displaying session dates, meeting links, tutor profiles, and video recordings.
+- **Academic Toolbox (`/`)**: Aggregated directory of institutional links, faculty portals, course syllabi, and engineering utilities.
+- **FAQ Knowledge Base (`/`)**: Queryable repository of academic and administrative guidelines.
+- **Administrative Portal (`/admin`)**:
+  - JWT-based authentication using HTTP-only cookies and bcrypt password hashing.
+  - CRUD operations for Diktat records, Asistensi sessions, FAQs, and Toolbox items.
+  - Administrative webhook integration to trigger on-demand static rebuilds and cache invalidation.
 
 ---
 
-## 📂 Project Structure
+## Technology Stack
+
+### Frontend
+- **Framework**: Next.js 16 (App Router)
+- **Library**: React 19, TypeScript 5
+- **Styling**: Tailwind CSS v4
+- **Icons**: Lucide React
+- **Data Parsing**: PapaParse
+
+### Backend & Storage
+- **Database**: Turso (Distributed LibSQL / SQLite)
+- **ORM / Client**: Drizzle ORM & `@libsql/client`
+- **Authentication**: `jose` (JWT) & `bcryptjs`
+- **Edge Storage**: Cloudflare KV Namespace bindings
+
+### Deployment & Runtime
+- **Platform**: Cloudflare Pages (`@cloudflare/next-on-pages` / OpenNext)
+
+---
+
+## Directory Structure
 
 ```
 ├── app/
-│   ├── admin/                # Admin OS dashboard, managers, and login
-│   ├── api/admin/            # Secure Edge & serverless API routes (auth, CRUD, sync)
-│   ├── asistensi/            # Asistensi schedule & calendar page
-│   ├── components/           # UI components (Hero, Navbar, Layout, FilterSelector, etc.)
-│   ├── data/                 # Bundled build-time JSON caches (diktats, asistensi, faqs)
-│   ├── diktat/               # Diktat archive & study resources page
-│   ├── lib/                  # Shared utilities, data fetchers, and theme context
-│   ├── globals.css           # Global Tailwind CSS styles and theme variables
-│   ├── layout.tsx            # Root layout and metadata
-│   └── page.tsx              # Home portal page
-├── public/                   # Static assets, branding logos, and CSV dumps
-├── scripts/                  # Turso database dump scripts and migration utilities
-├── wrangler.toml             # Cloudflare Pages & KV configuration
+│   ├── admin/                # Admin portal pages and management interfaces
+│   ├── api/admin/            # Edge and serverless route handlers (auth, CRUD, sync)
+│   ├── asistensi/            # Asistensi schedule and calendar views
+│   ├── components/           # UI components and layout structures
+│   ├── data/                 # Pre-compiled JSON datasets for static bundling
+│   ├── diktat/               # Diktat repository and filtering interface
+│   ├── lib/                  # Shared utilities, fetchers, and context providers
+│   ├── globals.css           # Global Tailwind CSS configurations
+│   ├── layout.tsx            # Root layout wrapper
+│   └── page.tsx              # Index route
+├── public/                   # Static assets, branding vectors, and CSV backups
+├── scripts/                  # Turso data dump scripts and schema migrations
+├── wrangler.toml             # Cloudflare Pages and KV namespace configuration
 └── package.json
 ```
 
 ---
 
-## ⚙️ Getting Started
+## Development Setup
 
-### 1. Prerequisites
-- **Node.js**: 20+ installed
-- **Package Manager**: `npm`, `pnpm`, or `bun`
+### Prerequisites
+- Node.js version 20 or higher
+- Package manager (`npm`, `pnpm`, or `bun`)
 
-### 2. Environment Variables
-Create a `.env` file in the root directory:
+### Configuration
+Create a `.env` file in the project root:
 
 ```env
-# Database (Turso)
-TURSO_DATABASE_URL="libsql://your-turso-db.turso.io"
-TURSO_AUTH_TOKEN="your-turso-auth-token"
+# Database Configuration
+TURSO_DATABASE_URL="libsql://<database-name>.turso.io"
+TURSO_AUTH_TOKEN="<turso-auth-token>"
 
 # Authentication
-JWT_SECRET="your-secure-random-secret-key"
-ADMIN_PASSWORD_HASH="bcrypt-hashed-admin-password"
+JWT_SECRET="<jwt-secret-key>"
+ADMIN_PASSWORD_HASH="<bcrypt-hash>"
 
-# Live Deployment Hook (Optional - for admin one-click build trigger)
-CLOUDFLARE_DEPLOY_HOOK="https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/..."
+# Deployment Webhook (Optional)
+CLOUDFLARE_DEPLOY_HOOK="https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/<hook-id>"
 ```
 
-### 3. Install Dependencies
+### Installation
 ```bash
 npm install
 ```
 
-### 4. Seed / Dump Database to Local Cache
-Before building or running locally, sync latest data from Turso to generate local JSON caches:
+### Database Synchronization
+Generate the local pre-rendered JSON data files from Turso:
 ```bash
 npm run db:dump
 ```
 
-### 5. Run Development Server
+### Local Execution
 ```bash
 npm run dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+The application will be accessible at `http://localhost:3000`.
 
 ---
 
-## 🚢 Build & Deployment
+## Build & Deployment
 
 ### Production Build
 ```bash
 npm run build
 ```
-*Note: `npm run build` will automatically run `npm run db:dump` before building the Next.js static output.*
+The build pipeline executes `npm run db:dump` to fetch fresh database state before running `next build`.
 
-### Deploying to Cloudflare Pages
+### Cloudflare Pages Deployment
 ```bash
 npm run pages:deploy
 ```
-Or connect your GitHub repository directly to **Cloudflare Pages** using the build settings:
+For Git-integrated Cloudflare Pages deployments, use the following project parameters:
 - **Build command**: `npm run build`
-- **Output directory**: `.vercel/output/static`
+- **Build output directory**: `.vercel/output/static`
 
 ---
 
-## 📄 License
+## License & Maintenance
 
-Maintained with 💙 by **Bidang Akademik dan Keprofesian (AKPRO) IME FTUI 2026**.
+Maintained by Departemen Akademik dan Keprofesian (AKPRO) IME FTUI.
