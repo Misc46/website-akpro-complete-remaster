@@ -189,7 +189,6 @@ const CalendarView = memo(({ items, isDarkMode }: { items: AsistensiItem[], isDa
                             <span className="text-[8px] font-black uppercase text-muted-foreground tracking-widest">Jam</span>
                         </div>
 
-<<<<<<< HEAD
                         {/* Day Headers */}
                         {weekDays.map((day, idx) => {
                             const isToday = new Date().toDateString() === day.toDateString();
@@ -202,22 +201,6 @@ const CalendarView = memo(({ items, isDarkMode }: { items: AsistensiItem[], isDa
                                 >
                                     <span className={`text-[8px] md:text-[9px] font-black uppercase tracking-[0.1em] block mb-0 ${
                                         isToday ? 'text-highlight' : 'text-muted-foreground'
-=======
-                {calendarDays.map((dateObj, idx) => {
-                    const dayItems = getItemsForDay(dateObj.date);
-                    const isToday = new Date().toDateString() === dateObj.date.toDateString();
-
-                    return (
-                        <div
-                            key={idx}
-                            className={`min-h-[120px] p-2 transition-colors ${dateObj.currentMonth
-                                ? (isDarkMode ? 'bg-muted/5' : 'bg-background')
-                                : (isDarkMode ? 'bg-muted/10 opacity-40' : 'bg-muted/20 opacity-50')
-                                } ${isToday ? 'ring-1 ring-inset ring-highlight/50' : ''}`}
-                        >
-                            <div className="flex justify-between items-center mb-2">
-                                <span className={`text-[10px] font-bold ${isToday ? 'bg-highlight text-white w-5 h-5 flex items-center justify-center rounded-full' : 'text-muted-foreground'
->>>>>>> 4239874 (test aktor)
                                     }`}>
                                         {dayNames[idx]}
                                     </span>
