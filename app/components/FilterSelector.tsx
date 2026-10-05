@@ -38,7 +38,7 @@ export const FilterSelector = memo(({
                         <option value={0}>Semua Semester</option>
                         {years.map((y) => (
                             <option key={y} value={y}>
-                                Semester {getSemester(y, ganjilGenap)}{y === 3 ? ' (Special Edition)' : ''}
+                                Semester {getSemester(y, ganjilGenap)}
                             </option>
                         ))}
                     </select>

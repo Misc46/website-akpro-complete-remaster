@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, Calendar, ShieldCheck, ArrowUpRight, ChevronRight, Sparkles } from 'lucide-react';
+import { BookOpen, Calendar, ShieldCheck, ArrowUpRight, ChevronRight } from 'lucide-react';
 
 export const DirectorySection: React.FC = () => {
     return (
@@ -13,16 +13,10 @@ export const DirectorySection: React.FC = () => {
                         <div className="p-3 bg-highlight/10 rounded-lg text-highlight">
                             <BookOpen size={24} />
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded-full bg-highlight/15 text-highlight-text border border-highlight/30 text-[9px] font-black uppercase tracking-wider flex items-center gap-1">
-                                <Sparkles size={10} />
-                                <span>Special Edition</span>
-                            </span>
-                            <ArrowUpRight size={20} className="text-muted-foreground group-hover:text-highlight transition-all" />
-                        </div>
+                        <ArrowUpRight size={20} className="text-muted-foreground group-hover:text-highlight transition-all" />
                     </div>
                     <h3 className="text-xl font-bold mb-2 text-foreground">Kumpulan Diktat</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-medium">Kumpulan pembahasan soal materi UTS/UAS, termasuk edisi khusus (Special Edition).</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-medium">Kumpulan pembahasan soal yang berkaitan dengan materi UTS/UAS.</p>
                     <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-highlight">
                         <span>Lihat Diktat</span>
                         <ChevronRight size={14} />
