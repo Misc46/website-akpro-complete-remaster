@@ -193,7 +193,7 @@ export default function RequestForm() {
                 value={formData.namaLengkap}
                 onChange={handleInputChange}
                 className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Masukkan nama sesuai SIAKAD"
+                placeholder="Nama Lengkap Sesuai KTM"
               />
               {errors.namaLengkap && <p className="text-red-500 text-xs mt-1">{errors.namaLengkap[0]}</p>}
             </div>
