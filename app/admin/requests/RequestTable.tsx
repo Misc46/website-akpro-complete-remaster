@@ -1,9 +1,7 @@
-"use client";
-
 import { useState } from "react";
-import { verifyPayment, assignPengasis } from "@/app/lib/actions/request";
+import { verifyPayment, assignPengasis, updateRequestDetails } from "@/app/lib/actions/request";
 import { Request, Pengasis } from "@/app/lib/db/schema";
-import { ExternalLink, CheckCircle } from "lucide-react";
+import { ExternalLink, CheckCircle, Edit3 } from "lucide-react";
 
 export default function RequestTable({ 
   requests, 
@@ -21,9 +19,12 @@ export default function RequestTable({
   };
 
   const handleAssign = async (requestId: number, pengasisId: string) => {
-    if (!pengasisId) return;
     setLoading(requestId);
-    await assignPengasis(requestId, parseInt(pengasisId));
+    if (!pengasisId || pengasisId === "unassign") {
+      await updateRequestDetails(requestId, { pengasisId: null, status: "verified" });
+    } else {
+      await assignPengasis(requestId, parseInt(pengasisId));
+    }
     setLoading(null);
   };
 

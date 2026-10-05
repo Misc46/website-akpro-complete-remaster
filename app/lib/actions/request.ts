@@ -140,3 +140,75 @@ export async function verifyPayment(requestId: number) {
     return { success: false };
   }
 }
+
+export async function updateRequestDetails(
+  requestId: number,
+  data: {
+    pengasisId?: number | null;
+    status?: string;
+    catatan?: string | null;
+    kontak?: string | null;
+    sudahBayar?: boolean;
+  }
+) {
+  try {
+    const updateData: Record<string, any> = {
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (data.pengasisId !== undefined) {
+      updateData.pengasisId = data.pengasisId;
+      if (data.pengasisId !== null && !data.status) {
+        updateData.status = "assigned";
+      } else if (data.pengasisId === null && (!data.status || data.status === "assigned")) {
+        updateData.status = "verified";
+      }
+    }
+
+    if (data.status !== undefined) {
+      updateData.status = data.status;
+    }
+
+    if (data.catatan !== undefined) {
+      updateData.catatan = data.catatan;
+    }
+
+    if (data.kontak !== undefined) {
+      updateData.kontak = data.kontak;
+    }
+
+    if (data.sudahBayar !== undefined) {
+      updateData.sudahBayar = data.sudahBayar;
+      if (data.sudahBayar && (!data.status || data.status === "pending")) {
+        updateData.status = "verified";
+      }
+    }
+
+    await db
+      .update(requests)
+      .set(updateData)
+      .where(eq(requests.id, requestId));
+
+    revalidatePath("/admin/requests");
+    revalidatePath("/admin/dashboard");
+    return { success: true };
+  } catch (error) {
+    console.error("Update request details error:", error);
+    return { success: false, error: "Failed to update request details" };
+  }
+}
+
+export async function deleteRequest(requestId: number) {
+  try {
+    await db
+      .delete(requests)
+      .where(eq(requests.id, requestId));
+
+    revalidatePath("/admin/requests");
+    revalidatePath("/admin/dashboard");
+    return { success: true };
+  } catch (error) {
+    console.error("Delete request error:", error);
+    return { success: false, error: "Failed to delete request" };
+  }
+}
