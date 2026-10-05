@@ -137,9 +137,19 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                 {/* Context Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-border pb-8">
                     <div>
-                        <div className="flex items-center gap-2 text-highlight-text mb-4">
-                            <Archive size={16} />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Bank Diktat</span>
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="flex items-center gap-1.5 text-highlight-text">
+                                <Archive size={16} />
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Bank Diktat</span>
+                            </div>
+                            {specialEditionItems.length > 0 && (
+                                <>
+                                    <span className="text-border text-xs">•</span>
+                                    <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-highlight/15 text-highlight-text border border-highlight/30">
+                                        Special Edition Included
+                                    </span>
+                                </>
+                            )}
                         </div>
                         <h1 className="text-3xl font-black tracking-tight text-foreground">
                             {currentGroup.uts_uas.toUpperCase()} {currentGroup.ganjil_genap.toUpperCase()} {currentGroup.year}
