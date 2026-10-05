@@ -11,6 +11,7 @@ interface FilterSelectorProps {
     setSelectedMajor: (major: string) => void;
     ganjilGenap: string;
     isDarkMode: boolean;
+    availableYears?: number[];
 }
 
 export const FilterSelector = memo(({
@@ -19,23 +20,31 @@ export const FilterSelector = memo(({
     selectedMajor,
     setSelectedMajor,
     ganjilGenap,
-    isDarkMode
-}: FilterSelectorProps) => (
-    <div className="flex flex-col gap-4">
-        <div className="flex-1">
-            <label className="block text-[10px] font-black uppercase tracking-widest mb-2 text-muted-foreground/80">Tingkat Semester</label>
-            <div className="relative">
-                <select
-                    value={selectedYear}
-                    onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                    className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none cursor-pointer"
-                >
-                    <option value={1}>Semester {getSemester(1, ganjilGenap)}</option>
-                    <option value={2}>Semester {getSemester(2, ganjilGenap)}</option>
-                </select>
-                <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+    isDarkMode,
+    availableYears
+}: FilterSelectorProps) => {
+    const years = availableYears && availableYears.length > 0 ? availableYears : [1, 2, 3];
+
+    return (
+        <div className="flex flex-col gap-4">
+            <div className="flex-1">
+                <label className="block text-[10px] font-black uppercase tracking-widest mb-2 text-muted-foreground/80">Tingkat Semester</label>
+                <div className="relative">
+                    <select
+                        value={selectedYear}
+                        onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                        className="w-full px-4 py-2.5 text-xs border border-border font-sans font-bold appearance-none bg-background text-foreground rounded-lg focus:ring-1 focus:ring-highlight focus:border-highlight outline-none cursor-pointer"
+                    >
+                        <option value={0}>Semua Semester</option>
+                        {years.map((y) => (
+                            <option key={y} value={y}>
+                                Semester {getSemester(y, ganjilGenap)}{y === 3 ? ' (Special Edition)' : ''}
+                            </option>
+                        ))}
+                    </select>
+                    <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                </div>
             </div>
-        </div>
         <div className="flex-1">
             <label className="block text-[10px] font-black uppercase tracking-widest mb-2 text-muted-foreground/80">Program Studi</label>
             <div className="relative">
@@ -53,6 +62,7 @@ export const FilterSelector = memo(({
             </div>
         </div>
     </div>
-));
+);
+});
 
 FilterSelector.displayName = 'FilterSelector';

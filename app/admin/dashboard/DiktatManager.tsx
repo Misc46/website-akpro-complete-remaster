@@ -295,7 +295,7 @@ export default function DiktatManager() {
                         <div>
                             <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Target Semesters (Year)</label>
                             <div className="flex gap-4">
-                                {[1, 2].map(y => (
+                                {[1, 2, 3].map(y => (
                                     <label key={y} className="flex items-center gap-2 cursor-pointer">
                                         <input
                                             type="checkbox"

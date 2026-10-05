@@ -3,10 +3,11 @@
 import React, { useState, useMemo, memo } from 'react';
 import { FilterSelector } from '../components/FilterSelector';
 import { useTheme } from '../lib/ThemeContext';
-import { Archive, FileText, Download, Search, Info, ChevronDown } from 'lucide-react';
+import { Archive, FileText, Download, Search, Info, ChevronDown, Sparkles } from 'lucide-react';
 import { BackgroundDecorations } from '../components/home/BackgroundDecorations';
 import {
     filterContent,
+    getSemester,
     DiktatData,
     DiktatItem
 } from '../lib/dataUtils';
@@ -95,6 +96,29 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
         sortedData.find(d => d.id === activeGroupId) || sortedData[0]
         , [sortedData, activeGroupId]);
 
+    const availableYears = useMemo(() => {
+        const yearSet = new Set<number>();
+        currentGroup?.content?.forEach(item => {
+            item.year?.forEach(y => yearSet.add(y));
+        });
+        yearSet.add(1);
+        yearSet.add(2);
+        return Array.from(yearSet).sort((a, b) => a - b);
+    }, [currentGroup]);
+
+    const specialEditionItems = useMemo(() => {
+        if (!currentGroup?.content) return [];
+        return currentGroup.content.filter(
+            item => item.name.toLowerCase().includes('special') || (item.year && item.year.includes(3))
+        );
+    }, [currentGroup]);
+
+    React.useEffect(() => {
+        if (selectedYear !== 0 && !availableYears.includes(selectedYear)) {
+            setSelectedYear(1);
+        }
+    }, [availableYears, selectedYear]);
+
     const filtered = useMemo(() => {
         if (!currentGroup) return [];
         return filterContent(currentGroup.content, selectedYear, selectedMajor).filter(item =>
@@ -165,6 +189,7 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
                                 setSelectedMajor={setSelectedMajor}
                                 ganjilGenap={currentGroup.ganjil_genap}
                                 isDarkMode={isDarkMode}
+                                availableYears={availableYears}
                             />
                         </div>
 
@@ -216,41 +241,115 @@ export default function DiktatClient({ initialData }: DiktatClientProps) {
 
                     {/* Main Content */}
                     <div className="space-y-6">
+                        {/* Subtle Special Edition Callout Banner */}
+                        {specialEditionItems.length > 0 && (
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-highlight/10 border border-highlight/30 text-foreground transition-all">
+                                <div className="flex items-start sm:items-center gap-3">
+                                    <div className="p-2 rounded-lg bg-highlight/20 text-highlight-text shrink-0 mt-0.5 sm:mt-0">
+                                        <Sparkles size={16} />
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-highlight-text">
+                                                Special Edition Tersedia
+                                            </span>
+                                            <span className="px-1.5 py-0.5 rounded-[4px] text-[8px] font-bold uppercase tracking-wider bg-highlight/20 text-highlight-text">
+                                                Tingkat 3
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground mt-0.5">
+                                            Tersedia diktat edisi khusus untuk mahasiswa Semester {getSemester(3, currentGroup.ganjil_genap)}: <strong className="text-foreground">{specialEditionItems.map(i => i.name).join(', ')}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                {selectedYear !== 3 ? (
+                                    <button
+                                        onClick={() => {
+                                            setSelectedYear(3);
+                                            setSelectedMajor('');
+                                            setSearchQuery('');
+                                        }}
+                                        className="self-start sm:self-auto px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider bg-highlight text-highlight-foreground hover:opacity-90 transition-all shadow-xs flex items-center gap-1.5 cursor-pointer shrink-0"
+                                    >
+                                        <span>Lihat Diktat (Sem. {getSemester(3, currentGroup.ganjil_genap)})</span>
+                                        <Sparkles size={12} />
+                                    </button>
+                                ) : (
+                                    <span className="text-[10px] font-bold text-highlight-text uppercase tracking-wider px-3 py-1.5 rounded-lg bg-highlight/15 border border-highlight/30 shrink-0">
+                                        Sedang Ditampilkan
+                                    </span>
+                                )}
+                            </div>
+                        )}
+
                         {filtered.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                                {filtered.map((item: DiktatItem, idx: number) => (
-                                    <a
-                                        key={idx}
-                                        href={item.googleDriveLink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={`group flex flex-col border border-border rounded-xl overflow-hidden hover:border-highlight/50 ${isDarkMode ? 'bg-muted/10' : 'bg-background shadow-sm'}`}
-                                    >
-                                        <div className="h-28 bg-muted/30 relative flex items-center justify-center border-b border-border">
-                                            <DiktatThumbnail item={item} isDarkMode={isDarkMode} />
-                                        </div>
-                                        <div className="p-4 flex flex-col flex-1">
-                                            <div className="flex flex-wrap gap-1 mb-3">
-                                                {item.major.map((m: string) => (
-                                                    <span key={m} className="px-1.5 py-0.5 rounded-[4px] text-[7px] font-black uppercase tracking-wider bg-muted text-muted-foreground border border-border/50">
-                                                        {m}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                            <h3 className="font-bold text-xs mb-4 flex-1 line-clamp-2 text-foreground group-hover:text-highlight transition-colors leading-relaxed">{item.name}</h3>
+                                {filtered.map((item: DiktatItem, idx: number) => {
+                                    const isSpecial = item.name.toLowerCase().includes('special') || (item.year && item.year.includes(3));
 
-                                            <div className="flex items-center justify-between pt-3 border-t border-border/50">
-                                                <div className="flex items-center gap-1.5 text-muted-foreground">
-                                                    <span className="text-[8px] font-bold uppercase tracking-widest opacity-60">Drive Link</span>
+                                    return (
+                                        <a
+                                            key={idx}
+                                            href={item.googleDriveLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={`group flex flex-col rounded-xl overflow-hidden transition-all duration-300 ${
+                                                isSpecial
+                                                    ? 'border-2 border-highlight/60 hover:border-highlight shadow-sm bg-gradient-to-b from-highlight/5 to-transparent'
+                                                    : 'border border-border hover:border-highlight/50'
+                                            } ${isDarkMode ? 'bg-muted/10' : 'bg-background shadow-xs'}`}
+                                        >
+                                            <div className="h-28 bg-muted/30 relative flex items-center justify-center border-b border-border overflow-hidden">
+                                                <DiktatThumbnail item={item} isDarkMode={isDarkMode} />
+                                                {isSpecial && (
+                                                    <div className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-highlight text-highlight-foreground shadow-xs flex items-center gap-1 backdrop-blur-xs">
+                                                        <Sparkles size={10} />
+                                                        <span>Special Edition</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="p-4 flex flex-col flex-1">
+                                                <div className="flex flex-wrap gap-1 mb-3">
+                                                    {item.year.map((y: number) => (
+                                                        <span
+                                                            key={y}
+                                                            className={`px-1.5 py-0.5 rounded-[4px] text-[7px] font-black uppercase tracking-wider border ${
+                                                                y === 3
+                                                                    ? 'bg-highlight/20 text-highlight-text border-highlight/30 font-bold'
+                                                                    : 'bg-muted text-muted-foreground border-border/50'
+                                                            }`}
+                                                        >
+                                                            Sem {getSemester(y, currentGroup.ganjil_genap)}
+                                                        </span>
+                                                    ))}
+                                                    {item.major.map((m: string) => (
+                                                        <span key={m} className="px-1.5 py-0.5 rounded-[4px] text-[7px] font-black uppercase tracking-wider bg-muted text-muted-foreground border border-border/50">
+                                                            {m}
+                                                        </span>
+                                                    ))}
+                                                    {isSpecial && (
+                                                        <span className="px-1.5 py-0.5 rounded-[4px] text-[7px] font-black uppercase tracking-wider bg-highlight/20 text-highlight-text border border-highlight/40 flex items-center gap-1 font-bold">
+                                                            <Sparkles size={8} /> Special Edition
+                                                        </span>
+                                                    )}
                                                 </div>
-                                                <div className="flex items-center gap-1 text-highlight text-[8px] font-black uppercase tracking-widest">
-                                                    <span>Get</span>
-                                                    <Download size={10} />
+                                                <h3 className="font-bold text-xs mb-4 flex-1 line-clamp-2 text-foreground group-hover:text-highlight transition-colors leading-relaxed">
+                                                    {item.name}
+                                                </h3>
+
+                                                <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                                                    <div className="flex items-center gap-1.5 text-muted-foreground">
+                                                        <span className="text-[8px] font-bold uppercase tracking-widest opacity-60">Drive Link</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-1 text-highlight text-[8px] font-black uppercase tracking-widest group-hover:translate-x-0.5 transition-transform">
+                                                        <span>Get</span>
+                                                        <Download size={10} />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                ))}
+                                        </a>
+                                    );
+                                })}
                             </div>
                         ) : (
                             <div className="py-24 text-center border-2 border-dashed border-border rounded-2xl">

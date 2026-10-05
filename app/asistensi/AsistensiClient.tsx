@@ -454,6 +454,16 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
         sortedData.find(d => d.id === activeGroupId) || sortedData[0]
         , [sortedData, activeGroupId]);
 
+    const availableYears = useMemo(() => {
+        const yearSet = new Set<number>();
+        currentGroup?.content?.forEach(item => {
+            item.year?.forEach(y => yearSet.add(y));
+        });
+        yearSet.add(1);
+        yearSet.add(2);
+        return Array.from(yearSet).sort((a, b) => a - b);
+    }, [currentGroup]);
+
     if (!currentGroup) return <div className={`p-24 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Tidak ada data asistensi tersedia</div>;
 
     const filtered = useMemo(() => {
@@ -541,6 +551,7 @@ export default function AsistensiClient({ initialData }: AsistensiClientProps) {
                                 setSelectedMajor={setSelectedMajor}
                                 ganjilGenap={currentGroup.ganjil_genap}
                                 isDarkMode={isDarkMode}
+                                availableYears={availableYears}
                             />
                         </div>
 

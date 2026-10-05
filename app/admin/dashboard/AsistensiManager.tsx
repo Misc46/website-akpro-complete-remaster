@@ -325,7 +325,7 @@ export default function AsistensiManager() {
                                     </label>
                                 ))}
                                 <div className="w-full border-t border-[#0036A7] my-1"></div>
-                                {[1, 2].map(y => (
+                                {[1, 2, 3].map(y => (
                                     <label key={y} className="flex items-center gap-2 cursor-pointer">
                                         <input
                                             type="checkbox"

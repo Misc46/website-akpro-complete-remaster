@@ -2,21 +2,27 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, Calendar, ShieldCheck, ArrowUpRight, ChevronRight } from 'lucide-react';
+import { BookOpen, Calendar, ShieldCheck, ArrowUpRight, ChevronRight, Sparkles } from 'lucide-react';
 
 export const DirectorySection: React.FC = () => {
     return (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 animate-in fade-in duration-500">
             <div className="grid md:grid-cols-3 gap-8">
-                <Link href="/diktat" className="group p-8 border border-border rounded-2xl bg-card shadow-sm">
+                <Link href="/diktat" className="group p-8 border border-border rounded-2xl bg-card shadow-sm hover:border-highlight/50 transition-all">
                     <div className="flex justify-between items-start mb-6">
                         <div className="p-3 bg-highlight/10 rounded-lg text-highlight">
                             <BookOpen size={24} />
                         </div>
-                        <ArrowUpRight size={20} className="text-muted-foreground group-hover:text-highlight transition-all" />
+                        <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded-full bg-highlight/15 text-highlight-text border border-highlight/30 text-[9px] font-black uppercase tracking-wider flex items-center gap-1">
+                                <Sparkles size={10} />
+                                <span>Special Edition</span>
+                            </span>
+                            <ArrowUpRight size={20} className="text-muted-foreground group-hover:text-highlight transition-all" />
+                        </div>
                     </div>
                     <h3 className="text-xl font-bold mb-2 text-foreground">Kumpulan Diktat</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-medium">Kumpulan pembahasan soal yang berkaitan dengan materi UTS/UAS.</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-medium">Kumpulan pembahasan soal materi UTS/UAS, termasuk edisi khusus (Special Edition).</p>
                     <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-highlight">
                         <span>Lihat Diktat</span>
                         <ChevronRight size={14} />
